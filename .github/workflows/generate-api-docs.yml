@@ -19,6 +19,14 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Print openapi spec:
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        curl -H "Authorization: token ${GITHUB_TOKEN}" \
+          -L "https://api.github.com/repos/oc-project/oc-backend/contents/api/v1/openapi.yaml?ref=main" \
+          | jq -r .content | base64 -d
+
     - name: Generate API Documentation
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
