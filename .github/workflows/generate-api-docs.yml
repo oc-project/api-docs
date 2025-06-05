@@ -23,13 +23,14 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
+        mkdir -p docs
         docker run --rm \
           -v "${PWD}:/local" \
           openapitools/openapi-generator-cli generate \
           -a "Authorization:token%20${GITHUB_TOKEN}" \
           -i https://raw.githubusercontent.com/oc-project/oc-backend/refs/heads/main/api/v1/openapi.yaml \
           -g html2 \
-          -o /local/
+          -o /local/docs/
 
     - name: Check if docs changed
       id: verify-changed-files
