@@ -1,0 +1,50 @@
+name: Generate API Documentation
+
+on:
+  # 每天 UTC 时间 02:00 执行（北京时间 10:00）
+  schedule:
+    - cron: '0 2 * * *'
+  
+  # 支持手动触发
+  workflow_dispatch:
+
+jobs:
+  generate-docs:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write  # 需要写权限来提交文件
+      
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Generate API Documentation
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        docker run --rm \
+          -v "${PWD}:/local" \
+          openapitools/openapi-generator-cli generate \
+          -a "Authorization:token%20${GITHUB_TOKEN}" \
+          -i https://raw.githubusercontent.com/oc-project/oc-backend/refs/heads/main/api/v1/openapi.yaml \
+          -g html2 \
+          -o /local/
+
+    - name: Check if docs changed
+      id: verify-changed-files
+      run: |
+        if [ -n "$(git status --porcelain)" ]; then
+          echo "changed=true" >> $GITHUB_OUTPUT
+        else
+          echo "changed=false" >> $GITHUB_OUTPUT
+        fi
+        
+    - name: Commit and push changes
+      if: steps.verify-changed-files.outputs.changed == 'true'
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add docs/
+        git commit -m "docs: update API documentation ($(date +'%Y-%m-%d %H:%M:%S'))"
+        git push
