@@ -1,0 +1,3035 @@
+{
+  "openapi" : "3.0.3",
+  "info" : {
+    "contact" : {
+      "name" : "API Support",
+      "url" : "https://github.com/example/oc-backend"
+    },
+    "description" : "API for managing user profiles and follows",
+    "title" : "OC Backend API",
+    "version" : "1.0.0"
+  },
+  "servers" : [ {
+    "description" : "Development server",
+    "url" : "http://localhost:8080/api/v1"
+  } ],
+  "security" : [ {
+    "bearerAuth" : [ ]
+  } ],
+  "paths" : {
+    "/auth/signup" : {
+      "post" : {
+        "description" : "Register a new user with email/phone and password. The system will automatically detect whether the identifier is an email or phone number.",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SignUpRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_auth_signup_post_201_response"
+                }
+              }
+            },
+            "description" : "User registered successfully"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Email or phone already registered"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "security" : [ ],
+        "summary" : "Sign up with email or phone",
+        "tags" : [ "Auth" ]
+      }
+    },
+    "/auth/signin" : {
+      "post" : {
+        "description" : "Authenticate user with email/phone and password. The system will automatically detect whether the identifier is an email or phone number.",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SignInRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_auth_signin_post_200_response"
+                }
+              }
+            },
+            "description" : "User authenticated successfully"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Invalid credentials"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "security" : [ ],
+        "summary" : "Sign in with email or phone",
+        "tags" : [ "Auth" ]
+      }
+    },
+    "/auth/signin/oauth" : {
+      "post" : {
+        "description" : "Initiate OAuth sign in with social providers (Google, Facebook, Apple)",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/OAuthSignInRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_auth_signin_oauth_post_200_response"
+                }
+              }
+            },
+            "description" : "OAuth URL generated successfully"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "security" : [ ],
+        "summary" : "OAuth sign in",
+        "tags" : [ "Auth" ]
+      }
+    },
+    "/auth/verify-otp" : {
+      "post" : {
+        "description" : "Verify one-time password for phone authentication",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/VerifyOTPRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_auth_signin_post_200_response"
+                }
+              }
+            },
+            "description" : "OTP verified successfully"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Invalid or expired OTP"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "security" : [ ],
+        "summary" : "Verify OTP",
+        "tags" : [ "Auth" ]
+      }
+    },
+    "/auth/refresh" : {
+      "post" : {
+        "description" : "Refresh access token using refresh token",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/RefreshTokenRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_auth_signin_post_200_response"
+                }
+              }
+            },
+            "description" : "Token refreshed successfully"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Invalid refresh token"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "security" : [ ],
+        "summary" : "Refresh access token",
+        "tags" : [ "Auth" ]
+      }
+    },
+    "/auth/signout" : {
+      "post" : {
+        "description" : "Sign out user and invalidate tokens",
+        "responses" : {
+          "204" : {
+            "description" : "User signed out successfully"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "summary" : "Sign out",
+        "tags" : [ "Auth" ]
+      }
+    },
+    "/users/{id}/profile" : {
+      "get" : {
+        "description" : "Retrieve a user's profile information including basic info, social stats, and content overview",
+        "parameters" : [ {
+          "description" : "User ID",
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "Include followers list in response",
+          "explode" : true,
+          "in" : "query",
+          "name" : "include_followers",
+          "required" : false,
+          "schema" : {
+            "default" : false,
+            "type" : "boolean"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Include following list in response",
+          "explode" : true,
+          "in" : "query",
+          "name" : "include_following",
+          "required" : false,
+          "schema" : {
+            "default" : false,
+            "type" : "boolean"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_users__id__profile_get_200_response"
+                }
+              }
+            },
+            "description" : "User profile information"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "security" : [ ],
+        "summary" : "Get user profile",
+        "tags" : [ "UserProfiles" ]
+      },
+      "put" : {
+        "description" : "Update the authenticated user's profile information",
+        "parameters" : [ {
+          "description" : "User ID (must be the authenticated user)",
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UpdateUserProfileRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_users__id__profile_get_200_response"
+                }
+              }
+            },
+            "description" : "User profile updated successfully"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "summary" : "Update user profile",
+        "tags" : [ "UserProfiles" ]
+      }
+    },
+    "/users/{id}/follow" : {
+      "delete" : {
+        "description" : "Stop following a user",
+        "parameters" : [ {
+          "description" : "User ID to unfollow",
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Successfully unfollowed user"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "summary" : "Unfollow a user",
+        "tags" : [ "UserFollows" ]
+      },
+      "post" : {
+        "description" : "Follow another user",
+        "parameters" : [ {
+          "description" : "User ID to follow",
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_users__id__follow_post_201_response"
+                }
+              }
+            },
+            "description" : "Successfully followed user"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Already following this user"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "summary" : "Follow a user",
+        "tags" : [ "UserFollows" ]
+      }
+    },
+    "/users/{id}/followers" : {
+      "get" : {
+        "description" : "Retrieve a list of users who follow the specified user",
+        "parameters" : [ {
+          "description" : "User ID",
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "Maximum number of items to return",
+          "explode" : true,
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : 20,
+            "maximum" : 100,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Number of items to skip",
+          "explode" : true,
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_users__id__followers_get_200_response"
+                }
+              }
+            },
+            "description" : "List of followers"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "security" : [ ],
+        "summary" : "Get user followers",
+        "tags" : [ "UserFollows" ]
+      }
+    },
+    "/users/{id}/following" : {
+      "get" : {
+        "description" : "Retrieve a list of users that the specified user is following",
+        "parameters" : [ {
+          "description" : "User ID",
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "Maximum number of items to return",
+          "explode" : true,
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : 20,
+            "maximum" : 100,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Number of items to skip",
+          "explode" : true,
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_users__id__followers_get_200_response"
+                }
+              }
+            },
+            "description" : "List of users being followed"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "security" : [ ],
+        "summary" : "Get users being followed",
+        "tags" : [ "UserFollows" ]
+      }
+    },
+    "/oc" : {
+      "get" : {
+        "description" : "Get a list of OC characters created by the current authenticated user",
+        "parameters" : [ {
+          "description" : "Maximum number of items to return",
+          "explode" : true,
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : 20,
+            "maximum" : 100,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Number of items to skip",
+          "explode" : true,
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_oc_get_200_response"
+                }
+              }
+            },
+            "description" : "List of user's OC characters"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "summary" : "Get current user's OC characters",
+        "tags" : [ "OC" ]
+      },
+      "post" : {
+        "description" : "Create a new OC (Original Character) with name, avatar, description and image gallery",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CreateOCRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_oc_post_201_response"
+                }
+              }
+            },
+            "description" : "OC character created successfully"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "summary" : "Create OC character",
+        "tags" : [ "OC" ]
+      }
+    },
+    "/oc/{id}" : {
+      "delete" : {
+        "description" : "Delete an OC character (only by creator, and only if no associated diary entries exist)",
+        "parameters" : [ {
+          "description" : "OC character ID",
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "OC character deleted successfully"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Cannot delete OC character with associated diary entries"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "summary" : "Delete OC character",
+        "tags" : [ "OC" ]
+      },
+      "get" : {
+        "description" : "Get detailed information about a specific OC character, including image gallery and associated posts",
+        "parameters" : [ {
+          "description" : "OC character ID",
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_oc__id__get_200_response"
+                }
+              }
+            },
+            "description" : "OC character details"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "security" : [ ],
+        "summary" : "Get OC character details",
+        "tags" : [ "OC" ]
+      },
+      "put" : {
+        "description" : "Update an existing OC character (only by creator)",
+        "parameters" : [ {
+          "description" : "OC character ID",
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UpdateOCRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_oc_post_201_response"
+                }
+              }
+            },
+            "description" : "OC character updated successfully"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "summary" : "Update OC character",
+        "tags" : [ "OC" ]
+      }
+    },
+    "/users/{id}/oc" : {
+      "get" : {
+        "description" : "Get a list of OC characters created by a specific user",
+        "parameters" : [ {
+          "description" : "User ID",
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "Maximum number of items to return",
+          "explode" : true,
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : 20,
+            "maximum" : 100,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Number of items to skip",
+          "explode" : true,
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_oc_get_200_response"
+                }
+              }
+            },
+            "description" : "List of user's OC characters"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "security" : [ ],
+        "summary" : "Get user's OC characters",
+        "tags" : [ "OC" ]
+      }
+    },
+    "/posts" : {
+      "get" : {
+        "description" : "Get a paginated list of posts from followed users or public posts",
+        "parameters" : [ {
+          "description" : "Type of posts to retrieve",
+          "explode" : true,
+          "in" : "query",
+          "name" : "feed_type",
+          "required" : false,
+          "schema" : {
+            "default" : "following",
+            "enum" : [ "following", "public", "user" ],
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "User ID to get posts from (required when feed_type is 'user')",
+          "explode" : true,
+          "in" : "query",
+          "name" : "user_id",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "OC ID to filter posts by specific character",
+          "explode" : true,
+          "in" : "query",
+          "name" : "oc_id",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Maximum number of items to return",
+          "explode" : true,
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : 20,
+            "maximum" : 100,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Number of items to skip",
+          "explode" : true,
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_posts_get_200_response"
+                }
+              }
+            },
+            "description" : "List of posts"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "security" : [ ],
+        "summary" : "Get posts feed",
+        "tags" : [ "Posts" ]
+      },
+      "post" : {
+        "description" : "Create a new diary post associated with an OC character",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CreatePostRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_posts_post_201_response"
+                }
+              }
+            },
+            "description" : "Post created successfully"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "summary" : "Create a new post",
+        "tags" : [ "Posts" ]
+      }
+    },
+    "/posts/{id}" : {
+      "delete" : {
+        "description" : "Delete a post (only by the post author)",
+        "parameters" : [ {
+          "description" : "Post ID",
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Post deleted successfully"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "summary" : "Delete a post",
+        "tags" : [ "Posts" ]
+      },
+      "get" : {
+        "description" : "Get detailed information about a specific post",
+        "parameters" : [ {
+          "description" : "Post ID",
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_posts__id__get_200_response"
+                }
+              }
+            },
+            "description" : "Post details"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "security" : [ ],
+        "summary" : "Get post details",
+        "tags" : [ "Posts" ]
+      },
+      "put" : {
+        "description" : "Update an existing post (only by the post author)",
+        "parameters" : [ {
+          "description" : "Post ID",
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UpdatePostRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_posts_post_201_response"
+                }
+              }
+            },
+            "description" : "Post updated successfully"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "summary" : "Update a post",
+        "tags" : [ "Posts" ]
+      }
+    },
+    "/posts/{id}/like" : {
+      "delete" : {
+        "description" : "Remove a like from a post",
+        "parameters" : [ {
+          "description" : "Post ID",
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Post unliked successfully"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "summary" : "Unlike a post",
+        "tags" : [ "Posts" ]
+      },
+      "post" : {
+        "description" : "Add a like to a post",
+        "parameters" : [ {
+          "description" : "Post ID",
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_posts__id__like_post_201_response"
+                }
+              }
+            },
+            "description" : "Post liked successfully"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Already liked this post"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "summary" : "Like a post",
+        "tags" : [ "Posts" ]
+      }
+    },
+    "/posts/{id}/likes" : {
+      "get" : {
+        "description" : "Get a list of users who liked a post",
+        "parameters" : [ {
+          "description" : "Post ID",
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "Maximum number of items to return",
+          "explode" : true,
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : 20,
+            "maximum" : 100,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Number of items to skip",
+          "explode" : true,
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_posts__id__likes_get_200_response"
+                }
+              }
+            },
+            "description" : "List of users who liked the post"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "security" : [ ],
+        "summary" : "Get post likes",
+        "tags" : [ "Posts" ]
+      }
+    },
+    "/posts/{id}/comments" : {
+      "get" : {
+        "description" : "Get a list of comments on a post",
+        "parameters" : [ {
+          "description" : "Post ID",
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "Maximum number of items to return",
+          "explode" : true,
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : 20,
+            "maximum" : 100,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Number of items to skip",
+          "explode" : true,
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_posts__id__comments_get_200_response"
+                }
+              }
+            },
+            "description" : "List of comments"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "security" : [ ],
+        "summary" : "Get post comments",
+        "tags" : [ "Posts" ]
+      },
+      "post" : {
+        "description" : "Add a comment to a post",
+        "parameters" : [ {
+          "description" : "Post ID",
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CreateCommentRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_posts__id__comments_post_201_response"
+                }
+              }
+            },
+            "description" : "Comment added successfully"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "summary" : "Add a comment to a post",
+        "tags" : [ "Posts" ]
+      }
+    },
+    "/posts/{id}/comments/{comment_id}" : {
+      "delete" : {
+        "description" : "Delete a comment (only by comment author or post author)",
+        "parameters" : [ {
+          "description" : "Post ID",
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "Comment ID",
+          "explode" : false,
+          "in" : "path",
+          "name" : "comment_id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Comment deleted successfully"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "summary" : "Delete a comment",
+        "tags" : [ "Posts" ]
+      }
+    },
+    "/posts/drafts" : {
+      "get" : {
+        "description" : "Get a list of draft posts for the authenticated user",
+        "parameters" : [ {
+          "description" : "Maximum number of items to return",
+          "explode" : true,
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : 20,
+            "maximum" : 100,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Number of items to skip",
+          "explode" : true,
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_posts_drafts_get_200_response"
+                }
+              }
+            },
+            "description" : "List of draft posts"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "summary" : "Get user's draft posts",
+        "tags" : [ "Posts" ]
+      },
+      "post" : {
+        "description" : "Save a post as draft",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CreateDraftRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_posts_drafts_post_201_response"
+                }
+              }
+            },
+            "description" : "Draft saved successfully"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "summary" : "Create or update a draft post",
+        "tags" : [ "Posts" ]
+      }
+    },
+    "/posts/drafts/{id}" : {
+      "delete" : {
+        "description" : "Delete a draft post",
+        "parameters" : [ {
+          "description" : "Draft ID",
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Draft deleted successfully"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "summary" : "Delete a draft post",
+        "tags" : [ "Posts" ]
+      },
+      "get" : {
+        "description" : "Get detailed information about a specific draft",
+        "parameters" : [ {
+          "description" : "Draft ID",
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_posts_drafts_post_201_response"
+                }
+              }
+            },
+            "description" : "Draft details"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "summary" : "Get draft post details",
+        "tags" : [ "Posts" ]
+      },
+      "put" : {
+        "description" : "Update an existing draft post",
+        "parameters" : [ {
+          "description" : "Draft ID",
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UpdateDraftRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_posts_drafts_post_201_response"
+                }
+              }
+            },
+            "description" : "Draft updated successfully"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "summary" : "Update a draft post",
+        "tags" : [ "Posts" ]
+      }
+    },
+    "/posts/drafts/{id}/publish" : {
+      "post" : {
+        "description" : "Convert a draft post to a published post",
+        "parameters" : [ {
+          "description" : "Draft ID",
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_posts_post_201_response"
+                }
+              }
+            },
+            "description" : "Draft published successfully"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "summary" : "Publish a draft post",
+        "tags" : [ "Posts" ]
+      }
+    }
+  },
+  "components" : {
+    "parameters" : {
+      "PageLimit" : {
+        "description" : "Maximum number of items to return",
+        "explode" : true,
+        "in" : "query",
+        "name" : "limit",
+        "required" : false,
+        "schema" : {
+          "default" : 20,
+          "maximum" : 100,
+          "minimum" : 1,
+          "type" : "integer"
+        },
+        "style" : "form"
+      },
+      "PageOffset" : {
+        "description" : "Number of items to skip",
+        "explode" : true,
+        "in" : "query",
+        "name" : "offset",
+        "required" : false,
+        "schema" : {
+          "default" : 0,
+          "minimum" : 0,
+          "type" : "integer"
+        },
+        "style" : "form"
+      }
+    },
+    "responses" : {
+      "Unauthorized" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Error"
+            }
+          }
+        },
+        "description" : "Unauthorized - authentication required"
+      },
+      "Forbidden" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Error"
+            }
+          }
+        },
+        "description" : "Forbidden - access denied"
+      },
+      "BadRequest" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Error"
+            }
+          }
+        },
+        "description" : "Bad request"
+      },
+      "NotFound" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Error"
+            }
+          }
+        },
+        "description" : "Resource not found"
+      },
+      "InternalServerError" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Error"
+            }
+          }
+        },
+        "description" : "Internal server error"
+      }
+    },
+    "schemas" : {
+      "UserProfile" : {
+        "properties" : {
+          "id" : {
+            "description" : "User unique identifier",
+            "type" : "string"
+          },
+          "display_id" : {
+            "description" : "User public display ID",
+            "type" : "string"
+          },
+          "nickname" : {
+            "description" : "User display name",
+            "maxLength" : 20,
+            "type" : "string"
+          },
+          "avatar_url" : {
+            "description" : "User avatar image URL",
+            "format" : "uri",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "bio" : {
+            "description" : "User biography/signature",
+            "maxLength" : 100,
+            "nullable" : true,
+            "type" : "string"
+          },
+          "email" : {
+            "description" : "User contact email (only visible to profile owner)",
+            "format" : "email",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "website" : {
+            "description" : "User personal website",
+            "format" : "uri",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "followers_count" : {
+            "description" : "Number of followers",
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "following_count" : {
+            "description" : "Number of users being followed",
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "posts_count" : {
+            "description" : "Number of posts created",
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "oc_characters_count" : {
+            "description" : "Number of OC characters created",
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "is_following" : {
+            "description" : "Whether the current user is following this user",
+            "nullable" : true,
+            "type" : "boolean"
+          },
+          "is_followed_by" : {
+            "description" : "Whether this user is following the current user",
+            "nullable" : true,
+            "type" : "boolean"
+          },
+          "created_at" : {
+            "description" : "User registration timestamp",
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "updated_at" : {
+            "description" : "Profile last update timestamp",
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "followers" : {
+            "description" : "List of followers (only included if requested)",
+            "items" : {
+              "$ref" : "#/components/schemas/UserProfileSummary"
+            },
+            "nullable" : true,
+            "type" : "array"
+          },
+          "following" : {
+            "description" : "List of users being followed (only included if requested)",
+            "items" : {
+              "$ref" : "#/components/schemas/UserProfileSummary"
+            },
+            "nullable" : true,
+            "type" : "array"
+          },
+          "recent_posts" : {
+            "description" : "Recent posts by this user",
+            "items" : {
+              "$ref" : "#/components/schemas/PostSummary"
+            },
+            "nullable" : true,
+            "type" : "array"
+          },
+          "oc_characters" : {
+            "description" : "OC characters created by this user",
+            "items" : {
+              "$ref" : "#/components/schemas/OCSummary"
+            },
+            "nullable" : true,
+            "type" : "array"
+          }
+        },
+        "required" : [ "created_at", "display_id", "followers_count", "following_count", "id", "nickname", "oc_characters_count", "posts_count", "updated_at" ],
+        "type" : "object"
+      },
+      "UserProfileSummary" : {
+        "properties" : {
+          "id" : {
+            "description" : "User unique identifier",
+            "type" : "string"
+          },
+          "display_id" : {
+            "description" : "User public display ID",
+            "type" : "string"
+          },
+          "nickname" : {
+            "description" : "User display name",
+            "type" : "string"
+          },
+          "avatar_url" : {
+            "description" : "User avatar image URL",
+            "format" : "uri",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "bio" : {
+            "description" : "User biography/signature (truncated)",
+            "maxLength" : 50,
+            "nullable" : true,
+            "type" : "string"
+          },
+          "followers_count" : {
+            "description" : "Number of followers",
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "following_count" : {
+            "description" : "Number of users being followed",
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "is_following" : {
+            "description" : "Whether the current user is following this user",
+            "nullable" : true,
+            "type" : "boolean"
+          },
+          "is_followed_by" : {
+            "description" : "Whether this user is following the current user",
+            "nullable" : true,
+            "type" : "boolean"
+          }
+        },
+        "required" : [ "display_id", "followers_count", "following_count", "id", "nickname" ],
+        "type" : "object"
+      },
+      "UpdateUserProfileRequest" : {
+        "properties" : {
+          "nickname" : {
+            "description" : "User display name",
+            "maxLength" : 20,
+            "minLength" : 2,
+            "type" : "string"
+          },
+          "bio" : {
+            "description" : "User biography/signature",
+            "maxLength" : 100,
+            "type" : "string"
+          },
+          "email" : {
+            "description" : "User contact email",
+            "format" : "email",
+            "type" : "string"
+          },
+          "website" : {
+            "description" : "User personal website",
+            "format" : "uri",
+            "type" : "string"
+          },
+          "avatar_url" : {
+            "description" : "User avatar image URL",
+            "format" : "uri",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "FollowRelation" : {
+        "properties" : {
+          "follower_id" : {
+            "description" : "ID of the user who is following",
+            "type" : "string"
+          },
+          "following_id" : {
+            "description" : "ID of the user being followed",
+            "type" : "string"
+          },
+          "created_at" : {
+            "description" : "When the follow relationship was created",
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "required" : [ "created_at", "follower_id", "following_id" ],
+        "type" : "object"
+      },
+      "PostSummary" : {
+        "properties" : {
+          "id" : {
+            "description" : "Post unique identifier",
+            "type" : "string"
+          },
+          "content_preview" : {
+            "description" : "Preview of post content (truncated)",
+            "maxLength" : 200,
+            "type" : "string"
+          },
+          "cover_image_url" : {
+            "description" : "Post cover image URL",
+            "format" : "uri",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "user" : {
+            "$ref" : "#/components/schemas/UserProfileSummary"
+          },
+          "oc" : {
+            "$ref" : "#/components/schemas/OCSummary"
+          },
+          "likes_count" : {
+            "description" : "Number of likes",
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "comments_count" : {
+            "description" : "Number of comments",
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "created_at" : {
+            "description" : "Post creation timestamp",
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "required" : [ "comments_count", "content_preview", "created_at", "id", "likes_count", "oc", "user" ],
+        "type" : "object"
+      },
+      "OCSummary" : {
+        "properties" : {
+          "id" : {
+            "description" : "OC unique identifier",
+            "type" : "string"
+          },
+          "name" : {
+            "description" : "OC name",
+            "type" : "string"
+          },
+          "avatar_url" : {
+            "description" : "OC avatar image URL",
+            "format" : "uri",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "description" : {
+            "description" : "Brief OC description",
+            "maxLength" : 100,
+            "nullable" : true,
+            "type" : "string"
+          }
+        },
+        "required" : [ "id", "name" ],
+        "type" : "object"
+      },
+      "OC" : {
+        "properties" : {
+          "id" : {
+            "description" : "OC unique identifier",
+            "type" : "string"
+          },
+          "name" : {
+            "description" : "OC character name",
+            "maxLength" : 20,
+            "type" : "string"
+          },
+          "avatar_url" : {
+            "description" : "OC avatar image URL",
+            "format" : "uri",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "description" : {
+            "description" : "OC character description/bio",
+            "maxLength" : 200,
+            "nullable" : true,
+            "type" : "string"
+          },
+          "creator" : {
+            "$ref" : "#/components/schemas/UserProfileSummary"
+          },
+          "posts_count" : {
+            "description" : "Number of diary posts associated with this OC",
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "created_at" : {
+            "description" : "OC creation timestamp",
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "updated_at" : {
+            "description" : "OC last update timestamp",
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "required" : [ "created_at", "creator", "id", "name", "posts_count", "updated_at" ],
+        "type" : "object"
+      },
+      "OCDetails" : {
+        "properties" : {
+          "id" : {
+            "description" : "OC unique identifier",
+            "type" : "string"
+          },
+          "name" : {
+            "description" : "OC character name",
+            "maxLength" : 20,
+            "type" : "string"
+          },
+          "avatar_url" : {
+            "description" : "OC avatar image URL",
+            "format" : "uri",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "description" : {
+            "description" : "OC character description/bio",
+            "maxLength" : 200,
+            "nullable" : true,
+            "type" : "string"
+          },
+          "creator" : {
+            "$ref" : "#/components/schemas/UserProfileSummary"
+          },
+          "image_gallery" : {
+            "description" : "OC character image gallery",
+            "items" : {
+              "$ref" : "#/components/schemas/OCImage"
+            },
+            "maxItems" : 9,
+            "type" : "array"
+          },
+          "posts_count" : {
+            "description" : "Number of diary posts associated with this OC",
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "recent_posts" : {
+            "description" : "Recent diary posts by this OC character",
+            "items" : {
+              "$ref" : "#/components/schemas/PostSummary"
+            },
+            "type" : "array"
+          },
+          "created_at" : {
+            "description" : "OC creation timestamp",
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "updated_at" : {
+            "description" : "OC last update timestamp",
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "required" : [ "created_at", "creator", "id", "image_gallery", "name", "posts_count", "recent_posts", "updated_at" ],
+        "type" : "object"
+      },
+      "OCImage" : {
+        "properties" : {
+          "id" : {
+            "description" : "Image unique identifier",
+            "type" : "string"
+          },
+          "image_url" : {
+            "description" : "Image URL",
+            "format" : "uri",
+            "type" : "string"
+          },
+          "description" : {
+            "description" : "Image description",
+            "maxLength" : 100,
+            "nullable" : true,
+            "type" : "string"
+          },
+          "uploaded_at" : {
+            "description" : "Image upload timestamp",
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "required" : [ "id", "image_url", "uploaded_at" ],
+        "type" : "object"
+      },
+      "CreateOCRequest" : {
+        "properties" : {
+          "name" : {
+            "description" : "OC character name",
+            "maxLength" : 20,
+            "minLength" : 1,
+            "type" : "string"
+          },
+          "avatar_url" : {
+            "description" : "OC avatar image URL",
+            "format" : "uri",
+            "type" : "string"
+          },
+          "description" : {
+            "description" : "OC character description/bio",
+            "maxLength" : 200,
+            "type" : "string"
+          },
+          "image_gallery" : {
+            "description" : "Initial image gallery for the OC character",
+            "items" : {
+              "$ref" : "#/components/schemas/CreateOCImageRequest"
+            },
+            "maxItems" : 9,
+            "type" : "array"
+          }
+        },
+        "required" : [ "name" ],
+        "type" : "object"
+      },
+      "CreateOCImageRequest" : {
+        "properties" : {
+          "image_url" : {
+            "description" : "Image URL",
+            "format" : "uri",
+            "type" : "string"
+          },
+          "description" : {
+            "description" : "Image description",
+            "maxLength" : 100,
+            "type" : "string"
+          }
+        },
+        "required" : [ "image_url" ],
+        "type" : "object"
+      },
+      "UpdateOCRequest" : {
+        "properties" : {
+          "name" : {
+            "description" : "OC character name",
+            "maxLength" : 20,
+            "minLength" : 1,
+            "type" : "string"
+          },
+          "avatar_url" : {
+            "description" : "OC avatar image URL",
+            "format" : "uri",
+            "type" : "string"
+          },
+          "description" : {
+            "description" : "OC character description/bio",
+            "maxLength" : 200,
+            "type" : "string"
+          },
+          "image_gallery" : {
+            "description" : "Updated image gallery for the OC character",
+            "items" : {
+              "$ref" : "#/components/schemas/UpdateOCImageRequest"
+            },
+            "maxItems" : 9,
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "UpdateOCImageRequest" : {
+        "properties" : {
+          "id" : {
+            "description" : "Image ID (for existing images)",
+            "type" : "string"
+          },
+          "image_url" : {
+            "description" : "Image URL",
+            "format" : "uri",
+            "type" : "string"
+          },
+          "description" : {
+            "description" : "Image description",
+            "maxLength" : 100,
+            "type" : "string"
+          },
+          "action" : {
+            "description" : "Action to perform on this image",
+            "enum" : [ "add", "update", "delete" ],
+            "type" : "string"
+          }
+        },
+        "required" : [ "action" ],
+        "type" : "object"
+      },
+      "Post" : {
+        "properties" : {
+          "id" : {
+            "description" : "Post unique identifier",
+            "type" : "string"
+          },
+          "content" : {
+            "description" : "Post text content",
+            "maxLength" : 1000,
+            "type" : "string"
+          },
+          "user" : {
+            "$ref" : "#/components/schemas/UserProfileSummary"
+          },
+          "oc" : {
+            "$ref" : "#/components/schemas/OCSummary"
+          },
+          "images" : {
+            "description" : "Post images",
+            "items" : {
+              "$ref" : "#/components/schemas/PostImage"
+            },
+            "maxItems" : 9,
+            "type" : "array"
+          },
+          "likes_count" : {
+            "description" : "Number of likes",
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "comments_count" : {
+            "description" : "Number of comments",
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "is_liked" : {
+            "description" : "Whether the current user has liked this post",
+            "nullable" : true,
+            "type" : "boolean"
+          },
+          "is_public" : {
+            "description" : "Whether the post is public",
+            "type" : "boolean"
+          },
+          "created_at" : {
+            "description" : "Post creation timestamp",
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "updated_at" : {
+            "description" : "Post last update timestamp",
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "required" : [ "comments_count", "content", "created_at", "id", "images", "is_public", "likes_count", "oc", "updated_at", "user" ],
+        "type" : "object"
+      },
+      "PostDetails" : {
+        "properties" : {
+          "id" : {
+            "description" : "Post unique identifier",
+            "type" : "string"
+          },
+          "content" : {
+            "description" : "Post text content",
+            "maxLength" : 1000,
+            "type" : "string"
+          },
+          "user" : {
+            "$ref" : "#/components/schemas/UserProfileSummary"
+          },
+          "oc" : {
+            "$ref" : "#/components/schemas/OCSummary"
+          },
+          "images" : {
+            "description" : "Post images",
+            "items" : {
+              "$ref" : "#/components/schemas/PostImage"
+            },
+            "maxItems" : 9,
+            "type" : "array"
+          },
+          "likes_count" : {
+            "description" : "Number of likes",
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "comments_count" : {
+            "description" : "Number of comments",
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "is_liked" : {
+            "description" : "Whether the current user has liked this post",
+            "nullable" : true,
+            "type" : "boolean"
+          },
+          "is_public" : {
+            "description" : "Whether the post is public",
+            "type" : "boolean"
+          },
+          "recent_comments" : {
+            "description" : "Recent comments on this post",
+            "items" : {
+              "$ref" : "#/components/schemas/PostComment"
+            },
+            "maxItems" : 5,
+            "type" : "array"
+          },
+          "created_at" : {
+            "description" : "Post creation timestamp",
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "updated_at" : {
+            "description" : "Post last update timestamp",
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "required" : [ "comments_count", "content", "created_at", "id", "images", "is_public", "likes_count", "oc", "recent_comments", "updated_at", "user" ],
+        "type" : "object"
+      },
+      "PostImage" : {
+        "properties" : {
+          "id" : {
+            "description" : "Image unique identifier",
+            "type" : "string"
+          },
+          "image_url" : {
+            "description" : "Image URL",
+            "format" : "uri",
+            "type" : "string"
+          },
+          "display_order" : {
+            "description" : "Display order of the image",
+            "type" : "integer"
+          },
+          "created_at" : {
+            "description" : "Image upload timestamp",
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "required" : [ "created_at", "display_order", "id", "image_url" ],
+        "type" : "object"
+      },
+      "PostLike" : {
+        "properties" : {
+          "id" : {
+            "description" : "Like unique identifier",
+            "type" : "string"
+          },
+          "user" : {
+            "$ref" : "#/components/schemas/UserProfileSummary"
+          },
+          "created_at" : {
+            "description" : "Like timestamp",
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "required" : [ "created_at", "id", "user" ],
+        "type" : "object"
+      },
+      "PostComment" : {
+        "properties" : {
+          "id" : {
+            "description" : "Comment unique identifier",
+            "type" : "string"
+          },
+          "content" : {
+            "description" : "Comment text content",
+            "maxLength" : 300,
+            "type" : "string"
+          },
+          "user" : {
+            "$ref" : "#/components/schemas/UserProfileSummary"
+          },
+          "created_at" : {
+            "description" : "Comment timestamp",
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "updated_at" : {
+            "description" : "Comment last update timestamp",
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "required" : [ "content", "created_at", "id", "updated_at", "user" ],
+        "type" : "object"
+      },
+      "PostDraft" : {
+        "properties" : {
+          "id" : {
+            "description" : "Draft unique identifier",
+            "type" : "string"
+          },
+          "content" : {
+            "description" : "Draft text content",
+            "maxLength" : 1000,
+            "type" : "string"
+          },
+          "oc" : {
+            "$ref" : "#/components/schemas/OCSummary"
+          },
+          "image_urls" : {
+            "description" : "Draft image URLs",
+            "items" : {
+              "format" : "uri",
+              "type" : "string"
+            },
+            "maxItems" : 9,
+            "type" : "array"
+          },
+          "created_at" : {
+            "description" : "Draft creation timestamp",
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "updated_at" : {
+            "description" : "Draft last update timestamp",
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "required" : [ "content", "created_at", "id", "image_urls", "updated_at" ],
+        "type" : "object"
+      },
+      "CreatePostRequest" : {
+        "properties" : {
+          "content" : {
+            "description" : "Post text content",
+            "maxLength" : 1000,
+            "minLength" : 1,
+            "type" : "string"
+          },
+          "oc_id" : {
+            "description" : "OC character ID",
+            "type" : "string"
+          },
+          "image_urls" : {
+            "description" : "Post image URLs",
+            "items" : {
+              "format" : "uri",
+              "type" : "string"
+            },
+            "maxItems" : 9,
+            "type" : "array"
+          },
+          "is_public" : {
+            "default" : true,
+            "description" : "Whether the post is public",
+            "type" : "boolean"
+          }
+        },
+        "required" : [ "content", "oc_id" ],
+        "type" : "object"
+      },
+      "UpdatePostRequest" : {
+        "properties" : {
+          "content" : {
+            "description" : "Updated post text content",
+            "maxLength" : 1000,
+            "minLength" : 1,
+            "type" : "string"
+          },
+          "oc_id" : {
+            "description" : "Updated OC character ID",
+            "type" : "string"
+          },
+          "image_urls" : {
+            "description" : "Updated post image URLs",
+            "items" : {
+              "format" : "uri",
+              "type" : "string"
+            },
+            "maxItems" : 9,
+            "type" : "array"
+          },
+          "is_public" : {
+            "description" : "Whether the post is public",
+            "type" : "boolean"
+          }
+        },
+        "type" : "object"
+      },
+      "CreateCommentRequest" : {
+        "properties" : {
+          "content" : {
+            "description" : "Comment text content",
+            "maxLength" : 300,
+            "minLength" : 1,
+            "type" : "string"
+          }
+        },
+        "required" : [ "content" ],
+        "type" : "object"
+      },
+      "CreateDraftRequest" : {
+        "properties" : {
+          "content" : {
+            "description" : "Draft text content",
+            "maxLength" : 1000,
+            "minLength" : 1,
+            "type" : "string"
+          },
+          "oc_id" : {
+            "description" : "OC character ID",
+            "type" : "string"
+          },
+          "image_urls" : {
+            "description" : "Draft image URLs",
+            "items" : {
+              "format" : "uri",
+              "type" : "string"
+            },
+            "maxItems" : 9,
+            "type" : "array"
+          }
+        },
+        "required" : [ "content" ],
+        "type" : "object"
+      },
+      "UpdateDraftRequest" : {
+        "properties" : {
+          "content" : {
+            "description" : "Updated draft text content",
+            "maxLength" : 1000,
+            "minLength" : 1,
+            "type" : "string"
+          },
+          "oc_id" : {
+            "description" : "Updated OC character ID",
+            "type" : "string"
+          },
+          "image_urls" : {
+            "description" : "Updated draft image URLs",
+            "items" : {
+              "format" : "uri",
+              "type" : "string"
+            },
+            "maxItems" : 9,
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "SignUpRequest" : {
+        "properties" : {
+          "identifier" : {
+            "description" : "Email address or phone number in E.164 format (e.g., user@example.com or +1234567890)",
+            "type" : "string"
+          },
+          "password" : {
+            "description" : "User password (minimum 8 characters)",
+            "minLength" : 8,
+            "type" : "string"
+          },
+          "redirect_to" : {
+            "description" : "Optional redirect URL after email confirmation (only applies to email signup)",
+            "format" : "uri",
+            "type" : "string"
+          }
+        },
+        "required" : [ "identifier", "password" ],
+        "type" : "object"
+      },
+      "SignInRequest" : {
+        "properties" : {
+          "identifier" : {
+            "description" : "Email address or phone number in E.164 format (e.g., user@example.com or +1234567890)",
+            "type" : "string"
+          },
+          "password" : {
+            "description" : "User password",
+            "type" : "string"
+          }
+        },
+        "required" : [ "identifier", "password" ],
+        "type" : "object"
+      },
+      "OAuthSignInRequest" : {
+        "properties" : {
+          "provider" : {
+            "description" : "OAuth provider",
+            "enum" : [ "google", "facebook", "apple" ],
+            "type" : "string"
+          },
+          "redirect_to" : {
+            "description" : "Optional redirect URL after OAuth flow",
+            "format" : "uri",
+            "type" : "string"
+          }
+        },
+        "required" : [ "provider" ],
+        "type" : "object"
+      },
+      "VerifyOTPRequest" : {
+        "properties" : {
+          "phone" : {
+            "description" : "Phone number in E.164 format",
+            "pattern" : "^\\+[1-9]\\d{1,14}$",
+            "type" : "string"
+          },
+          "token" : {
+            "description" : "6-digit OTP code",
+            "pattern" : "^\\d{6}$",
+            "type" : "string"
+          },
+          "type" : {
+            "default" : "sms",
+            "description" : "OTP type",
+            "enum" : [ "sms" ],
+            "type" : "string"
+          }
+        },
+        "required" : [ "phone", "token", "type" ],
+        "type" : "object"
+      },
+      "RefreshTokenRequest" : {
+        "properties" : {
+          "refresh_token" : {
+            "description" : "Refresh token",
+            "type" : "string"
+          }
+        },
+        "required" : [ "refresh_token" ],
+        "type" : "object"
+      },
+      "AuthResponse" : {
+        "properties" : {
+          "user" : {
+            "$ref" : "#/components/schemas/AuthUser"
+          },
+          "session" : {
+            "$ref" : "#/components/schemas/AuthSession"
+          }
+        },
+        "required" : [ "session", "user" ],
+        "type" : "object"
+      },
+      "AuthUser" : {
+        "properties" : {
+          "id" : {
+            "description" : "User unique identifier",
+            "type" : "string"
+          },
+          "email" : {
+            "description" : "User email address",
+            "format" : "email",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "phone" : {
+            "description" : "User phone number",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "email_confirmed_at" : {
+            "description" : "Email confirmation timestamp",
+            "format" : "date-time",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "phone_confirmed_at" : {
+            "description" : "Phone confirmation timestamp",
+            "format" : "date-time",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "created_at" : {
+            "description" : "User creation timestamp",
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "updated_at" : {
+            "description" : "User last update timestamp",
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "required" : [ "created_at", "id", "updated_at" ],
+        "type" : "object"
+      },
+      "AuthSession" : {
+        "properties" : {
+          "access_token" : {
+            "description" : "Access token for API authentication",
+            "type" : "string"
+          },
+          "refresh_token" : {
+            "description" : "Refresh token for renewing access token",
+            "type" : "string"
+          },
+          "expires_in" : {
+            "description" : "Access token expiration time in seconds",
+            "type" : "integer"
+          },
+          "token_type" : {
+            "description" : "Token type (usually 'bearer')",
+            "type" : "string"
+          },
+          "provider_token" : {
+            "description" : "OAuth provider token (for social login)",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "provider_refresh_token" : {
+            "description" : "OAuth provider refresh token",
+            "nullable" : true,
+            "type" : "string"
+          }
+        },
+        "required" : [ "access_token", "expires_in", "refresh_token", "token_type" ],
+        "type" : "object"
+      },
+      "OTPSentResponse" : {
+        "properties" : {
+          "message" : {
+            "description" : "Confirmation message",
+            "type" : "string"
+          },
+          "phone" : {
+            "description" : "Phone number (masked for security)",
+            "type" : "string"
+          }
+        },
+        "required" : [ "message", "phone" ],
+        "type" : "object"
+      },
+      "OAuthResponse" : {
+        "properties" : {
+          "url" : {
+            "description" : "OAuth authorization URL",
+            "format" : "uri",
+            "type" : "string"
+          },
+          "provider" : {
+            "description" : "OAuth provider name",
+            "type" : "string"
+          }
+        },
+        "required" : [ "provider", "url" ],
+        "type" : "object"
+      },
+      "PaginationMeta" : {
+        "properties" : {
+          "total" : {
+            "description" : "Total number of items",
+            "type" : "integer"
+          },
+          "limit" : {
+            "description" : "Maximum number of items returned",
+            "type" : "integer"
+          },
+          "offset" : {
+            "description" : "Number of items skipped",
+            "type" : "integer"
+          }
+        },
+        "required" : [ "limit", "offset", "total" ],
+        "type" : "object"
+      },
+      "Error" : {
+        "properties" : {
+          "code" : {
+            "description" : "Error code",
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "message" : {
+            "description" : "Error message",
+            "type" : "string"
+          },
+          "details" : {
+            "description" : "Additional error details",
+            "type" : "string"
+          }
+        },
+        "required" : [ "code", "message" ],
+        "type" : "object"
+      },
+      "_auth_signup_post_201_response_data" : {
+        "oneOf" : [ {
+          "$ref" : "#/components/schemas/AuthResponse"
+        }, {
+          "$ref" : "#/components/schemas/OTPSentResponse"
+        } ]
+      },
+      "_auth_signup_post_201_response" : {
+        "properties" : {
+          "data" : {
+            "$ref" : "#/components/schemas/_auth_signup_post_201_response_data"
+          }
+        },
+        "type" : "object"
+      },
+      "_auth_signin_post_200_response" : {
+        "properties" : {
+          "data" : {
+            "$ref" : "#/components/schemas/AuthResponse"
+          }
+        },
+        "type" : "object"
+      },
+      "_auth_signin_oauth_post_200_response" : {
+        "properties" : {
+          "data" : {
+            "$ref" : "#/components/schemas/OAuthResponse"
+          }
+        },
+        "type" : "object"
+      },
+      "_users__id__profile_get_200_response" : {
+        "properties" : {
+          "data" : {
+            "$ref" : "#/components/schemas/UserProfile"
+          }
+        },
+        "type" : "object"
+      },
+      "_users__id__follow_post_201_response" : {
+        "properties" : {
+          "data" : {
+            "$ref" : "#/components/schemas/FollowRelation"
+          }
+        },
+        "type" : "object"
+      },
+      "_users__id__followers_get_200_response" : {
+        "properties" : {
+          "data" : {
+            "items" : {
+              "$ref" : "#/components/schemas/UserProfileSummary"
+            },
+            "type" : "array"
+          },
+          "meta" : {
+            "$ref" : "#/components/schemas/PaginationMeta"
+          }
+        },
+        "type" : "object"
+      },
+      "_oc_get_200_response" : {
+        "properties" : {
+          "data" : {
+            "items" : {
+              "$ref" : "#/components/schemas/OC"
+            },
+            "type" : "array"
+          },
+          "meta" : {
+            "$ref" : "#/components/schemas/PaginationMeta"
+          }
+        },
+        "type" : "object"
+      },
+      "_oc_post_201_response" : {
+        "properties" : {
+          "data" : {
+            "$ref" : "#/components/schemas/OC"
+          }
+        },
+        "type" : "object"
+      },
+      "_oc__id__get_200_response" : {
+        "properties" : {
+          "data" : {
+            "$ref" : "#/components/schemas/OCDetails"
+          }
+        },
+        "type" : "object"
+      },
+      "_posts_get_200_response" : {
+        "properties" : {
+          "data" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Post"
+            },
+            "type" : "array"
+          },
+          "meta" : {
+            "$ref" : "#/components/schemas/PaginationMeta"
+          }
+        },
+        "type" : "object"
+      },
+      "_posts_post_201_response" : {
+        "properties" : {
+          "data" : {
+            "$ref" : "#/components/schemas/Post"
+          }
+        },
+        "type" : "object"
+      },
+      "_posts__id__get_200_response" : {
+        "properties" : {
+          "data" : {
+            "$ref" : "#/components/schemas/PostDetails"
+          }
+        },
+        "type" : "object"
+      },
+      "_posts__id__like_post_201_response" : {
+        "properties" : {
+          "data" : {
+            "$ref" : "#/components/schemas/PostLike"
+          }
+        },
+        "type" : "object"
+      },
+      "_posts__id__likes_get_200_response" : {
+        "properties" : {
+          "data" : {
+            "items" : {
+              "$ref" : "#/components/schemas/PostLike"
+            },
+            "type" : "array"
+          },
+          "meta" : {
+            "$ref" : "#/components/schemas/PaginationMeta"
+          }
+        },
+        "type" : "object"
+      },
+      "_posts__id__comments_get_200_response" : {
+        "properties" : {
+          "data" : {
+            "items" : {
+              "$ref" : "#/components/schemas/PostComment"
+            },
+            "type" : "array"
+          },
+          "meta" : {
+            "$ref" : "#/components/schemas/PaginationMeta"
+          }
+        },
+        "type" : "object"
+      },
+      "_posts__id__comments_post_201_response" : {
+        "properties" : {
+          "data" : {
+            "$ref" : "#/components/schemas/PostComment"
+          }
+        },
+        "type" : "object"
+      },
+      "_posts_drafts_get_200_response" : {
+        "properties" : {
+          "data" : {
+            "items" : {
+              "$ref" : "#/components/schemas/PostDraft"
+            },
+            "type" : "array"
+          },
+          "meta" : {
+            "$ref" : "#/components/schemas/PaginationMeta"
+          }
+        },
+        "type" : "object"
+      },
+      "_posts_drafts_post_201_response" : {
+        "properties" : {
+          "data" : {
+            "$ref" : "#/components/schemas/PostDraft"
+          }
+        },
+        "type" : "object"
+      }
+    },
+    "securitySchemes" : {
+      "BearerAuth" : {
+        "bearerFormat" : "JWT",
+        "scheme" : "bearer",
+        "type" : "http"
+      }
+    }
+  }
+}
