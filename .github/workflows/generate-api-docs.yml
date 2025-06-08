@@ -19,13 +19,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Print openapi spec
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        curl -H 'Accept: application/vnd.github.v3.raw' \
-          -L "https://raw.githubusercontent.com/oc-project/oc-backend/refs/heads/main/api/v1/openapi.yaml?token=${GITHUB_TOKEN}"
-
     - name: Generate API Documentation
       env:
         GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
