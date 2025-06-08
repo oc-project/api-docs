@@ -1161,15 +1161,8 @@ ul.nav-tabs {
         "$ref" : "#/components/schemas/OC"
       }
     },
-    "total" : {
-      "type" : "integer",
-      "description" : "Total number of OC characters"
-    },
-    "limit" : {
-      "type" : "integer"
-    },
-    "offset" : {
-      "type" : "integer"
+    "meta" : {
+      "$ref" : "#/components/schemas/PaginationMeta"
     }
   }
 };
@@ -1186,6 +1179,24 @@ ul.nav-tabs {
   "properties" : {
     "data" : {
       "$ref" : "#/components/schemas/OC"
+    }
+  }
+};
+    defs["PaginationMeta"] = {
+  "required" : [ "limit", "offset", "total" ],
+  "type" : "object",
+  "properties" : {
+    "total" : {
+      "type" : "integer",
+      "description" : "Total number of items"
+    },
+    "limit" : {
+      "type" : "integer",
+      "description" : "Maximum number of items returned"
+    },
+    "offset" : {
+      "type" : "integer",
+      "description" : "Number of items skipped"
     }
   }
 };
@@ -1471,15 +1482,8 @@ ul.nav-tabs {
         "$ref" : "#/components/schemas/PostDraft"
       }
     },
-    "total" : {
-      "type" : "integer",
-      "description" : "Total number of drafts"
-    },
-    "limit" : {
-      "type" : "integer"
-    },
-    "offset" : {
-      "type" : "integer"
+    "meta" : {
+      "$ref" : "#/components/schemas/PaginationMeta"
     }
   }
 };
@@ -1500,15 +1504,8 @@ ul.nav-tabs {
         "$ref" : "#/components/schemas/Post"
       }
     },
-    "total" : {
-      "type" : "integer",
-      "description" : "Total number of posts"
-    },
-    "limit" : {
-      "type" : "integer"
-    },
-    "offset" : {
-      "type" : "integer"
+    "meta" : {
+      "$ref" : "#/components/schemas/PaginationMeta"
     }
   }
 };
@@ -1521,15 +1518,8 @@ ul.nav-tabs {
         "$ref" : "#/components/schemas/PostComment"
       }
     },
-    "total" : {
-      "type" : "integer",
-      "description" : "Total number of comments"
-    },
-    "limit" : {
-      "type" : "integer"
-    },
-    "offset" : {
-      "type" : "integer"
+    "meta" : {
+      "$ref" : "#/components/schemas/PaginationMeta"
     }
   }
 };
@@ -1566,15 +1556,8 @@ ul.nav-tabs {
         "$ref" : "#/components/schemas/PostLike"
       }
     },
-    "total" : {
-      "type" : "integer",
-      "description" : "Total number of likes"
-    },
-    "limit" : {
-      "type" : "integer"
-    },
-    "offset" : {
-      "type" : "integer"
+    "meta" : {
+      "$ref" : "#/components/schemas/PaginationMeta"
     }
   }
 };
@@ -1905,36 +1888,8 @@ ul.nav-tabs {
         "$ref" : "#/components/schemas/UserProfileSummary"
       }
     },
-    "total" : {
-      "type" : "integer",
-      "description" : "Total number of followers"
-    },
-    "limit" : {
-      "type" : "integer"
-    },
-    "offset" : {
-      "type" : "integer"
-    }
-  }
-};
-    defs["_users__id__following_get_200_response"] = {
-  "type" : "object",
-  "properties" : {
-    "data" : {
-      "type" : "array",
-      "items" : {
-        "$ref" : "#/components/schemas/UserProfileSummary"
-      }
-    },
-    "total" : {
-      "type" : "integer",
-      "description" : "Total number of users being followed"
-    },
-    "limit" : {
-      "type" : "integer"
-    },
-    "offset" : {
-      "type" : "integer"
+    "meta" : {
+      "$ref" : "#/components/schemas/PaginationMeta"
     }
   }
 };
@@ -2132,8 +2087,8 @@ public class OCApiExample {
 
         // Create an instance of the API class
         OCApi apiInstance = new OCApi();
-        Integer limit = 56; // Integer | Maximum number of OC characters to return
-        Integer offset = 56; // Integer | Number of OC characters to skip
+        Integer limit = 56; // Integer | Maximum number of items to return
+        Integer offset = 56; // Integer | Number of items to skip
 
         try {
             _oc_get_200_response result = apiInstance.ocGet(limit, offset);
@@ -2152,8 +2107,8 @@ public class OCApiExample {
 
 final api_instance = DefaultApi();
 
-final Integer limit = new Integer(); // Integer | Maximum number of OC characters to return
-final Integer offset = new Integer(); // Integer | Number of OC characters to skip
+final Integer limit = new Integer(); // Integer | Maximum number of items to return
+final Integer offset = new Integer(); // Integer | Number of items to skip
 
 try {
     final result = await api_instance.ocGet(limit, offset);
@@ -2171,8 +2126,8 @@ try {
 public class OCApiExample {
     public static void main(String[] args) {
         OCApi apiInstance = new OCApi();
-        Integer limit = 56; // Integer | Maximum number of OC characters to return
-        Integer offset = 56; // Integer | Number of OC characters to skip
+        Integer limit = 56; // Integer | Maximum number of items to return
+        Integer offset = 56; // Integer | Number of items to skip
 
         try {
             _oc_get_200_response result = apiInstance.ocGet(limit, offset);
@@ -2193,8 +2148,8 @@ public class OCApiExample {
 
 // Create an instance of the API class
 OCApi *apiInstance = [[OCApi alloc] init];
-Integer *limit = 56; // Maximum number of OC characters to return (optional) (default to 20)
-Integer *offset = 56; // Number of OC characters to skip (optional) (default to 0)
+Integer *limit = 56; // Maximum number of items to return (optional) (default to 20)
+Integer *offset = 56; // Number of items to skip (optional) (default to 0)
 
 // Get current user's OC characters
 [apiInstance ocGetWith:limit
@@ -2216,8 +2171,8 @@ Integer *offset = 56; // Number of OC characters to skip (optional) (default to 
 // Create an instance of the API class
 var api = new OcBackendApi.OCApi()
 var opts = {
-  'limit': 56, // {Integer} Maximum number of OC characters to return
-  'offset': 56 // {Integer} Number of OC characters to skip
+  'limit': 56, // {Integer} Maximum number of items to return
+  'offset': 56 // {Integer} Number of items to skip
 };
 
 var callback = function(error, data, response) {
@@ -2250,8 +2205,8 @@ namespace Example
 
             // Create an instance of the API class
             var apiInstance = new OCApi();
-            var limit = 56;  // Integer | Maximum number of OC characters to return (optional)  (default to 20)
-            var offset = 56;  // Integer | Number of OC characters to skip (optional)  (default to 0)
+            var limit = 56;  // Integer | Maximum number of items to return (optional)  (default to 20)
+            var offset = 56;  // Integer | Number of items to skip (optional)  (default to 0)
 
             try {
                 // Get current user's OC characters
@@ -2272,8 +2227,8 @@ require_once(__DIR__ . '/vendor/autoload.php');
 
 // Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\OCApi();
-$limit = 56; // Integer | Maximum number of OC characters to return
-$offset = 56; // Integer | Number of OC characters to skip
+$limit = 56; // Integer | Maximum number of items to return
+$offset = 56; // Integer | Number of items to skip
 
 try {
     $result = $api_instance->ocGet($limit, $offset);
@@ -2291,8 +2246,8 @@ use WWW::OPenAPIClient::OCApi;
 
 # Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::OCApi->new();
-my $limit = 56; # Integer | Maximum number of OC characters to return
-my $offset = 56; # Integer | Number of OC characters to skip
+my $limit = 56; # Integer | Maximum number of items to return
+my $offset = 56; # Integer | Number of items to skip
 
 eval {
     my $result = $api_instance->ocGet(limit => $limit, offset => $offset);
@@ -2312,8 +2267,8 @@ from pprint import pprint
 
 # Create an instance of the API class
 api_instance = openapi_client.OCApi()
-limit = 56 # Integer | Maximum number of OC characters to return (optional) (default to 20)
-offset = 56 # Integer | Number of OC characters to skip (optional) (default to 0)
+limit = 56 # Integer | Maximum number of items to return (optional) (default to 20)
+offset = 56 # Integer | Number of items to skip (optional) (default to 0)
 
 try:
     # Get current user's OC characters
@@ -2368,7 +2323,7 @@ pub fn main() {
                 </span>
 
                     <div class="inner description marked">
-Maximum number of OC characters to return
+Maximum number of items to return
                     </div>
             </div>
         </div>
@@ -2388,7 +2343,7 @@ Maximum number of OC characters to return
                 </span>
 
                     <div class="inner description marked">
-Number of OC characters to skip
+Number of items to skip
                     </div>
             </div>
         </div>
@@ -5410,8 +5365,8 @@ public class OCApiExample {
         // Create an instance of the API class
         OCApi apiInstance = new OCApi();
         String id = id_example; // String | User ID
-        Integer limit = 56; // Integer | Maximum number of OC characters to return
-        Integer offset = 56; // Integer | Number of OC characters to skip
+        Integer limit = 56; // Integer | Maximum number of items to return
+        Integer offset = 56; // Integer | Number of items to skip
 
         try {
             _oc_get_200_response result = apiInstance.usersIdOcGet(id, limit, offset);
@@ -5431,8 +5386,8 @@ public class OCApiExample {
 final api_instance = DefaultApi();
 
 final String id = new String(); // String | User ID
-final Integer limit = new Integer(); // Integer | Maximum number of OC characters to return
-final Integer offset = new Integer(); // Integer | Number of OC characters to skip
+final Integer limit = new Integer(); // Integer | Maximum number of items to return
+final Integer offset = new Integer(); // Integer | Number of items to skip
 
 try {
     final result = await api_instance.usersIdOcGet(id, limit, offset);
@@ -5451,8 +5406,8 @@ public class OCApiExample {
     public static void main(String[] args) {
         OCApi apiInstance = new OCApi();
         String id = id_example; // String | User ID
-        Integer limit = 56; // Integer | Maximum number of OC characters to return
-        Integer offset = 56; // Integer | Number of OC characters to skip
+        Integer limit = 56; // Integer | Maximum number of items to return
+        Integer offset = 56; // Integer | Number of items to skip
 
         try {
             _oc_get_200_response result = apiInstance.usersIdOcGet(id, limit, offset);
@@ -5474,8 +5429,8 @@ public class OCApiExample {
 // Create an instance of the API class
 OCApi *apiInstance = [[OCApi alloc] init];
 String *id = id_example; // User ID (default to null)
-Integer *limit = 56; // Maximum number of OC characters to return (optional) (default to 20)
-Integer *offset = 56; // Number of OC characters to skip (optional) (default to 0)
+Integer *limit = 56; // Maximum number of items to return (optional) (default to 20)
+Integer *offset = 56; // Number of items to skip (optional) (default to 0)
 
 // Get user's OC characters
 [apiInstance usersIdOcGetWith:id
@@ -5499,8 +5454,8 @@ Integer *offset = 56; // Number of OC characters to skip (optional) (default to 
 var api = new OcBackendApi.OCApi()
 var id = id_example; // {String} User ID
 var opts = {
-  'limit': 56, // {Integer} Maximum number of OC characters to return
-  'offset': 56 // {Integer} Number of OC characters to skip
+  'limit': 56, // {Integer} Maximum number of items to return
+  'offset': 56 // {Integer} Number of items to skip
 };
 
 var callback = function(error, data, response) {
@@ -5534,8 +5489,8 @@ namespace Example
             // Create an instance of the API class
             var apiInstance = new OCApi();
             var id = id_example;  // String | User ID (default to null)
-            var limit = 56;  // Integer | Maximum number of OC characters to return (optional)  (default to 20)
-            var offset = 56;  // Integer | Number of OC characters to skip (optional)  (default to 0)
+            var limit = 56;  // Integer | Maximum number of items to return (optional)  (default to 20)
+            var offset = 56;  // Integer | Number of items to skip (optional)  (default to 0)
 
             try {
                 // Get user's OC characters
@@ -5557,8 +5512,8 @@ require_once(__DIR__ . '/vendor/autoload.php');
 // Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\OCApi();
 $id = id_example; // String | User ID
-$limit = 56; // Integer | Maximum number of OC characters to return
-$offset = 56; // Integer | Number of OC characters to skip
+$limit = 56; // Integer | Maximum number of items to return
+$offset = 56; // Integer | Number of items to skip
 
 try {
     $result = $api_instance->usersIdOcGet($id, $limit, $offset);
@@ -5577,8 +5532,8 @@ use WWW::OPenAPIClient::OCApi;
 # Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::OCApi->new();
 my $id = id_example; # String | User ID
-my $limit = 56; # Integer | Maximum number of OC characters to return
-my $offset = 56; # Integer | Number of OC characters to skip
+my $limit = 56; # Integer | Maximum number of items to return
+my $offset = 56; # Integer | Number of items to skip
 
 eval {
     my $result = $api_instance->usersIdOcGet(id => $id, limit => $limit, offset => $offset);
@@ -5599,8 +5554,8 @@ from pprint import pprint
 # Create an instance of the API class
 api_instance = openapi_client.OCApi()
 id = id_example # String | User ID (default to null)
-limit = 56 # Integer | Maximum number of OC characters to return (optional) (default to 20)
-offset = 56 # Integer | Number of OC characters to skip (optional) (default to 0)
+limit = 56 # Integer | Maximum number of items to return (optional) (default to 20)
+offset = 56 # Integer | Number of items to skip (optional) (default to 0)
 
 try:
     # Get user's OC characters
@@ -5686,7 +5641,7 @@ User ID
                 </span>
 
                     <div class="inner description marked">
-Maximum number of OC characters to return
+Maximum number of items to return
                     </div>
             </div>
         </div>
@@ -5706,7 +5661,7 @@ Maximum number of OC characters to return
                 </span>
 
                     <div class="inner description marked">
-Number of OC characters to skip
+Number of items to skip
                     </div>
             </div>
         </div>
@@ -6004,8 +5959,8 @@ public class PostsApiExample {
 
         // Create an instance of the API class
         PostsApi apiInstance = new PostsApi();
-        Integer limit = 56; // Integer | Maximum number of drafts to return
-        Integer offset = 56; // Integer | Number of drafts to skip
+        Integer limit = 56; // Integer | Maximum number of items to return
+        Integer offset = 56; // Integer | Number of items to skip
 
         try {
             _posts_drafts_get_200_response result = apiInstance.postsDraftsGet(limit, offset);
@@ -6024,8 +5979,8 @@ public class PostsApiExample {
 
 final api_instance = DefaultApi();
 
-final Integer limit = new Integer(); // Integer | Maximum number of drafts to return
-final Integer offset = new Integer(); // Integer | Number of drafts to skip
+final Integer limit = new Integer(); // Integer | Maximum number of items to return
+final Integer offset = new Integer(); // Integer | Number of items to skip
 
 try {
     final result = await api_instance.postsDraftsGet(limit, offset);
@@ -6043,8 +5998,8 @@ try {
 public class PostsApiExample {
     public static void main(String[] args) {
         PostsApi apiInstance = new PostsApi();
-        Integer limit = 56; // Integer | Maximum number of drafts to return
-        Integer offset = 56; // Integer | Number of drafts to skip
+        Integer limit = 56; // Integer | Maximum number of items to return
+        Integer offset = 56; // Integer | Number of items to skip
 
         try {
             _posts_drafts_get_200_response result = apiInstance.postsDraftsGet(limit, offset);
@@ -6065,8 +6020,8 @@ public class PostsApiExample {
 
 // Create an instance of the API class
 PostsApi *apiInstance = [[PostsApi alloc] init];
-Integer *limit = 56; // Maximum number of drafts to return (optional) (default to 20)
-Integer *offset = 56; // Number of drafts to skip (optional) (default to 0)
+Integer *limit = 56; // Maximum number of items to return (optional) (default to 20)
+Integer *offset = 56; // Number of items to skip (optional) (default to 0)
 
 // Get user's draft posts
 [apiInstance postsDraftsGetWith:limit
@@ -6088,8 +6043,8 @@ Integer *offset = 56; // Number of drafts to skip (optional) (default to 0)
 // Create an instance of the API class
 var api = new OcBackendApi.PostsApi()
 var opts = {
-  'limit': 56, // {Integer} Maximum number of drafts to return
-  'offset': 56 // {Integer} Number of drafts to skip
+  'limit': 56, // {Integer} Maximum number of items to return
+  'offset': 56 // {Integer} Number of items to skip
 };
 
 var callback = function(error, data, response) {
@@ -6122,8 +6077,8 @@ namespace Example
 
             // Create an instance of the API class
             var apiInstance = new PostsApi();
-            var limit = 56;  // Integer | Maximum number of drafts to return (optional)  (default to 20)
-            var offset = 56;  // Integer | Number of drafts to skip (optional)  (default to 0)
+            var limit = 56;  // Integer | Maximum number of items to return (optional)  (default to 20)
+            var offset = 56;  // Integer | Number of items to skip (optional)  (default to 0)
 
             try {
                 // Get user's draft posts
@@ -6144,8 +6099,8 @@ require_once(__DIR__ . '/vendor/autoload.php');
 
 // Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\PostsApi();
-$limit = 56; // Integer | Maximum number of drafts to return
-$offset = 56; // Integer | Number of drafts to skip
+$limit = 56; // Integer | Maximum number of items to return
+$offset = 56; // Integer | Number of items to skip
 
 try {
     $result = $api_instance->postsDraftsGet($limit, $offset);
@@ -6163,8 +6118,8 @@ use WWW::OPenAPIClient::PostsApi;
 
 # Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::PostsApi->new();
-my $limit = 56; # Integer | Maximum number of drafts to return
-my $offset = 56; # Integer | Number of drafts to skip
+my $limit = 56; # Integer | Maximum number of items to return
+my $offset = 56; # Integer | Number of items to skip
 
 eval {
     my $result = $api_instance->postsDraftsGet(limit => $limit, offset => $offset);
@@ -6184,8 +6139,8 @@ from pprint import pprint
 
 # Create an instance of the API class
 api_instance = openapi_client.PostsApi()
-limit = 56 # Integer | Maximum number of drafts to return (optional) (default to 20)
-offset = 56 # Integer | Number of drafts to skip (optional) (default to 0)
+limit = 56 # Integer | Maximum number of items to return (optional) (default to 20)
+offset = 56 # Integer | Number of items to skip (optional) (default to 0)
 
 try:
     # Get user's draft posts
@@ -6240,7 +6195,7 @@ pub fn main() {
                 </span>
 
                     <div class="inner description marked">
-Maximum number of drafts to return
+Maximum number of items to return
                     </div>
             </div>
         </div>
@@ -6260,7 +6215,7 @@ Maximum number of drafts to return
                 </span>
 
                     <div class="inner description marked">
-Number of drafts to skip
+Number of items to skip
                     </div>
             </div>
         </div>
@@ -10067,8 +10022,8 @@ public class PostsApiExample {
         String feedType = feedType_example; // String | Type of posts to retrieve
         String userId = userId_example; // String | User ID to get posts from (required when feed_type is 'user')
         String ocId = ocId_example; // String | OC ID to filter posts by specific character
-        Integer limit = 56; // Integer | Maximum number of posts to return
-        Integer offset = 56; // Integer | Number of posts to skip
+        Integer limit = 56; // Integer | Maximum number of items to return
+        Integer offset = 56; // Integer | Number of items to skip
 
         try {
             _posts_get_200_response result = apiInstance.postsGet(feedType, userId, ocId, limit, offset);
@@ -10090,8 +10045,8 @@ final api_instance = DefaultApi();
 final String feedType = new String(); // String | Type of posts to retrieve
 final String userId = new String(); // String | User ID to get posts from (required when feed_type is 'user')
 final String ocId = new String(); // String | OC ID to filter posts by specific character
-final Integer limit = new Integer(); // Integer | Maximum number of posts to return
-final Integer offset = new Integer(); // Integer | Number of posts to skip
+final Integer limit = new Integer(); // Integer | Maximum number of items to return
+final Integer offset = new Integer(); // Integer | Number of items to skip
 
 try {
     final result = await api_instance.postsGet(feedType, userId, ocId, limit, offset);
@@ -10112,8 +10067,8 @@ public class PostsApiExample {
         String feedType = feedType_example; // String | Type of posts to retrieve
         String userId = userId_example; // String | User ID to get posts from (required when feed_type is 'user')
         String ocId = ocId_example; // String | OC ID to filter posts by specific character
-        Integer limit = 56; // Integer | Maximum number of posts to return
-        Integer offset = 56; // Integer | Number of posts to skip
+        Integer limit = 56; // Integer | Maximum number of items to return
+        Integer offset = 56; // Integer | Number of items to skip
 
         try {
             _posts_get_200_response result = apiInstance.postsGet(feedType, userId, ocId, limit, offset);
@@ -10137,8 +10092,8 @@ PostsApi *apiInstance = [[PostsApi alloc] init];
 String *feedType = feedType_example; // Type of posts to retrieve (optional) (default to following)
 String *userId = userId_example; // User ID to get posts from (required when feed_type is 'user') (optional) (default to null)
 String *ocId = ocId_example; // OC ID to filter posts by specific character (optional) (default to null)
-Integer *limit = 56; // Maximum number of posts to return (optional) (default to 20)
-Integer *offset = 56; // Number of posts to skip (optional) (default to 0)
+Integer *limit = 56; // Maximum number of items to return (optional) (default to 20)
+Integer *offset = 56; // Number of items to skip (optional) (default to 0)
 
 // Get posts feed
 [apiInstance postsGetWith:feedType
@@ -10166,8 +10121,8 @@ var opts = {
   'feedType': feedType_example, // {String} Type of posts to retrieve
   'userId': userId_example, // {String} User ID to get posts from (required when feed_type is 'user')
   'ocId': ocId_example, // {String} OC ID to filter posts by specific character
-  'limit': 56, // {Integer} Maximum number of posts to return
-  'offset': 56 // {Integer} Number of posts to skip
+  'limit': 56, // {Integer} Maximum number of items to return
+  'offset': 56 // {Integer} Number of items to skip
 };
 
 var callback = function(error, data, response) {
@@ -10203,8 +10158,8 @@ namespace Example
             var feedType = feedType_example;  // String | Type of posts to retrieve (optional)  (default to following)
             var userId = userId_example;  // String | User ID to get posts from (required when feed_type is 'user') (optional)  (default to null)
             var ocId = ocId_example;  // String | OC ID to filter posts by specific character (optional)  (default to null)
-            var limit = 56;  // Integer | Maximum number of posts to return (optional)  (default to 20)
-            var offset = 56;  // Integer | Number of posts to skip (optional)  (default to 0)
+            var limit = 56;  // Integer | Maximum number of items to return (optional)  (default to 20)
+            var offset = 56;  // Integer | Number of items to skip (optional)  (default to 0)
 
             try {
                 // Get posts feed
@@ -10228,8 +10183,8 @@ $api_instance = new OpenAPITools\Client\Api\PostsApi();
 $feedType = feedType_example; // String | Type of posts to retrieve
 $userId = userId_example; // String | User ID to get posts from (required when feed_type is 'user')
 $ocId = ocId_example; // String | OC ID to filter posts by specific character
-$limit = 56; // Integer | Maximum number of posts to return
-$offset = 56; // Integer | Number of posts to skip
+$limit = 56; // Integer | Maximum number of items to return
+$offset = 56; // Integer | Number of items to skip
 
 try {
     $result = $api_instance->postsGet($feedType, $userId, $ocId, $limit, $offset);
@@ -10250,8 +10205,8 @@ my $api_instance = WWW::OPenAPIClient::PostsApi->new();
 my $feedType = feedType_example; # String | Type of posts to retrieve
 my $userId = userId_example; # String | User ID to get posts from (required when feed_type is 'user')
 my $ocId = ocId_example; # String | OC ID to filter posts by specific character
-my $limit = 56; # Integer | Maximum number of posts to return
-my $offset = 56; # Integer | Number of posts to skip
+my $limit = 56; # Integer | Maximum number of items to return
+my $offset = 56; # Integer | Number of items to skip
 
 eval {
     my $result = $api_instance->postsGet(feedType => $feedType, userId => $userId, ocId => $ocId, limit => $limit, offset => $offset);
@@ -10274,8 +10229,8 @@ api_instance = openapi_client.PostsApi()
 feedType = feedType_example # String | Type of posts to retrieve (optional) (default to following)
 userId = userId_example # String | User ID to get posts from (required when feed_type is 'user') (optional) (default to null)
 ocId = ocId_example # String | OC ID to filter posts by specific character (optional) (default to null)
-limit = 56 # Integer | Maximum number of posts to return (optional) (default to 20)
-offset = 56 # Integer | Number of posts to skip (optional) (default to 0)
+limit = 56 # Integer | Maximum number of items to return (optional) (default to 20)
+offset = 56 # Integer | Number of items to skip (optional) (default to 0)
 
 try:
     # Get posts feed
@@ -10393,7 +10348,7 @@ OC ID to filter posts by specific character
                 </span>
 
                     <div class="inner description marked">
-Maximum number of posts to return
+Maximum number of items to return
                     </div>
             </div>
         </div>
@@ -10413,7 +10368,7 @@ Maximum number of posts to return
                 </span>
 
                     <div class="inner description marked">
-Number of posts to skip
+Number of items to skip
                     </div>
             </div>
         </div>
@@ -11395,8 +11350,8 @@ public class PostsApiExample {
         // Create an instance of the API class
         PostsApi apiInstance = new PostsApi();
         String id = id_example; // String | Post ID
-        Integer limit = 56; // Integer | Maximum number of comments to return
-        Integer offset = 56; // Integer | Number of comments to skip
+        Integer limit = 56; // Integer | Maximum number of items to return
+        Integer offset = 56; // Integer | Number of items to skip
 
         try {
             _posts__id__comments_get_200_response result = apiInstance.postsIdCommentsGet(id, limit, offset);
@@ -11416,8 +11371,8 @@ public class PostsApiExample {
 final api_instance = DefaultApi();
 
 final String id = new String(); // String | Post ID
-final Integer limit = new Integer(); // Integer | Maximum number of comments to return
-final Integer offset = new Integer(); // Integer | Number of comments to skip
+final Integer limit = new Integer(); // Integer | Maximum number of items to return
+final Integer offset = new Integer(); // Integer | Number of items to skip
 
 try {
     final result = await api_instance.postsIdCommentsGet(id, limit, offset);
@@ -11436,8 +11391,8 @@ public class PostsApiExample {
     public static void main(String[] args) {
         PostsApi apiInstance = new PostsApi();
         String id = id_example; // String | Post ID
-        Integer limit = 56; // Integer | Maximum number of comments to return
-        Integer offset = 56; // Integer | Number of comments to skip
+        Integer limit = 56; // Integer | Maximum number of items to return
+        Integer offset = 56; // Integer | Number of items to skip
 
         try {
             _posts__id__comments_get_200_response result = apiInstance.postsIdCommentsGet(id, limit, offset);
@@ -11459,8 +11414,8 @@ public class PostsApiExample {
 // Create an instance of the API class
 PostsApi *apiInstance = [[PostsApi alloc] init];
 String *id = id_example; // Post ID (default to null)
-Integer *limit = 56; // Maximum number of comments to return (optional) (default to 20)
-Integer *offset = 56; // Number of comments to skip (optional) (default to 0)
+Integer *limit = 56; // Maximum number of items to return (optional) (default to 20)
+Integer *offset = 56; // Number of items to skip (optional) (default to 0)
 
 // Get post comments
 [apiInstance postsIdCommentsGetWith:id
@@ -11484,8 +11439,8 @@ Integer *offset = 56; // Number of comments to skip (optional) (default to 0)
 var api = new OcBackendApi.PostsApi()
 var id = id_example; // {String} Post ID
 var opts = {
-  'limit': 56, // {Integer} Maximum number of comments to return
-  'offset': 56 // {Integer} Number of comments to skip
+  'limit': 56, // {Integer} Maximum number of items to return
+  'offset': 56 // {Integer} Number of items to skip
 };
 
 var callback = function(error, data, response) {
@@ -11519,8 +11474,8 @@ namespace Example
             // Create an instance of the API class
             var apiInstance = new PostsApi();
             var id = id_example;  // String | Post ID (default to null)
-            var limit = 56;  // Integer | Maximum number of comments to return (optional)  (default to 20)
-            var offset = 56;  // Integer | Number of comments to skip (optional)  (default to 0)
+            var limit = 56;  // Integer | Maximum number of items to return (optional)  (default to 20)
+            var offset = 56;  // Integer | Number of items to skip (optional)  (default to 0)
 
             try {
                 // Get post comments
@@ -11542,8 +11497,8 @@ require_once(__DIR__ . '/vendor/autoload.php');
 // Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\PostsApi();
 $id = id_example; // String | Post ID
-$limit = 56; // Integer | Maximum number of comments to return
-$offset = 56; // Integer | Number of comments to skip
+$limit = 56; // Integer | Maximum number of items to return
+$offset = 56; // Integer | Number of items to skip
 
 try {
     $result = $api_instance->postsIdCommentsGet($id, $limit, $offset);
@@ -11562,8 +11517,8 @@ use WWW::OPenAPIClient::PostsApi;
 # Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::PostsApi->new();
 my $id = id_example; # String | Post ID
-my $limit = 56; # Integer | Maximum number of comments to return
-my $offset = 56; # Integer | Number of comments to skip
+my $limit = 56; # Integer | Maximum number of items to return
+my $offset = 56; # Integer | Number of items to skip
 
 eval {
     my $result = $api_instance->postsIdCommentsGet(id => $id, limit => $limit, offset => $offset);
@@ -11584,8 +11539,8 @@ from pprint import pprint
 # Create an instance of the API class
 api_instance = openapi_client.PostsApi()
 id = id_example # String | Post ID (default to null)
-limit = 56 # Integer | Maximum number of comments to return (optional) (default to 20)
-offset = 56 # Integer | Number of comments to skip (optional) (default to 0)
+limit = 56 # Integer | Maximum number of items to return (optional) (default to 20)
+offset = 56 # Integer | Number of items to skip (optional) (default to 0)
 
 try:
     # Get post comments
@@ -11671,7 +11626,7 @@ Post ID
                 </span>
 
                     <div class="inner description marked">
-Maximum number of comments to return
+Maximum number of items to return
                     </div>
             </div>
         </div>
@@ -11691,7 +11646,7 @@ Maximum number of comments to return
                 </span>
 
                     <div class="inner description marked">
-Number of comments to skip
+Number of items to skip
                     </div>
             </div>
         </div>
@@ -15145,8 +15100,8 @@ public class PostsApiExample {
         // Create an instance of the API class
         PostsApi apiInstance = new PostsApi();
         String id = id_example; // String | Post ID
-        Integer limit = 56; // Integer | Maximum number of likes to return
-        Integer offset = 56; // Integer | Number of likes to skip
+        Integer limit = 56; // Integer | Maximum number of items to return
+        Integer offset = 56; // Integer | Number of items to skip
 
         try {
             _posts__id__likes_get_200_response result = apiInstance.postsIdLikesGet(id, limit, offset);
@@ -15166,8 +15121,8 @@ public class PostsApiExample {
 final api_instance = DefaultApi();
 
 final String id = new String(); // String | Post ID
-final Integer limit = new Integer(); // Integer | Maximum number of likes to return
-final Integer offset = new Integer(); // Integer | Number of likes to skip
+final Integer limit = new Integer(); // Integer | Maximum number of items to return
+final Integer offset = new Integer(); // Integer | Number of items to skip
 
 try {
     final result = await api_instance.postsIdLikesGet(id, limit, offset);
@@ -15186,8 +15141,8 @@ public class PostsApiExample {
     public static void main(String[] args) {
         PostsApi apiInstance = new PostsApi();
         String id = id_example; // String | Post ID
-        Integer limit = 56; // Integer | Maximum number of likes to return
-        Integer offset = 56; // Integer | Number of likes to skip
+        Integer limit = 56; // Integer | Maximum number of items to return
+        Integer offset = 56; // Integer | Number of items to skip
 
         try {
             _posts__id__likes_get_200_response result = apiInstance.postsIdLikesGet(id, limit, offset);
@@ -15209,8 +15164,8 @@ public class PostsApiExample {
 // Create an instance of the API class
 PostsApi *apiInstance = [[PostsApi alloc] init];
 String *id = id_example; // Post ID (default to null)
-Integer *limit = 56; // Maximum number of likes to return (optional) (default to 20)
-Integer *offset = 56; // Number of likes to skip (optional) (default to 0)
+Integer *limit = 56; // Maximum number of items to return (optional) (default to 20)
+Integer *offset = 56; // Number of items to skip (optional) (default to 0)
 
 // Get post likes
 [apiInstance postsIdLikesGetWith:id
@@ -15234,8 +15189,8 @@ Integer *offset = 56; // Number of likes to skip (optional) (default to 0)
 var api = new OcBackendApi.PostsApi()
 var id = id_example; // {String} Post ID
 var opts = {
-  'limit': 56, // {Integer} Maximum number of likes to return
-  'offset': 56 // {Integer} Number of likes to skip
+  'limit': 56, // {Integer} Maximum number of items to return
+  'offset': 56 // {Integer} Number of items to skip
 };
 
 var callback = function(error, data, response) {
@@ -15269,8 +15224,8 @@ namespace Example
             // Create an instance of the API class
             var apiInstance = new PostsApi();
             var id = id_example;  // String | Post ID (default to null)
-            var limit = 56;  // Integer | Maximum number of likes to return (optional)  (default to 20)
-            var offset = 56;  // Integer | Number of likes to skip (optional)  (default to 0)
+            var limit = 56;  // Integer | Maximum number of items to return (optional)  (default to 20)
+            var offset = 56;  // Integer | Number of items to skip (optional)  (default to 0)
 
             try {
                 // Get post likes
@@ -15292,8 +15247,8 @@ require_once(__DIR__ . '/vendor/autoload.php');
 // Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\PostsApi();
 $id = id_example; // String | Post ID
-$limit = 56; // Integer | Maximum number of likes to return
-$offset = 56; // Integer | Number of likes to skip
+$limit = 56; // Integer | Maximum number of items to return
+$offset = 56; // Integer | Number of items to skip
 
 try {
     $result = $api_instance->postsIdLikesGet($id, $limit, $offset);
@@ -15312,8 +15267,8 @@ use WWW::OPenAPIClient::PostsApi;
 # Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::PostsApi->new();
 my $id = id_example; # String | Post ID
-my $limit = 56; # Integer | Maximum number of likes to return
-my $offset = 56; # Integer | Number of likes to skip
+my $limit = 56; # Integer | Maximum number of items to return
+my $offset = 56; # Integer | Number of items to skip
 
 eval {
     my $result = $api_instance->postsIdLikesGet(id => $id, limit => $limit, offset => $offset);
@@ -15334,8 +15289,8 @@ from pprint import pprint
 # Create an instance of the API class
 api_instance = openapi_client.PostsApi()
 id = id_example # String | Post ID (default to null)
-limit = 56 # Integer | Maximum number of likes to return (optional) (default to 20)
-offset = 56 # Integer | Number of likes to skip (optional) (default to 0)
+limit = 56 # Integer | Maximum number of items to return (optional) (default to 20)
+offset = 56 # Integer | Number of items to skip (optional) (default to 0)
 
 try:
     # Get post likes
@@ -15421,7 +15376,7 @@ Post ID
                 </span>
 
                     <div class="inner description marked">
-Maximum number of likes to return
+Maximum number of items to return
                     </div>
             </div>
         </div>
@@ -15441,7 +15396,7 @@ Maximum number of likes to return
                 </span>
 
                     <div class="inner description marked">
-Number of likes to skip
+Number of items to skip
                     </div>
             </div>
         </div>
@@ -18502,8 +18457,8 @@ public class UserFollowsApiExample {
         // Create an instance of the API class
         UserFollowsApi apiInstance = new UserFollowsApi();
         String id = id_example; // String | User ID
-        Integer limit = 56; // Integer | Maximum number of followers to return
-        Integer offset = 56; // Integer | Number of followers to skip
+        Integer limit = 56; // Integer | Maximum number of items to return
+        Integer offset = 56; // Integer | Number of items to skip
 
         try {
             _users__id__followers_get_200_response result = apiInstance.usersIdFollowersGet(id, limit, offset);
@@ -18523,8 +18478,8 @@ public class UserFollowsApiExample {
 final api_instance = DefaultApi();
 
 final String id = new String(); // String | User ID
-final Integer limit = new Integer(); // Integer | Maximum number of followers to return
-final Integer offset = new Integer(); // Integer | Number of followers to skip
+final Integer limit = new Integer(); // Integer | Maximum number of items to return
+final Integer offset = new Integer(); // Integer | Number of items to skip
 
 try {
     final result = await api_instance.usersIdFollowersGet(id, limit, offset);
@@ -18543,8 +18498,8 @@ public class UserFollowsApiExample {
     public static void main(String[] args) {
         UserFollowsApi apiInstance = new UserFollowsApi();
         String id = id_example; // String | User ID
-        Integer limit = 56; // Integer | Maximum number of followers to return
-        Integer offset = 56; // Integer | Number of followers to skip
+        Integer limit = 56; // Integer | Maximum number of items to return
+        Integer offset = 56; // Integer | Number of items to skip
 
         try {
             _users__id__followers_get_200_response result = apiInstance.usersIdFollowersGet(id, limit, offset);
@@ -18566,8 +18521,8 @@ public class UserFollowsApiExample {
 // Create an instance of the API class
 UserFollowsApi *apiInstance = [[UserFollowsApi alloc] init];
 String *id = id_example; // User ID (default to null)
-Integer *limit = 56; // Maximum number of followers to return (optional) (default to 20)
-Integer *offset = 56; // Number of followers to skip (optional) (default to 0)
+Integer *limit = 56; // Maximum number of items to return (optional) (default to 20)
+Integer *offset = 56; // Number of items to skip (optional) (default to 0)
 
 // Get user followers
 [apiInstance usersIdFollowersGetWith:id
@@ -18591,8 +18546,8 @@ Integer *offset = 56; // Number of followers to skip (optional) (default to 0)
 var api = new OcBackendApi.UserFollowsApi()
 var id = id_example; // {String} User ID
 var opts = {
-  'limit': 56, // {Integer} Maximum number of followers to return
-  'offset': 56 // {Integer} Number of followers to skip
+  'limit': 56, // {Integer} Maximum number of items to return
+  'offset': 56 // {Integer} Number of items to skip
 };
 
 var callback = function(error, data, response) {
@@ -18626,8 +18581,8 @@ namespace Example
             // Create an instance of the API class
             var apiInstance = new UserFollowsApi();
             var id = id_example;  // String | User ID (default to null)
-            var limit = 56;  // Integer | Maximum number of followers to return (optional)  (default to 20)
-            var offset = 56;  // Integer | Number of followers to skip (optional)  (default to 0)
+            var limit = 56;  // Integer | Maximum number of items to return (optional)  (default to 20)
+            var offset = 56;  // Integer | Number of items to skip (optional)  (default to 0)
 
             try {
                 // Get user followers
@@ -18649,8 +18604,8 @@ require_once(__DIR__ . '/vendor/autoload.php');
 // Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\UserFollowsApi();
 $id = id_example; // String | User ID
-$limit = 56; // Integer | Maximum number of followers to return
-$offset = 56; // Integer | Number of followers to skip
+$limit = 56; // Integer | Maximum number of items to return
+$offset = 56; // Integer | Number of items to skip
 
 try {
     $result = $api_instance->usersIdFollowersGet($id, $limit, $offset);
@@ -18669,8 +18624,8 @@ use WWW::OPenAPIClient::UserFollowsApi;
 # Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::UserFollowsApi->new();
 my $id = id_example; # String | User ID
-my $limit = 56; # Integer | Maximum number of followers to return
-my $offset = 56; # Integer | Number of followers to skip
+my $limit = 56; # Integer | Maximum number of items to return
+my $offset = 56; # Integer | Number of items to skip
 
 eval {
     my $result = $api_instance->usersIdFollowersGet(id => $id, limit => $limit, offset => $offset);
@@ -18691,8 +18646,8 @@ from pprint import pprint
 # Create an instance of the API class
 api_instance = openapi_client.UserFollowsApi()
 id = id_example # String | User ID (default to null)
-limit = 56 # Integer | Maximum number of followers to return (optional) (default to 20)
-offset = 56 # Integer | Number of followers to skip (optional) (default to 0)
+limit = 56 # Integer | Maximum number of items to return (optional) (default to 20)
+offset = 56 # Integer | Number of items to skip (optional) (default to 0)
 
 try:
     # Get user followers
@@ -18778,7 +18733,7 @@ User ID
                 </span>
 
                     <div class="inner description marked">
-Maximum number of followers to return
+Maximum number of items to return
                     </div>
             </div>
         </div>
@@ -18798,7 +18753,7 @@ Maximum number of followers to return
                 </span>
 
                     <div class="inner description marked">
-Number of followers to skip
+Number of items to skip
                     </div>
             </div>
         </div>
@@ -19094,11 +19049,11 @@ public class UserFollowsApiExample {
         // Create an instance of the API class
         UserFollowsApi apiInstance = new UserFollowsApi();
         String id = id_example; // String | User ID
-        Integer limit = 56; // Integer | Maximum number of following users to return
-        Integer offset = 56; // Integer | Number of following users to skip
+        Integer limit = 56; // Integer | Maximum number of items to return
+        Integer offset = 56; // Integer | Number of items to skip
 
         try {
-            _users__id__following_get_200_response result = apiInstance.usersIdFollowingGet(id, limit, offset);
+            _users__id__followers_get_200_response result = apiInstance.usersIdFollowingGet(id, limit, offset);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling UserFollowsApi#usersIdFollowingGet");
@@ -19115,8 +19070,8 @@ public class UserFollowsApiExample {
 final api_instance = DefaultApi();
 
 final String id = new String(); // String | User ID
-final Integer limit = new Integer(); // Integer | Maximum number of following users to return
-final Integer offset = new Integer(); // Integer | Number of following users to skip
+final Integer limit = new Integer(); // Integer | Maximum number of items to return
+final Integer offset = new Integer(); // Integer | Number of items to skip
 
 try {
     final result = await api_instance.usersIdFollowingGet(id, limit, offset);
@@ -19135,11 +19090,11 @@ public class UserFollowsApiExample {
     public static void main(String[] args) {
         UserFollowsApi apiInstance = new UserFollowsApi();
         String id = id_example; // String | User ID
-        Integer limit = 56; // Integer | Maximum number of following users to return
-        Integer offset = 56; // Integer | Number of following users to skip
+        Integer limit = 56; // Integer | Maximum number of items to return
+        Integer offset = 56; // Integer | Number of items to skip
 
         try {
-            _users__id__following_get_200_response result = apiInstance.usersIdFollowingGet(id, limit, offset);
+            _users__id__followers_get_200_response result = apiInstance.usersIdFollowingGet(id, limit, offset);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling UserFollowsApi#usersIdFollowingGet");
@@ -19158,14 +19113,14 @@ public class UserFollowsApiExample {
 // Create an instance of the API class
 UserFollowsApi *apiInstance = [[UserFollowsApi alloc] init];
 String *id = id_example; // User ID (default to null)
-Integer *limit = 56; // Maximum number of following users to return (optional) (default to 20)
-Integer *offset = 56; // Number of following users to skip (optional) (default to 0)
+Integer *limit = 56; // Maximum number of items to return (optional) (default to 20)
+Integer *offset = 56; // Number of items to skip (optional) (default to 0)
 
 // Get users being followed
 [apiInstance usersIdFollowingGetWith:id
     limit:limit
     offset:offset
-              completionHandler: ^(_users__id__following_get_200_response output, NSError* error) {
+              completionHandler: ^(_users__id__followers_get_200_response output, NSError* error) {
     if (output) {
         NSLog(@"%@", output);
     }
@@ -19183,8 +19138,8 @@ Integer *offset = 56; // Number of following users to skip (optional) (default t
 var api = new OcBackendApi.UserFollowsApi()
 var id = id_example; // {String} User ID
 var opts = {
-  'limit': 56, // {Integer} Maximum number of following users to return
-  'offset': 56 // {Integer} Number of following users to skip
+  'limit': 56, // {Integer} Maximum number of items to return
+  'offset': 56 // {Integer} Number of items to skip
 };
 
 var callback = function(error, data, response) {
@@ -19218,12 +19173,12 @@ namespace Example
             // Create an instance of the API class
             var apiInstance = new UserFollowsApi();
             var id = id_example;  // String | User ID (default to null)
-            var limit = 56;  // Integer | Maximum number of following users to return (optional)  (default to 20)
-            var offset = 56;  // Integer | Number of following users to skip (optional)  (default to 0)
+            var limit = 56;  // Integer | Maximum number of items to return (optional)  (default to 20)
+            var offset = 56;  // Integer | Number of items to skip (optional)  (default to 0)
 
             try {
                 // Get users being followed
-                _users__id__following_get_200_response result = apiInstance.usersIdFollowingGet(id, limit, offset);
+                _users__id__followers_get_200_response result = apiInstance.usersIdFollowingGet(id, limit, offset);
                 Debug.WriteLine(result);
             } catch (Exception e) {
                 Debug.Print("Exception when calling UserFollowsApi.usersIdFollowingGet: " + e.Message );
@@ -19241,8 +19196,8 @@ require_once(__DIR__ . '/vendor/autoload.php');
 // Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\UserFollowsApi();
 $id = id_example; // String | User ID
-$limit = 56; // Integer | Maximum number of following users to return
-$offset = 56; // Integer | Number of following users to skip
+$limit = 56; // Integer | Maximum number of items to return
+$offset = 56; // Integer | Number of items to skip
 
 try {
     $result = $api_instance->usersIdFollowingGet($id, $limit, $offset);
@@ -19261,8 +19216,8 @@ use WWW::OPenAPIClient::UserFollowsApi;
 # Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::UserFollowsApi->new();
 my $id = id_example; # String | User ID
-my $limit = 56; # Integer | Maximum number of following users to return
-my $offset = 56; # Integer | Number of following users to skip
+my $limit = 56; # Integer | Maximum number of items to return
+my $offset = 56; # Integer | Number of items to skip
 
 eval {
     my $result = $api_instance->usersIdFollowingGet(id => $id, limit => $limit, offset => $offset);
@@ -19283,8 +19238,8 @@ from pprint import pprint
 # Create an instance of the API class
 api_instance = openapi_client.UserFollowsApi()
 id = id_example # String | User ID (default to null)
-limit = 56 # Integer | Maximum number of following users to return (optional) (default to 20)
-offset = 56 # Integer | Number of following users to skip (optional) (default to 0)
+limit = 56 # Integer | Maximum number of items to return (optional) (default to 20)
+offset = 56 # Integer | Number of items to skip (optional) (default to 0)
 
 try:
     # Get users being followed
@@ -19370,7 +19325,7 @@ User ID
                 </span>
 
                     <div class="inner description marked">
-Maximum number of following users to return
+Maximum number of items to return
                     </div>
             </div>
         </div>
@@ -19390,7 +19345,7 @@ Maximum number of following users to return
                 </span>
 
                     <div class="inner description marked">
-Number of following users to skip
+Number of items to skip
                     </div>
             </div>
         </div>
@@ -19436,7 +19391,7 @@ Number of following users to skip
   "content" : {
     "application/json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/_users__id__following_get_200_response"
+        "$ref" : "#/components/schemas/_users__id__followers_get_200_response"
       }
     }
   }
