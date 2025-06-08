@@ -844,6 +844,124 @@ ul.nav-tabs {
   <script>
     // Script section to load models into a JS Var
     var defs = {}
+    defs["AuthResponse"] = {
+  "required" : [ "session", "user" ],
+  "type" : "object",
+  "properties" : {
+    "user" : {
+      "$ref" : "#/components/schemas/AuthUser"
+    },
+    "session" : {
+      "$ref" : "#/components/schemas/AuthSession"
+    }
+  }
+};
+    defs["AuthSession"] = {
+  "required" : [ "access_token", "expires_in", "refresh_token", "token_type" ],
+  "type" : "object",
+  "properties" : {
+    "access_token" : {
+      "type" : "string",
+      "description" : "Access token for API authentication"
+    },
+    "refresh_token" : {
+      "type" : "string",
+      "description" : "Refresh token for renewing access token"
+    },
+    "expires_in" : {
+      "type" : "integer",
+      "description" : "Access token expiration time in seconds"
+    },
+    "token_type" : {
+      "type" : "string",
+      "description" : "Token type (usually 'bearer')"
+    },
+    "provider_token" : {
+      "type" : "string",
+      "description" : "OAuth provider token (for social login)",
+      "nullable" : true
+    },
+    "provider_refresh_token" : {
+      "type" : "string",
+      "description" : "OAuth provider refresh token",
+      "nullable" : true
+    }
+  }
+};
+    defs["_auth_signin_oauth_post_200_response"] = {
+  "type" : "object",
+  "properties" : {
+    "data" : {
+      "$ref" : "#/components/schemas/OAuthResponse"
+    }
+  }
+};
+    defs["_auth_signin_post_200_response"] = {
+  "type" : "object",
+  "properties" : {
+    "data" : {
+      "$ref" : "#/components/schemas/AuthResponse"
+    }
+  }
+};
+    defs["_auth_signup_post_201_response"] = {
+  "type" : "object",
+  "properties" : {
+    "data" : {
+      "$ref" : "#/components/schemas/_auth_signup_post_201_response_data"
+    }
+  }
+};
+    defs["_auth_signup_post_201_response_data"] = {
+  "oneOf" : [ {
+    "$ref" : "#/components/schemas/AuthResponse"
+  }, {
+    "$ref" : "#/components/schemas/OTPSentResponse"
+  } ]
+};
+    defs["AuthUser"] = {
+  "required" : [ "created_at", "id", "updated_at" ],
+  "type" : "object",
+  "properties" : {
+    "id" : {
+      "type" : "string",
+      "description" : "User unique identifier"
+    },
+    "email" : {
+      "type" : "string",
+      "description" : "User email address",
+      "format" : "email",
+      "nullable" : true
+    },
+    "phone" : {
+      "type" : "string",
+      "description" : "User phone number",
+      "nullable" : true
+    },
+    "email_confirmed_at" : {
+      "type" : "string",
+      "description" : "Email confirmation timestamp",
+      "format" : "date-time",
+      "nullable" : true
+    },
+    "phone_confirmed_at" : {
+      "type" : "string",
+      "description" : "Phone confirmation timestamp",
+      "format" : "date-time",
+      "nullable" : true
+    },
+    "created_at" : {
+      "type" : "string",
+      "description" : "User creation timestamp",
+      "format" : "date-time"
+    },
+    "updated_at" : {
+      "type" : "string",
+      "description" : "User last update timestamp",
+      "format" : "date-time"
+    }
+  }
+};
     defs["CreateCommentRequest"] = {
   "required" : [ "content" ],
   "type" : "object",
@@ -992,6 +1110,37 @@ ul.nav-tabs {
       "type" : "string",
       "description" : "When the follow relationship was created",
       "format" : "date-time"
+    }
+  }
+};
+    defs["OAuthResponse"] = {
+  "required" : [ "provider", "url" ],
+  "type" : "object",
+  "properties" : {
+    "url" : {
+      "type" : "string",
+      "description" : "OAuth authorization URL",
+      "format" : "uri"
+    },
+    "provider" : {
+      "type" : "string",
+      "description" : "OAuth provider name"
+    }
+  }
+};
+    defs["OAuthSignInRequest"] = {
+  "required" : [ "provider" ],
+  "type" : "object",
+  "properties" : {
+    "provider" : {
+      "type" : "string",
+      "description" : "OAuth provider",
+      "enum" : [ "google", "facebook", "apple" ]
+    },
+    "redirect_to" : {
+      "type" : "string",
+      "description" : "Optional redirect URL after OAuth flow",
+      "format" : "uri"
     }
   }
 };
@@ -1149,6 +1298,20 @@ ul.nav-tabs {
       "type" : "string",
       "description" : "Brief OC description",
       "nullable" : true
+    }
+  }
+};
+    defs["OTPSentResponse"] = {
+  "required" : [ "message", "phone" ],
+  "type" : "object",
+  "properties" : {
+    "message" : {
+      "type" : "string",
+      "description" : "Confirmation message"
+    },
+    "phone" : {
+      "type" : "string",
+      "description" : "Phone number (masked for security)"
     }
   }
 };
@@ -1569,6 +1732,50 @@ ul.nav-tabs {
     }
   }
 };
+    defs["RefreshTokenRequest"] = {
+  "required" : [ "refresh_token" ],
+  "type" : "object",
+  "properties" : {
+    "refresh_token" : {
+      "type" : "string",
+      "description" : "Refresh token"
+    }
+  }
+};
+    defs["SignInRequest"] = {
+  "required" : [ "identifier", "password" ],
+  "type" : "object",
+  "properties" : {
+    "identifier" : {
+      "type" : "string",
+      "description" : "Email address or phone number in E.164 format (e.g., user@example.com or +1234567890)"
+    },
+    "password" : {
+      "type" : "string",
+      "description" : "User password"
+    }
+  }
+};
+    defs["SignUpRequest"] = {
+  "required" : [ "identifier", "password" ],
+  "type" : "object",
+  "properties" : {
+    "identifier" : {
+      "type" : "string",
+      "description" : "Email address or phone number in E.164 format (e.g., user@example.com or +1234567890)"
+    },
+    "password" : {
+      "minLength" : 8,
+      "type" : "string",
+      "description" : "User password (minimum 8 characters)"
+    },
+    "redirect_to" : {
+      "type" : "string",
+      "description" : "Optional redirect URL after email confirmation (only applies to email signup)",
+      "format" : "uri"
+    }
+  }
+};
     defs["UpdateDraftRequest"] = {
   "type" : "object",
   "properties" : {
@@ -1901,6 +2108,28 @@ ul.nav-tabs {
     }
   }
 };
+    defs["VerifyOTPRequest"] = {
+  "required" : [ "phone", "token", "type" ],
+  "type" : "object",
+  "properties" : {
+    "phone" : {
+      "pattern" : "^\\+[1-9]\\d{1,14}$",
+      "type" : "string",
+      "description" : "Phone number in E.164 format"
+    },
+    "token" : {
+      "pattern" : "^\\d{6}$",
+      "type" : "string",
+      "description" : "6-digit OTP code"
+    },
+    "type" : {
+      "type" : "string",
+      "description" : "OTP type",
+      "default" : "sms",
+      "enum" : [ "sms" ]
+    }
+  }
+};
 
 
     var errs = {};
@@ -1920,6 +2149,25 @@ ul.nav-tabs {
             -->
             <li class="nav-fixed nav-header active" data-group="_"><a href="#api-_">API Summary</a></li>
 
+                  <li class="nav-header" data-group="Auth"><a href="#api-Auth">API Methods - Auth</a></li>
+                    <li data-group="Auth" data-name="authRefreshPost" class="">
+                      <a href="#api-Auth-authRefreshPost">authRefreshPost</a>
+                    </li>
+                    <li data-group="Auth" data-name="authSigninOauthPost" class="">
+                      <a href="#api-Auth-authSigninOauthPost">authSigninOauthPost</a>
+                    </li>
+                    <li data-group="Auth" data-name="authSigninPost" class="">
+                      <a href="#api-Auth-authSigninPost">authSigninPost</a>
+                    </li>
+                    <li data-group="Auth" data-name="authSignoutPost" class="">
+                      <a href="#api-Auth-authSignoutPost">authSignoutPost</a>
+                    </li>
+                    <li data-group="Auth" data-name="authSignupPost" class="">
+                      <a href="#api-Auth-authSignupPost">authSignupPost</a>
+                    </li>
+                    <li data-group="Auth" data-name="authVerifyOtpPost" class="">
+                      <a href="#api-Auth-authVerifyOtpPost">authVerifyOtpPost</a>
+                    </li>
                   <li class="nav-header" data-group="OC"><a href="#api-OC">API Methods - OC</a></li>
                     <li data-group="OC" data-name="ocGet" class="">
                       <a href="#api-OC-ocGet">ocGet</a>
@@ -2032,6 +2280,3493 @@ ul.nav-tabs {
           </div>
         </div>
         <div id="sections">
+                <section id="api-Auth">
+                  <h1>Auth</h1>
+                    <div id="api-Auth-authRefreshPost">
+                      <article id="api-Auth-authRefreshPost-0" data-group="User" data-name="authRefreshPost" data-version="0">
+                        <div class="pull-left">
+                          <h1>authRefreshPost</h1>
+                          <p>Refresh access token</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">Refresh access token using refresh token</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/auth/refresh</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Auth-authRefreshPost-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Auth-authRefreshPost-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Auth-authRefreshPost-0-dart">Dart</a></li>
+                          <li class=""><a href="#examples-Auth-authRefreshPost-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Auth-authRefreshPost-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Auth-authRefreshPost-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Auth-authRefreshPost-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Auth-authRefreshPost-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Auth-authRefreshPost-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Auth-authRefreshPost-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Auth-authRefreshPost-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Auth-authRefreshPost-0-python">Python</a></li>
+                          <li class=""><a href="#examples-Auth-authRefreshPost-0-rust">Rust</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Auth-authRefreshPost-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X POST \
+ -H "Accept: application/json" \
+ -H "Content-Type: application/json" \
+ "http://localhost:8080/api/v1/auth/refresh" \
+ -d '{
+  &quot;refresh_token&quot; : &quot;refresh_token&quot;
+}'
+</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Auth-authRefreshPost-0-java">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
+import org.openapitools.client.auth.*;
+import org.openapitools.client.model.*;
+import org.openapitools.client.api.AuthApi;
+
+import java.io.File;
+import java.util.*;
+
+public class AuthApiExample {
+    public static void main(String[] args) {
+
+        // Create an instance of the API class
+        AuthApi apiInstance = new AuthApi();
+        RefreshTokenRequest refreshTokenRequest = ; // RefreshTokenRequest | 
+
+        try {
+            _auth_signin_post_200_response result = apiInstance.authRefreshPost(refreshTokenRequest);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling AuthApi#authRefreshPost");
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Auth-authRefreshPost-0-dart">
+                            <pre class="prettyprint"><code class="language-dart">import 'package:openapi/api.dart';
+
+final api_instance = DefaultApi();
+
+final RefreshTokenRequest refreshTokenRequest = new RefreshTokenRequest(); // RefreshTokenRequest | 
+
+try {
+    final result = await api_instance.authRefreshPost(refreshTokenRequest);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->authRefreshPost: $e\n');
+}
+
+</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Auth-authRefreshPost-0-android">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.AuthApi;
+
+public class AuthApiExample {
+    public static void main(String[] args) {
+        AuthApi apiInstance = new AuthApi();
+        RefreshTokenRequest refreshTokenRequest = ; // RefreshTokenRequest | 
+
+        try {
+            _auth_signin_post_200_response result = apiInstance.authRefreshPost(refreshTokenRequest);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling AuthApi#authRefreshPost");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Auth-authRefreshPost-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Auth-authRefreshPost-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">
+
+// Create an instance of the API class
+AuthApi *apiInstance = [[AuthApi alloc] init];
+RefreshTokenRequest *refreshTokenRequest = ; // 
+
+// Refresh access token
+[apiInstance authRefreshPostWith:refreshTokenRequest
+              completionHandler: ^(_auth_signin_post_200_response output, NSError* error) {
+    if (output) {
+        NSLog(@"%@", output);
+    }
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Auth-authRefreshPost-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var OcBackendApi = require('oc_backend_api');
+
+// Create an instance of the API class
+var api = new OcBackendApi.AuthApi()
+var refreshTokenRequest = ; // {RefreshTokenRequest} 
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.authRefreshPost(refreshTokenRequest, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Auth-authRefreshPost-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Auth-authRefreshPost-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using Org.OpenAPITools.Api;
+using Org.OpenAPITools.Client;
+using Org.OpenAPITools.Model;
+
+namespace Example
+{
+    public class authRefreshPostExample
+    {
+        public void main()
+        {
+
+            // Create an instance of the API class
+            var apiInstance = new AuthApi();
+            var refreshTokenRequest = new RefreshTokenRequest(); // RefreshTokenRequest | 
+
+            try {
+                // Refresh access token
+                _auth_signin_post_200_response result = apiInstance.authRefreshPost(refreshTokenRequest);
+                Debug.WriteLine(result);
+            } catch (Exception e) {
+                Debug.Print("Exception when calling AuthApi.authRefreshPost: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Auth-authRefreshPost-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+// Create an instance of the API class
+$api_instance = new OpenAPITools\Client\Api\AuthApi();
+$refreshTokenRequest = ; // RefreshTokenRequest | 
+
+try {
+    $result = $api_instance->authRefreshPost($refreshTokenRequest);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling AuthApi->authRefreshPost: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Auth-authRefreshPost-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::OPenAPIClient::Configuration;
+use WWW::OPenAPIClient::AuthApi;
+
+# Create an instance of the API class
+my $api_instance = WWW::OPenAPIClient::AuthApi->new();
+my $refreshTokenRequest = WWW::OPenAPIClient::Object::RefreshTokenRequest->new(); # RefreshTokenRequest | 
+
+eval {
+    my $result = $api_instance->authRefreshPost(refreshTokenRequest => $refreshTokenRequest);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling AuthApi->authRefreshPost: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Auth-authRefreshPost-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import openapi_client
+from openapi_client.rest import ApiException
+from pprint import pprint
+
+# Create an instance of the API class
+api_instance = openapi_client.AuthApi()
+refreshTokenRequest =  # RefreshTokenRequest | 
+
+try:
+    # Refresh access token
+    api_response = api_instance.auth_refresh_post(refreshTokenRequest)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling AuthApi->authRefreshPost: %s\n" % e)</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Auth-authRefreshPost-0-rust">
+                              <pre class="prettyprint"><code class="language-rust">extern crate AuthApi;
+
+pub fn main() {
+    let refreshTokenRequest = ; // RefreshTokenRequest
+
+    let mut context = AuthApi::Context::default();
+    let result = client.authRefreshPost(refreshTokenRequest, &context).wait();
+
+    println!("{:?}", result);
+}
+</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Scopes</h2>
+                          <table>
+                            
+                          </table>
+
+                          <h2>Parameters</h2>
+
+
+
+                            <div class="methodsubtabletitle">Body parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">refreshTokenRequest <span style="color:red;">*</span></td>
+<td>
+<p class="marked"></p>
+<script>
+$(document).ready(function() {
+  var schemaWrapper = {
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/RefreshTokenRequest"
+      }
+    }
+  },
+  "required" : true
+};
+
+  var schema = findNode('schema',schemaWrapper).schema;
+  if (!schema) {
+    schema = schemaWrapper.schema;
+  }
+  if (schema.$ref != null) {
+    schema = defsParser.$refs.get(schema.$ref);
+  } else if (schema.items != null && schema.items.$ref != null) {
+    schema.items = defsParser.$refs.get(schema.items.$ref);
+  } else {
+    schemaWrapper.definitions = Object.assign({}, defs);
+    $RefParser.dereference(schemaWrapper).catch(function(err) {
+      console.log(err);
+    });
+  }
+
+  var view = new JSONSchemaView(schema,2,{isBodyParam: true});
+  var result = $('#d2e199_authRefreshPost_refreshTokenRequest');
+  result.empty();
+  result.append(view.render());
+});
+</script>
+<div id="d2e199_authRefreshPost_refreshTokenRequest"></div>
+</td>
+</tr>
+
+                            </table>
+
+
+
+                          <h2>Responses</h2>
+                            <h3 id="examples-Auth-authRefreshPost-title-200"></h3>
+                            <p id="examples-Auth-authRefreshPost-description-200" class="marked"></p>
+                            <script>
+                              var responseAuth200_description = `Token refreshed successfully`;
+                              var responseAuth200_description_break = responseAuth200_description.indexOf('\n');
+                              if (responseAuth200_description_break == -1) {
+                                $("#examples-Auth-authRefreshPost-title-200").text("Status: 200 - " + responseAuth200_description);
+                              } else {
+                                $("#examples-Auth-authRefreshPost-title-200").text("Status: 200 - " + responseAuth200_description.substring(0, responseAuth200_description_break));
+                                $("#examples-Auth-authRefreshPost-description-200").html(responseAuth200_description.substring(responseAuth200_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Auth-authRefreshPost-200" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Auth-authRefreshPost-200-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Auth-authRefreshPost-200-wrapper" style='margin-bottom: 10px;'>
+                              <div class="tab-pane active" id="responses-Auth-authRefreshPost-200-schema">
+                                <div id="responses-Auth-authRefreshPost-schema-200" class="exampleStyle">
+                                  <script>
+                                    $(document).ready(function() {
+                                      var schemaWrapper = {
+  "description" : "Token refreshed successfully",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/_auth_signin_post_200_response"
+      }
+    }
+  }
+};
+                                      var schema = findNode('schema',schemaWrapper).schema;
+                                      if (!schema) {
+                                        schema = schemaWrapper.schema;
+                                      }
+                                      if (schema == null) {
+                                        return;
+                                      }
+                                      if (schema.$ref != null) {
+                                        schema = defsParser.$refs.get(schema.$ref);
+                                        if (schema.properties != null) {
+                                          Object.keys(schema.properties).forEach( (item) => {
+                                            if (schema.properties[item].$ref != null) {
+                                              schema.properties[item] = defsParser.$refs.get(schema.properties[item].$ref);
+                                            }
+                                          });
+                                        }
+                                      } else if (schema.items != null && schema.items.$ref != null) {
+                                        schema.items = defsParser.$refs.get(schema.items.$ref);
+                                      } else {
+                                        schemaWrapper.definitions = Object.assign({}, defs);
+                                        $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                          console.log(err);
+                                        });
+                                      }
+
+                                      var view = new JSONSchemaView(schema, 3);
+                                      $('#responses-Auth-authRefreshPost-200-schema-data').val(JSON.stringify(schema));
+                                      var result = $('#responses-Auth-authRefreshPost-schema-200');
+                                      result.empty();
+                                      result.append(view.render());
+                                    });
+                                  </script>
+                                </div>
+                                <input id='responses-Auth-authRefreshPost-200-schema-data' type='hidden' value=''></input>
+                              </div>
+                            </div>
+                            <h3 id="examples-Auth-authRefreshPost-title-400"></h3>
+                            <p id="examples-Auth-authRefreshPost-description-400" class="marked"></p>
+                            <script>
+                              var responseAuth400_description = `Bad request`;
+                              var responseAuth400_description_break = responseAuth400_description.indexOf('\n');
+                              if (responseAuth400_description_break == -1) {
+                                $("#examples-Auth-authRefreshPost-title-400").text("Status: 400 - " + responseAuth400_description);
+                              } else {
+                                $("#examples-Auth-authRefreshPost-title-400").text("Status: 400 - " + responseAuth400_description.substring(0, responseAuth400_description_break));
+                                $("#examples-Auth-authRefreshPost-description-400").html(responseAuth400_description.substring(responseAuth400_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Auth-authRefreshPost-400" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Auth-authRefreshPost-400-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Auth-authRefreshPost-400-wrapper" style='margin-bottom: 10px;'>
+                              <div class="tab-pane active" id="responses-Auth-authRefreshPost-400-schema">
+                                <div id="responses-Auth-authRefreshPost-schema-400" class="exampleStyle">
+                                  <script>
+                                    $(document).ready(function() {
+                                      var schemaWrapper = {
+  "description" : "Bad request",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/Error"
+      }
+    }
+  }
+};
+                                      var schema = findNode('schema',schemaWrapper).schema;
+                                      if (!schema) {
+                                        schema = schemaWrapper.schema;
+                                      }
+                                      if (schema == null) {
+                                        return;
+                                      }
+                                      if (schema.$ref != null) {
+                                        schema = defsParser.$refs.get(schema.$ref);
+                                        if (schema.properties != null) {
+                                          Object.keys(schema.properties).forEach( (item) => {
+                                            if (schema.properties[item].$ref != null) {
+                                              schema.properties[item] = defsParser.$refs.get(schema.properties[item].$ref);
+                                            }
+                                          });
+                                        }
+                                      } else if (schema.items != null && schema.items.$ref != null) {
+                                        schema.items = defsParser.$refs.get(schema.items.$ref);
+                                      } else {
+                                        schemaWrapper.definitions = Object.assign({}, defs);
+                                        $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                          console.log(err);
+                                        });
+                                      }
+
+                                      var view = new JSONSchemaView(schema, 3);
+                                      $('#responses-Auth-authRefreshPost-400-schema-data').val(JSON.stringify(schema));
+                                      var result = $('#responses-Auth-authRefreshPost-schema-400');
+                                      result.empty();
+                                      result.append(view.render());
+                                    });
+                                  </script>
+                                </div>
+                                <input id='responses-Auth-authRefreshPost-400-schema-data' type='hidden' value=''></input>
+                              </div>
+                            </div>
+                            <h3 id="examples-Auth-authRefreshPost-title-401"></h3>
+                            <p id="examples-Auth-authRefreshPost-description-401" class="marked"></p>
+                            <script>
+                              var responseAuth401_description = `Invalid refresh token`;
+                              var responseAuth401_description_break = responseAuth401_description.indexOf('\n');
+                              if (responseAuth401_description_break == -1) {
+                                $("#examples-Auth-authRefreshPost-title-401").text("Status: 401 - " + responseAuth401_description);
+                              } else {
+                                $("#examples-Auth-authRefreshPost-title-401").text("Status: 401 - " + responseAuth401_description.substring(0, responseAuth401_description_break));
+                                $("#examples-Auth-authRefreshPost-description-401").html(responseAuth401_description.substring(responseAuth401_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Auth-authRefreshPost-401" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Auth-authRefreshPost-401-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Auth-authRefreshPost-401-wrapper" style='margin-bottom: 10px;'>
+                              <div class="tab-pane active" id="responses-Auth-authRefreshPost-401-schema">
+                                <div id="responses-Auth-authRefreshPost-schema-401" class="exampleStyle">
+                                  <script>
+                                    $(document).ready(function() {
+                                      var schemaWrapper = {
+  "description" : "Invalid refresh token",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/Error"
+      }
+    }
+  }
+};
+                                      var schema = findNode('schema',schemaWrapper).schema;
+                                      if (!schema) {
+                                        schema = schemaWrapper.schema;
+                                      }
+                                      if (schema == null) {
+                                        return;
+                                      }
+                                      if (schema.$ref != null) {
+                                        schema = defsParser.$refs.get(schema.$ref);
+                                        if (schema.properties != null) {
+                                          Object.keys(schema.properties).forEach( (item) => {
+                                            if (schema.properties[item].$ref != null) {
+                                              schema.properties[item] = defsParser.$refs.get(schema.properties[item].$ref);
+                                            }
+                                          });
+                                        }
+                                      } else if (schema.items != null && schema.items.$ref != null) {
+                                        schema.items = defsParser.$refs.get(schema.items.$ref);
+                                      } else {
+                                        schemaWrapper.definitions = Object.assign({}, defs);
+                                        $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                          console.log(err);
+                                        });
+                                      }
+
+                                      var view = new JSONSchemaView(schema, 3);
+                                      $('#responses-Auth-authRefreshPost-401-schema-data').val(JSON.stringify(schema));
+                                      var result = $('#responses-Auth-authRefreshPost-schema-401');
+                                      result.empty();
+                                      result.append(view.render());
+                                    });
+                                  </script>
+                                </div>
+                                <input id='responses-Auth-authRefreshPost-401-schema-data' type='hidden' value=''></input>
+                              </div>
+                            </div>
+                            <h3 id="examples-Auth-authRefreshPost-title-500"></h3>
+                            <p id="examples-Auth-authRefreshPost-description-500" class="marked"></p>
+                            <script>
+                              var responseAuth500_description = `Internal server error`;
+                              var responseAuth500_description_break = responseAuth500_description.indexOf('\n');
+                              if (responseAuth500_description_break == -1) {
+                                $("#examples-Auth-authRefreshPost-title-500").text("Status: 500 - " + responseAuth500_description);
+                              } else {
+                                $("#examples-Auth-authRefreshPost-title-500").text("Status: 500 - " + responseAuth500_description.substring(0, responseAuth500_description_break));
+                                $("#examples-Auth-authRefreshPost-description-500").html(responseAuth500_description.substring(responseAuth500_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Auth-authRefreshPost-500" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Auth-authRefreshPost-500-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Auth-authRefreshPost-500-wrapper" style='margin-bottom: 10px;'>
+                              <div class="tab-pane active" id="responses-Auth-authRefreshPost-500-schema">
+                                <div id="responses-Auth-authRefreshPost-schema-500" class="exampleStyle">
+                                  <script>
+                                    $(document).ready(function() {
+                                      var schemaWrapper = {
+  "description" : "Internal server error",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/Error"
+      }
+    }
+  }
+};
+                                      var schema = findNode('schema',schemaWrapper).schema;
+                                      if (!schema) {
+                                        schema = schemaWrapper.schema;
+                                      }
+                                      if (schema == null) {
+                                        return;
+                                      }
+                                      if (schema.$ref != null) {
+                                        schema = defsParser.$refs.get(schema.$ref);
+                                        if (schema.properties != null) {
+                                          Object.keys(schema.properties).forEach( (item) => {
+                                            if (schema.properties[item].$ref != null) {
+                                              schema.properties[item] = defsParser.$refs.get(schema.properties[item].$ref);
+                                            }
+                                          });
+                                        }
+                                      } else if (schema.items != null && schema.items.$ref != null) {
+                                        schema.items = defsParser.$refs.get(schema.items.$ref);
+                                      } else {
+                                        schemaWrapper.definitions = Object.assign({}, defs);
+                                        $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                          console.log(err);
+                                        });
+                                      }
+
+                                      var view = new JSONSchemaView(schema, 3);
+                                      $('#responses-Auth-authRefreshPost-500-schema-data').val(JSON.stringify(schema));
+                                      var result = $('#responses-Auth-authRefreshPost-schema-500');
+                                      result.empty();
+                                      result.append(view.render());
+                                    });
+                                  </script>
+                                </div>
+                                <input id='responses-Auth-authRefreshPost-500-schema-data' type='hidden' value=''></input>
+                              </div>
+                            </div>
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Auth-authSigninOauthPost">
+                      <article id="api-Auth-authSigninOauthPost-0" data-group="User" data-name="authSigninOauthPost" data-version="0">
+                        <div class="pull-left">
+                          <h1>authSigninOauthPost</h1>
+                          <p>OAuth sign in</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">Initiate OAuth sign in with social providers (Google, Facebook, Apple)</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/auth/signin/oauth</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Auth-authSigninOauthPost-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Auth-authSigninOauthPost-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Auth-authSigninOauthPost-0-dart">Dart</a></li>
+                          <li class=""><a href="#examples-Auth-authSigninOauthPost-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Auth-authSigninOauthPost-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Auth-authSigninOauthPost-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Auth-authSigninOauthPost-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Auth-authSigninOauthPost-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Auth-authSigninOauthPost-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Auth-authSigninOauthPost-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Auth-authSigninOauthPost-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Auth-authSigninOauthPost-0-python">Python</a></li>
+                          <li class=""><a href="#examples-Auth-authSigninOauthPost-0-rust">Rust</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Auth-authSigninOauthPost-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X POST \
+ -H "Accept: application/json" \
+ -H "Content-Type: application/json" \
+ "http://localhost:8080/api/v1/auth/signin/oauth" \
+ -d '{
+  &quot;provider&quot; : &quot;google&quot;,
+  &quot;redirect_to&quot; : &quot;https://openapi-generator.tech&quot;
+}'
+</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Auth-authSigninOauthPost-0-java">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
+import org.openapitools.client.auth.*;
+import org.openapitools.client.model.*;
+import org.openapitools.client.api.AuthApi;
+
+import java.io.File;
+import java.util.*;
+
+public class AuthApiExample {
+    public static void main(String[] args) {
+
+        // Create an instance of the API class
+        AuthApi apiInstance = new AuthApi();
+        OAuthSignInRequest oAuthSignInRequest = ; // OAuthSignInRequest | 
+
+        try {
+            _auth_signin_oauth_post_200_response result = apiInstance.authSigninOauthPost(oAuthSignInRequest);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling AuthApi#authSigninOauthPost");
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Auth-authSigninOauthPost-0-dart">
+                            <pre class="prettyprint"><code class="language-dart">import 'package:openapi/api.dart';
+
+final api_instance = DefaultApi();
+
+final OAuthSignInRequest oAuthSignInRequest = new OAuthSignInRequest(); // OAuthSignInRequest | 
+
+try {
+    final result = await api_instance.authSigninOauthPost(oAuthSignInRequest);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->authSigninOauthPost: $e\n');
+}
+
+</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Auth-authSigninOauthPost-0-android">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.AuthApi;
+
+public class AuthApiExample {
+    public static void main(String[] args) {
+        AuthApi apiInstance = new AuthApi();
+        OAuthSignInRequest oAuthSignInRequest = ; // OAuthSignInRequest | 
+
+        try {
+            _auth_signin_oauth_post_200_response result = apiInstance.authSigninOauthPost(oAuthSignInRequest);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling AuthApi#authSigninOauthPost");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Auth-authSigninOauthPost-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Auth-authSigninOauthPost-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">
+
+// Create an instance of the API class
+AuthApi *apiInstance = [[AuthApi alloc] init];
+OAuthSignInRequest *oAuthSignInRequest = ; // 
+
+// OAuth sign in
+[apiInstance authSigninOauthPostWith:oAuthSignInRequest
+              completionHandler: ^(_auth_signin_oauth_post_200_response output, NSError* error) {
+    if (output) {
+        NSLog(@"%@", output);
+    }
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Auth-authSigninOauthPost-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var OcBackendApi = require('oc_backend_api');
+
+// Create an instance of the API class
+var api = new OcBackendApi.AuthApi()
+var oAuthSignInRequest = ; // {OAuthSignInRequest} 
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.authSigninOauthPost(oAuthSignInRequest, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Auth-authSigninOauthPost-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Auth-authSigninOauthPost-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using Org.OpenAPITools.Api;
+using Org.OpenAPITools.Client;
+using Org.OpenAPITools.Model;
+
+namespace Example
+{
+    public class authSigninOauthPostExample
+    {
+        public void main()
+        {
+
+            // Create an instance of the API class
+            var apiInstance = new AuthApi();
+            var oAuthSignInRequest = new OAuthSignInRequest(); // OAuthSignInRequest | 
+
+            try {
+                // OAuth sign in
+                _auth_signin_oauth_post_200_response result = apiInstance.authSigninOauthPost(oAuthSignInRequest);
+                Debug.WriteLine(result);
+            } catch (Exception e) {
+                Debug.Print("Exception when calling AuthApi.authSigninOauthPost: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Auth-authSigninOauthPost-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+// Create an instance of the API class
+$api_instance = new OpenAPITools\Client\Api\AuthApi();
+$oAuthSignInRequest = ; // OAuthSignInRequest | 
+
+try {
+    $result = $api_instance->authSigninOauthPost($oAuthSignInRequest);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling AuthApi->authSigninOauthPost: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Auth-authSigninOauthPost-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::OPenAPIClient::Configuration;
+use WWW::OPenAPIClient::AuthApi;
+
+# Create an instance of the API class
+my $api_instance = WWW::OPenAPIClient::AuthApi->new();
+my $oAuthSignInRequest = WWW::OPenAPIClient::Object::OAuthSignInRequest->new(); # OAuthSignInRequest | 
+
+eval {
+    my $result = $api_instance->authSigninOauthPost(oAuthSignInRequest => $oAuthSignInRequest);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling AuthApi->authSigninOauthPost: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Auth-authSigninOauthPost-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import openapi_client
+from openapi_client.rest import ApiException
+from pprint import pprint
+
+# Create an instance of the API class
+api_instance = openapi_client.AuthApi()
+oAuthSignInRequest =  # OAuthSignInRequest | 
+
+try:
+    # OAuth sign in
+    api_response = api_instance.auth_signin_oauth_post(oAuthSignInRequest)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling AuthApi->authSigninOauthPost: %s\n" % e)</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Auth-authSigninOauthPost-0-rust">
+                              <pre class="prettyprint"><code class="language-rust">extern crate AuthApi;
+
+pub fn main() {
+    let oAuthSignInRequest = ; // OAuthSignInRequest
+
+    let mut context = AuthApi::Context::default();
+    let result = client.authSigninOauthPost(oAuthSignInRequest, &context).wait();
+
+    println!("{:?}", result);
+}
+</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Scopes</h2>
+                          <table>
+                            
+                          </table>
+
+                          <h2>Parameters</h2>
+
+
+
+                            <div class="methodsubtabletitle">Body parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">oAuthSignInRequest <span style="color:red;">*</span></td>
+<td>
+<p class="marked"></p>
+<script>
+$(document).ready(function() {
+  var schemaWrapper = {
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/OAuthSignInRequest"
+      }
+    }
+  },
+  "required" : true
+};
+
+  var schema = findNode('schema',schemaWrapper).schema;
+  if (!schema) {
+    schema = schemaWrapper.schema;
+  }
+  if (schema.$ref != null) {
+    schema = defsParser.$refs.get(schema.$ref);
+  } else if (schema.items != null && schema.items.$ref != null) {
+    schema.items = defsParser.$refs.get(schema.items.$ref);
+  } else {
+    schemaWrapper.definitions = Object.assign({}, defs);
+    $RefParser.dereference(schemaWrapper).catch(function(err) {
+      console.log(err);
+    });
+  }
+
+  var view = new JSONSchemaView(schema,2,{isBodyParam: true});
+  var result = $('#d2e199_authSigninOauthPost_oAuthSignInRequest');
+  result.empty();
+  result.append(view.render());
+});
+</script>
+<div id="d2e199_authSigninOauthPost_oAuthSignInRequest"></div>
+</td>
+</tr>
+
+                            </table>
+
+
+
+                          <h2>Responses</h2>
+                            <h3 id="examples-Auth-authSigninOauthPost-title-200"></h3>
+                            <p id="examples-Auth-authSigninOauthPost-description-200" class="marked"></p>
+                            <script>
+                              var responseAuth200_description = `OAuth URL generated successfully`;
+                              var responseAuth200_description_break = responseAuth200_description.indexOf('\n');
+                              if (responseAuth200_description_break == -1) {
+                                $("#examples-Auth-authSigninOauthPost-title-200").text("Status: 200 - " + responseAuth200_description);
+                              } else {
+                                $("#examples-Auth-authSigninOauthPost-title-200").text("Status: 200 - " + responseAuth200_description.substring(0, responseAuth200_description_break));
+                                $("#examples-Auth-authSigninOauthPost-description-200").html(responseAuth200_description.substring(responseAuth200_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Auth-authSigninOauthPost-200" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Auth-authSigninOauthPost-200-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Auth-authSigninOauthPost-200-wrapper" style='margin-bottom: 10px;'>
+                              <div class="tab-pane active" id="responses-Auth-authSigninOauthPost-200-schema">
+                                <div id="responses-Auth-authSigninOauthPost-schema-200" class="exampleStyle">
+                                  <script>
+                                    $(document).ready(function() {
+                                      var schemaWrapper = {
+  "description" : "OAuth URL generated successfully",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/_auth_signin_oauth_post_200_response"
+      }
+    }
+  }
+};
+                                      var schema = findNode('schema',schemaWrapper).schema;
+                                      if (!schema) {
+                                        schema = schemaWrapper.schema;
+                                      }
+                                      if (schema == null) {
+                                        return;
+                                      }
+                                      if (schema.$ref != null) {
+                                        schema = defsParser.$refs.get(schema.$ref);
+                                        if (schema.properties != null) {
+                                          Object.keys(schema.properties).forEach( (item) => {
+                                            if (schema.properties[item].$ref != null) {
+                                              schema.properties[item] = defsParser.$refs.get(schema.properties[item].$ref);
+                                            }
+                                          });
+                                        }
+                                      } else if (schema.items != null && schema.items.$ref != null) {
+                                        schema.items = defsParser.$refs.get(schema.items.$ref);
+                                      } else {
+                                        schemaWrapper.definitions = Object.assign({}, defs);
+                                        $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                          console.log(err);
+                                        });
+                                      }
+
+                                      var view = new JSONSchemaView(schema, 3);
+                                      $('#responses-Auth-authSigninOauthPost-200-schema-data').val(JSON.stringify(schema));
+                                      var result = $('#responses-Auth-authSigninOauthPost-schema-200');
+                                      result.empty();
+                                      result.append(view.render());
+                                    });
+                                  </script>
+                                </div>
+                                <input id='responses-Auth-authSigninOauthPost-200-schema-data' type='hidden' value=''></input>
+                              </div>
+                            </div>
+                            <h3 id="examples-Auth-authSigninOauthPost-title-400"></h3>
+                            <p id="examples-Auth-authSigninOauthPost-description-400" class="marked"></p>
+                            <script>
+                              var responseAuth400_description = `Bad request`;
+                              var responseAuth400_description_break = responseAuth400_description.indexOf('\n');
+                              if (responseAuth400_description_break == -1) {
+                                $("#examples-Auth-authSigninOauthPost-title-400").text("Status: 400 - " + responseAuth400_description);
+                              } else {
+                                $("#examples-Auth-authSigninOauthPost-title-400").text("Status: 400 - " + responseAuth400_description.substring(0, responseAuth400_description_break));
+                                $("#examples-Auth-authSigninOauthPost-description-400").html(responseAuth400_description.substring(responseAuth400_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Auth-authSigninOauthPost-400" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Auth-authSigninOauthPost-400-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Auth-authSigninOauthPost-400-wrapper" style='margin-bottom: 10px;'>
+                              <div class="tab-pane active" id="responses-Auth-authSigninOauthPost-400-schema">
+                                <div id="responses-Auth-authSigninOauthPost-schema-400" class="exampleStyle">
+                                  <script>
+                                    $(document).ready(function() {
+                                      var schemaWrapper = {
+  "description" : "Bad request",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/Error"
+      }
+    }
+  }
+};
+                                      var schema = findNode('schema',schemaWrapper).schema;
+                                      if (!schema) {
+                                        schema = schemaWrapper.schema;
+                                      }
+                                      if (schema == null) {
+                                        return;
+                                      }
+                                      if (schema.$ref != null) {
+                                        schema = defsParser.$refs.get(schema.$ref);
+                                        if (schema.properties != null) {
+                                          Object.keys(schema.properties).forEach( (item) => {
+                                            if (schema.properties[item].$ref != null) {
+                                              schema.properties[item] = defsParser.$refs.get(schema.properties[item].$ref);
+                                            }
+                                          });
+                                        }
+                                      } else if (schema.items != null && schema.items.$ref != null) {
+                                        schema.items = defsParser.$refs.get(schema.items.$ref);
+                                      } else {
+                                        schemaWrapper.definitions = Object.assign({}, defs);
+                                        $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                          console.log(err);
+                                        });
+                                      }
+
+                                      var view = new JSONSchemaView(schema, 3);
+                                      $('#responses-Auth-authSigninOauthPost-400-schema-data').val(JSON.stringify(schema));
+                                      var result = $('#responses-Auth-authSigninOauthPost-schema-400');
+                                      result.empty();
+                                      result.append(view.render());
+                                    });
+                                  </script>
+                                </div>
+                                <input id='responses-Auth-authSigninOauthPost-400-schema-data' type='hidden' value=''></input>
+                              </div>
+                            </div>
+                            <h3 id="examples-Auth-authSigninOauthPost-title-500"></h3>
+                            <p id="examples-Auth-authSigninOauthPost-description-500" class="marked"></p>
+                            <script>
+                              var responseAuth500_description = `Internal server error`;
+                              var responseAuth500_description_break = responseAuth500_description.indexOf('\n');
+                              if (responseAuth500_description_break == -1) {
+                                $("#examples-Auth-authSigninOauthPost-title-500").text("Status: 500 - " + responseAuth500_description);
+                              } else {
+                                $("#examples-Auth-authSigninOauthPost-title-500").text("Status: 500 - " + responseAuth500_description.substring(0, responseAuth500_description_break));
+                                $("#examples-Auth-authSigninOauthPost-description-500").html(responseAuth500_description.substring(responseAuth500_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Auth-authSigninOauthPost-500" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Auth-authSigninOauthPost-500-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Auth-authSigninOauthPost-500-wrapper" style='margin-bottom: 10px;'>
+                              <div class="tab-pane active" id="responses-Auth-authSigninOauthPost-500-schema">
+                                <div id="responses-Auth-authSigninOauthPost-schema-500" class="exampleStyle">
+                                  <script>
+                                    $(document).ready(function() {
+                                      var schemaWrapper = {
+  "description" : "Internal server error",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/Error"
+      }
+    }
+  }
+};
+                                      var schema = findNode('schema',schemaWrapper).schema;
+                                      if (!schema) {
+                                        schema = schemaWrapper.schema;
+                                      }
+                                      if (schema == null) {
+                                        return;
+                                      }
+                                      if (schema.$ref != null) {
+                                        schema = defsParser.$refs.get(schema.$ref);
+                                        if (schema.properties != null) {
+                                          Object.keys(schema.properties).forEach( (item) => {
+                                            if (schema.properties[item].$ref != null) {
+                                              schema.properties[item] = defsParser.$refs.get(schema.properties[item].$ref);
+                                            }
+                                          });
+                                        }
+                                      } else if (schema.items != null && schema.items.$ref != null) {
+                                        schema.items = defsParser.$refs.get(schema.items.$ref);
+                                      } else {
+                                        schemaWrapper.definitions = Object.assign({}, defs);
+                                        $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                          console.log(err);
+                                        });
+                                      }
+
+                                      var view = new JSONSchemaView(schema, 3);
+                                      $('#responses-Auth-authSigninOauthPost-500-schema-data').val(JSON.stringify(schema));
+                                      var result = $('#responses-Auth-authSigninOauthPost-schema-500');
+                                      result.empty();
+                                      result.append(view.render());
+                                    });
+                                  </script>
+                                </div>
+                                <input id='responses-Auth-authSigninOauthPost-500-schema-data' type='hidden' value=''></input>
+                              </div>
+                            </div>
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Auth-authSigninPost">
+                      <article id="api-Auth-authSigninPost-0" data-group="User" data-name="authSigninPost" data-version="0">
+                        <div class="pull-left">
+                          <h1>authSigninPost</h1>
+                          <p>Sign in with email or phone</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">Authenticate user with email/phone and password. The system will automatically detect whether the identifier is an email or phone number.</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/auth/signin</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Auth-authSigninPost-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Auth-authSigninPost-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Auth-authSigninPost-0-dart">Dart</a></li>
+                          <li class=""><a href="#examples-Auth-authSigninPost-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Auth-authSigninPost-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Auth-authSigninPost-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Auth-authSigninPost-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Auth-authSigninPost-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Auth-authSigninPost-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Auth-authSigninPost-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Auth-authSigninPost-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Auth-authSigninPost-0-python">Python</a></li>
+                          <li class=""><a href="#examples-Auth-authSigninPost-0-rust">Rust</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Auth-authSigninPost-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X POST \
+ -H "Accept: application/json" \
+ -H "Content-Type: application/json" \
+ "http://localhost:8080/api/v1/auth/signin" \
+ -d '{
+  &quot;identifier&quot; : &quot;identifier&quot;,
+  &quot;password&quot; : &quot;password&quot;
+}'
+</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Auth-authSigninPost-0-java">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
+import org.openapitools.client.auth.*;
+import org.openapitools.client.model.*;
+import org.openapitools.client.api.AuthApi;
+
+import java.io.File;
+import java.util.*;
+
+public class AuthApiExample {
+    public static void main(String[] args) {
+
+        // Create an instance of the API class
+        AuthApi apiInstance = new AuthApi();
+        SignInRequest signInRequest = ; // SignInRequest | 
+
+        try {
+            _auth_signin_post_200_response result = apiInstance.authSigninPost(signInRequest);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling AuthApi#authSigninPost");
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Auth-authSigninPost-0-dart">
+                            <pre class="prettyprint"><code class="language-dart">import 'package:openapi/api.dart';
+
+final api_instance = DefaultApi();
+
+final SignInRequest signInRequest = new SignInRequest(); // SignInRequest | 
+
+try {
+    final result = await api_instance.authSigninPost(signInRequest);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->authSigninPost: $e\n');
+}
+
+</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Auth-authSigninPost-0-android">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.AuthApi;
+
+public class AuthApiExample {
+    public static void main(String[] args) {
+        AuthApi apiInstance = new AuthApi();
+        SignInRequest signInRequest = ; // SignInRequest | 
+
+        try {
+            _auth_signin_post_200_response result = apiInstance.authSigninPost(signInRequest);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling AuthApi#authSigninPost");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Auth-authSigninPost-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Auth-authSigninPost-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">
+
+// Create an instance of the API class
+AuthApi *apiInstance = [[AuthApi alloc] init];
+SignInRequest *signInRequest = ; // 
+
+// Sign in with email or phone
+[apiInstance authSigninPostWith:signInRequest
+              completionHandler: ^(_auth_signin_post_200_response output, NSError* error) {
+    if (output) {
+        NSLog(@"%@", output);
+    }
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Auth-authSigninPost-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var OcBackendApi = require('oc_backend_api');
+
+// Create an instance of the API class
+var api = new OcBackendApi.AuthApi()
+var signInRequest = ; // {SignInRequest} 
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.authSigninPost(signInRequest, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Auth-authSigninPost-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Auth-authSigninPost-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using Org.OpenAPITools.Api;
+using Org.OpenAPITools.Client;
+using Org.OpenAPITools.Model;
+
+namespace Example
+{
+    public class authSigninPostExample
+    {
+        public void main()
+        {
+
+            // Create an instance of the API class
+            var apiInstance = new AuthApi();
+            var signInRequest = new SignInRequest(); // SignInRequest | 
+
+            try {
+                // Sign in with email or phone
+                _auth_signin_post_200_response result = apiInstance.authSigninPost(signInRequest);
+                Debug.WriteLine(result);
+            } catch (Exception e) {
+                Debug.Print("Exception when calling AuthApi.authSigninPost: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Auth-authSigninPost-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+// Create an instance of the API class
+$api_instance = new OpenAPITools\Client\Api\AuthApi();
+$signInRequest = ; // SignInRequest | 
+
+try {
+    $result = $api_instance->authSigninPost($signInRequest);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling AuthApi->authSigninPost: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Auth-authSigninPost-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::OPenAPIClient::Configuration;
+use WWW::OPenAPIClient::AuthApi;
+
+# Create an instance of the API class
+my $api_instance = WWW::OPenAPIClient::AuthApi->new();
+my $signInRequest = WWW::OPenAPIClient::Object::SignInRequest->new(); # SignInRequest | 
+
+eval {
+    my $result = $api_instance->authSigninPost(signInRequest => $signInRequest);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling AuthApi->authSigninPost: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Auth-authSigninPost-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import openapi_client
+from openapi_client.rest import ApiException
+from pprint import pprint
+
+# Create an instance of the API class
+api_instance = openapi_client.AuthApi()
+signInRequest =  # SignInRequest | 
+
+try:
+    # Sign in with email or phone
+    api_response = api_instance.auth_signin_post(signInRequest)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling AuthApi->authSigninPost: %s\n" % e)</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Auth-authSigninPost-0-rust">
+                              <pre class="prettyprint"><code class="language-rust">extern crate AuthApi;
+
+pub fn main() {
+    let signInRequest = ; // SignInRequest
+
+    let mut context = AuthApi::Context::default();
+    let result = client.authSigninPost(signInRequest, &context).wait();
+
+    println!("{:?}", result);
+}
+</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Scopes</h2>
+                          <table>
+                            
+                          </table>
+
+                          <h2>Parameters</h2>
+
+
+
+                            <div class="methodsubtabletitle">Body parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">signInRequest <span style="color:red;">*</span></td>
+<td>
+<p class="marked"></p>
+<script>
+$(document).ready(function() {
+  var schemaWrapper = {
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/SignInRequest"
+      }
+    }
+  },
+  "required" : true
+};
+
+  var schema = findNode('schema',schemaWrapper).schema;
+  if (!schema) {
+    schema = schemaWrapper.schema;
+  }
+  if (schema.$ref != null) {
+    schema = defsParser.$refs.get(schema.$ref);
+  } else if (schema.items != null && schema.items.$ref != null) {
+    schema.items = defsParser.$refs.get(schema.items.$ref);
+  } else {
+    schemaWrapper.definitions = Object.assign({}, defs);
+    $RefParser.dereference(schemaWrapper).catch(function(err) {
+      console.log(err);
+    });
+  }
+
+  var view = new JSONSchemaView(schema,2,{isBodyParam: true});
+  var result = $('#d2e199_authSigninPost_signInRequest');
+  result.empty();
+  result.append(view.render());
+});
+</script>
+<div id="d2e199_authSigninPost_signInRequest"></div>
+</td>
+</tr>
+
+                            </table>
+
+
+
+                          <h2>Responses</h2>
+                            <h3 id="examples-Auth-authSigninPost-title-200"></h3>
+                            <p id="examples-Auth-authSigninPost-description-200" class="marked"></p>
+                            <script>
+                              var responseAuth200_description = `User authenticated successfully`;
+                              var responseAuth200_description_break = responseAuth200_description.indexOf('\n');
+                              if (responseAuth200_description_break == -1) {
+                                $("#examples-Auth-authSigninPost-title-200").text("Status: 200 - " + responseAuth200_description);
+                              } else {
+                                $("#examples-Auth-authSigninPost-title-200").text("Status: 200 - " + responseAuth200_description.substring(0, responseAuth200_description_break));
+                                $("#examples-Auth-authSigninPost-description-200").html(responseAuth200_description.substring(responseAuth200_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Auth-authSigninPost-200" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Auth-authSigninPost-200-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Auth-authSigninPost-200-wrapper" style='margin-bottom: 10px;'>
+                              <div class="tab-pane active" id="responses-Auth-authSigninPost-200-schema">
+                                <div id="responses-Auth-authSigninPost-schema-200" class="exampleStyle">
+                                  <script>
+                                    $(document).ready(function() {
+                                      var schemaWrapper = {
+  "description" : "User authenticated successfully",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/_auth_signin_post_200_response"
+      }
+    }
+  }
+};
+                                      var schema = findNode('schema',schemaWrapper).schema;
+                                      if (!schema) {
+                                        schema = schemaWrapper.schema;
+                                      }
+                                      if (schema == null) {
+                                        return;
+                                      }
+                                      if (schema.$ref != null) {
+                                        schema = defsParser.$refs.get(schema.$ref);
+                                        if (schema.properties != null) {
+                                          Object.keys(schema.properties).forEach( (item) => {
+                                            if (schema.properties[item].$ref != null) {
+                                              schema.properties[item] = defsParser.$refs.get(schema.properties[item].$ref);
+                                            }
+                                          });
+                                        }
+                                      } else if (schema.items != null && schema.items.$ref != null) {
+                                        schema.items = defsParser.$refs.get(schema.items.$ref);
+                                      } else {
+                                        schemaWrapper.definitions = Object.assign({}, defs);
+                                        $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                          console.log(err);
+                                        });
+                                      }
+
+                                      var view = new JSONSchemaView(schema, 3);
+                                      $('#responses-Auth-authSigninPost-200-schema-data').val(JSON.stringify(schema));
+                                      var result = $('#responses-Auth-authSigninPost-schema-200');
+                                      result.empty();
+                                      result.append(view.render());
+                                    });
+                                  </script>
+                                </div>
+                                <input id='responses-Auth-authSigninPost-200-schema-data' type='hidden' value=''></input>
+                              </div>
+                            </div>
+                            <h3 id="examples-Auth-authSigninPost-title-400"></h3>
+                            <p id="examples-Auth-authSigninPost-description-400" class="marked"></p>
+                            <script>
+                              var responseAuth400_description = `Bad request`;
+                              var responseAuth400_description_break = responseAuth400_description.indexOf('\n');
+                              if (responseAuth400_description_break == -1) {
+                                $("#examples-Auth-authSigninPost-title-400").text("Status: 400 - " + responseAuth400_description);
+                              } else {
+                                $("#examples-Auth-authSigninPost-title-400").text("Status: 400 - " + responseAuth400_description.substring(0, responseAuth400_description_break));
+                                $("#examples-Auth-authSigninPost-description-400").html(responseAuth400_description.substring(responseAuth400_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Auth-authSigninPost-400" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Auth-authSigninPost-400-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Auth-authSigninPost-400-wrapper" style='margin-bottom: 10px;'>
+                              <div class="tab-pane active" id="responses-Auth-authSigninPost-400-schema">
+                                <div id="responses-Auth-authSigninPost-schema-400" class="exampleStyle">
+                                  <script>
+                                    $(document).ready(function() {
+                                      var schemaWrapper = {
+  "description" : "Bad request",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/Error"
+      }
+    }
+  }
+};
+                                      var schema = findNode('schema',schemaWrapper).schema;
+                                      if (!schema) {
+                                        schema = schemaWrapper.schema;
+                                      }
+                                      if (schema == null) {
+                                        return;
+                                      }
+                                      if (schema.$ref != null) {
+                                        schema = defsParser.$refs.get(schema.$ref);
+                                        if (schema.properties != null) {
+                                          Object.keys(schema.properties).forEach( (item) => {
+                                            if (schema.properties[item].$ref != null) {
+                                              schema.properties[item] = defsParser.$refs.get(schema.properties[item].$ref);
+                                            }
+                                          });
+                                        }
+                                      } else if (schema.items != null && schema.items.$ref != null) {
+                                        schema.items = defsParser.$refs.get(schema.items.$ref);
+                                      } else {
+                                        schemaWrapper.definitions = Object.assign({}, defs);
+                                        $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                          console.log(err);
+                                        });
+                                      }
+
+                                      var view = new JSONSchemaView(schema, 3);
+                                      $('#responses-Auth-authSigninPost-400-schema-data').val(JSON.stringify(schema));
+                                      var result = $('#responses-Auth-authSigninPost-schema-400');
+                                      result.empty();
+                                      result.append(view.render());
+                                    });
+                                  </script>
+                                </div>
+                                <input id='responses-Auth-authSigninPost-400-schema-data' type='hidden' value=''></input>
+                              </div>
+                            </div>
+                            <h3 id="examples-Auth-authSigninPost-title-401"></h3>
+                            <p id="examples-Auth-authSigninPost-description-401" class="marked"></p>
+                            <script>
+                              var responseAuth401_description = `Invalid credentials`;
+                              var responseAuth401_description_break = responseAuth401_description.indexOf('\n');
+                              if (responseAuth401_description_break == -1) {
+                                $("#examples-Auth-authSigninPost-title-401").text("Status: 401 - " + responseAuth401_description);
+                              } else {
+                                $("#examples-Auth-authSigninPost-title-401").text("Status: 401 - " + responseAuth401_description.substring(0, responseAuth401_description_break));
+                                $("#examples-Auth-authSigninPost-description-401").html(responseAuth401_description.substring(responseAuth401_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Auth-authSigninPost-401" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Auth-authSigninPost-401-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Auth-authSigninPost-401-wrapper" style='margin-bottom: 10px;'>
+                              <div class="tab-pane active" id="responses-Auth-authSigninPost-401-schema">
+                                <div id="responses-Auth-authSigninPost-schema-401" class="exampleStyle">
+                                  <script>
+                                    $(document).ready(function() {
+                                      var schemaWrapper = {
+  "description" : "Invalid credentials",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/Error"
+      }
+    }
+  }
+};
+                                      var schema = findNode('schema',schemaWrapper).schema;
+                                      if (!schema) {
+                                        schema = schemaWrapper.schema;
+                                      }
+                                      if (schema == null) {
+                                        return;
+                                      }
+                                      if (schema.$ref != null) {
+                                        schema = defsParser.$refs.get(schema.$ref);
+                                        if (schema.properties != null) {
+                                          Object.keys(schema.properties).forEach( (item) => {
+                                            if (schema.properties[item].$ref != null) {
+                                              schema.properties[item] = defsParser.$refs.get(schema.properties[item].$ref);
+                                            }
+                                          });
+                                        }
+                                      } else if (schema.items != null && schema.items.$ref != null) {
+                                        schema.items = defsParser.$refs.get(schema.items.$ref);
+                                      } else {
+                                        schemaWrapper.definitions = Object.assign({}, defs);
+                                        $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                          console.log(err);
+                                        });
+                                      }
+
+                                      var view = new JSONSchemaView(schema, 3);
+                                      $('#responses-Auth-authSigninPost-401-schema-data').val(JSON.stringify(schema));
+                                      var result = $('#responses-Auth-authSigninPost-schema-401');
+                                      result.empty();
+                                      result.append(view.render());
+                                    });
+                                  </script>
+                                </div>
+                                <input id='responses-Auth-authSigninPost-401-schema-data' type='hidden' value=''></input>
+                              </div>
+                            </div>
+                            <h3 id="examples-Auth-authSigninPost-title-500"></h3>
+                            <p id="examples-Auth-authSigninPost-description-500" class="marked"></p>
+                            <script>
+                              var responseAuth500_description = `Internal server error`;
+                              var responseAuth500_description_break = responseAuth500_description.indexOf('\n');
+                              if (responseAuth500_description_break == -1) {
+                                $("#examples-Auth-authSigninPost-title-500").text("Status: 500 - " + responseAuth500_description);
+                              } else {
+                                $("#examples-Auth-authSigninPost-title-500").text("Status: 500 - " + responseAuth500_description.substring(0, responseAuth500_description_break));
+                                $("#examples-Auth-authSigninPost-description-500").html(responseAuth500_description.substring(responseAuth500_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Auth-authSigninPost-500" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Auth-authSigninPost-500-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Auth-authSigninPost-500-wrapper" style='margin-bottom: 10px;'>
+                              <div class="tab-pane active" id="responses-Auth-authSigninPost-500-schema">
+                                <div id="responses-Auth-authSigninPost-schema-500" class="exampleStyle">
+                                  <script>
+                                    $(document).ready(function() {
+                                      var schemaWrapper = {
+  "description" : "Internal server error",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/Error"
+      }
+    }
+  }
+};
+                                      var schema = findNode('schema',schemaWrapper).schema;
+                                      if (!schema) {
+                                        schema = schemaWrapper.schema;
+                                      }
+                                      if (schema == null) {
+                                        return;
+                                      }
+                                      if (schema.$ref != null) {
+                                        schema = defsParser.$refs.get(schema.$ref);
+                                        if (schema.properties != null) {
+                                          Object.keys(schema.properties).forEach( (item) => {
+                                            if (schema.properties[item].$ref != null) {
+                                              schema.properties[item] = defsParser.$refs.get(schema.properties[item].$ref);
+                                            }
+                                          });
+                                        }
+                                      } else if (schema.items != null && schema.items.$ref != null) {
+                                        schema.items = defsParser.$refs.get(schema.items.$ref);
+                                      } else {
+                                        schemaWrapper.definitions = Object.assign({}, defs);
+                                        $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                          console.log(err);
+                                        });
+                                      }
+
+                                      var view = new JSONSchemaView(schema, 3);
+                                      $('#responses-Auth-authSigninPost-500-schema-data').val(JSON.stringify(schema));
+                                      var result = $('#responses-Auth-authSigninPost-schema-500');
+                                      result.empty();
+                                      result.append(view.render());
+                                    });
+                                  </script>
+                                </div>
+                                <input id='responses-Auth-authSigninPost-500-schema-data' type='hidden' value=''></input>
+                              </div>
+                            </div>
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Auth-authSignoutPost">
+                      <article id="api-Auth-authSignoutPost-0" data-group="User" data-name="authSignoutPost" data-version="0">
+                        <div class="pull-left">
+                          <h1>authSignoutPost</h1>
+                          <p>Sign out</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">Sign out user and invalidate tokens</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/auth/signout</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Auth-authSignoutPost-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Auth-authSignoutPost-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Auth-authSignoutPost-0-dart">Dart</a></li>
+                          <li class=""><a href="#examples-Auth-authSignoutPost-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Auth-authSignoutPost-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Auth-authSignoutPost-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Auth-authSignoutPost-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Auth-authSignoutPost-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Auth-authSignoutPost-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Auth-authSignoutPost-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Auth-authSignoutPost-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Auth-authSignoutPost-0-python">Python</a></li>
+                          <li class=""><a href="#examples-Auth-authSignoutPost-0-rust">Rust</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Auth-authSignoutPost-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X POST \
+ -H "Accept: application/json" \
+ "http://localhost:8080/api/v1/auth/signout"
+</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Auth-authSignoutPost-0-java">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
+import org.openapitools.client.auth.*;
+import org.openapitools.client.model.*;
+import org.openapitools.client.api.AuthApi;
+
+import java.io.File;
+import java.util.*;
+
+public class AuthApiExample {
+    public static void main(String[] args) {
+
+        // Create an instance of the API class
+        AuthApi apiInstance = new AuthApi();
+
+        try {
+            apiInstance.authSignoutPost();
+        } catch (ApiException e) {
+            System.err.println("Exception when calling AuthApi#authSignoutPost");
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Auth-authSignoutPost-0-dart">
+                            <pre class="prettyprint"><code class="language-dart">import 'package:openapi/api.dart';
+
+final api_instance = DefaultApi();
+
+
+try {
+    final result = await api_instance.authSignoutPost();
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->authSignoutPost: $e\n');
+}
+
+</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Auth-authSignoutPost-0-android">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.AuthApi;
+
+public class AuthApiExample {
+    public static void main(String[] args) {
+        AuthApi apiInstance = new AuthApi();
+
+        try {
+            apiInstance.authSignoutPost();
+        } catch (ApiException e) {
+            System.err.println("Exception when calling AuthApi#authSignoutPost");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Auth-authSignoutPost-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Auth-authSignoutPost-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">
+
+// Create an instance of the API class
+AuthApi *apiInstance = [[AuthApi alloc] init];
+
+// Sign out
+[apiInstance authSignoutPostWithCompletionHandler: 
+              ^(NSError* error) {
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Auth-authSignoutPost-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var OcBackendApi = require('oc_backend_api');
+
+// Create an instance of the API class
+var api = new OcBackendApi.AuthApi()
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully.');
+  }
+};
+api.authSignoutPost(callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Auth-authSignoutPost-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Auth-authSignoutPost-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using Org.OpenAPITools.Api;
+using Org.OpenAPITools.Client;
+using Org.OpenAPITools.Model;
+
+namespace Example
+{
+    public class authSignoutPostExample
+    {
+        public void main()
+        {
+
+            // Create an instance of the API class
+            var apiInstance = new AuthApi();
+
+            try {
+                // Sign out
+                apiInstance.authSignoutPost();
+            } catch (Exception e) {
+                Debug.Print("Exception when calling AuthApi.authSignoutPost: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Auth-authSignoutPost-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+// Create an instance of the API class
+$api_instance = new OpenAPITools\Client\Api\AuthApi();
+
+try {
+    $api_instance->authSignoutPost();
+} catch (Exception $e) {
+    echo 'Exception when calling AuthApi->authSignoutPost: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Auth-authSignoutPost-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::OPenAPIClient::Configuration;
+use WWW::OPenAPIClient::AuthApi;
+
+# Create an instance of the API class
+my $api_instance = WWW::OPenAPIClient::AuthApi->new();
+
+eval {
+    $api_instance->authSignoutPost();
+};
+if ($@) {
+    warn "Exception when calling AuthApi->authSignoutPost: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Auth-authSignoutPost-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import openapi_client
+from openapi_client.rest import ApiException
+from pprint import pprint
+
+# Create an instance of the API class
+api_instance = openapi_client.AuthApi()
+
+try:
+    # Sign out
+    api_instance.auth_signout_post()
+except ApiException as e:
+    print("Exception when calling AuthApi->authSignoutPost: %s\n" % e)</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Auth-authSignoutPost-0-rust">
+                              <pre class="prettyprint"><code class="language-rust">extern crate AuthApi;
+
+pub fn main() {
+
+    let mut context = AuthApi::Context::default();
+    let result = client.authSignoutPost(&context).wait();
+
+    println!("{:?}", result);
+}
+</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Scopes</h2>
+                          <table>
+                            
+                          </table>
+
+                          <h2>Parameters</h2>
+
+
+
+
+
+
+                          <h2>Responses</h2>
+                            <h3 id="examples-Auth-authSignoutPost-title-204"></h3>
+                            <p id="examples-Auth-authSignoutPost-description-204" class="marked"></p>
+                            <script>
+                              var responseAuth204_description = `User signed out successfully`;
+                              var responseAuth204_description_break = responseAuth204_description.indexOf('\n');
+                              if (responseAuth204_description_break == -1) {
+                                $("#examples-Auth-authSignoutPost-title-204").text("Status: 204 - " + responseAuth204_description);
+                              } else {
+                                $("#examples-Auth-authSignoutPost-title-204").text("Status: 204 - " + responseAuth204_description.substring(0, responseAuth204_description_break));
+                                $("#examples-Auth-authSignoutPost-description-204").html(responseAuth204_description.substring(responseAuth204_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Auth-authSignoutPost-204" class="nav nav-tabs nav-tabs-examples" >
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Auth-authSignoutPost-204-wrapper" style='margin-bottom: 10px;'>
+                              <div class="tab-pane active" id="responses-Auth-authSignoutPost-204-schema">
+                                <div id="responses-Auth-authSignoutPost-schema-204" class="exampleStyle">
+                                  <script>
+                                    $(document).ready(function() {
+                                      var schemaWrapper = {
+  "description" : "User signed out successfully"
+};
+                                      var schema = findNode('schema',schemaWrapper).schema;
+                                      if (!schema) {
+                                        schema = schemaWrapper.schema;
+                                      }
+                                      if (schema == null) {
+                                        return;
+                                      }
+                                      if (schema.$ref != null) {
+                                        schema = defsParser.$refs.get(schema.$ref);
+                                        if (schema.properties != null) {
+                                          Object.keys(schema.properties).forEach( (item) => {
+                                            if (schema.properties[item].$ref != null) {
+                                              schema.properties[item] = defsParser.$refs.get(schema.properties[item].$ref);
+                                            }
+                                          });
+                                        }
+                                      } else if (schema.items != null && schema.items.$ref != null) {
+                                        schema.items = defsParser.$refs.get(schema.items.$ref);
+                                      } else {
+                                        schemaWrapper.definitions = Object.assign({}, defs);
+                                        $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                          console.log(err);
+                                        });
+                                      }
+
+                                      var view = new JSONSchemaView(schema, 3);
+                                      $('#responses-Auth-authSignoutPost-204-schema-data').val(JSON.stringify(schema));
+                                      var result = $('#responses-Auth-authSignoutPost-schema-204');
+                                      result.empty();
+                                      result.append(view.render());
+                                    });
+                                  </script>
+                                </div>
+                                <input id='responses-Auth-authSignoutPost-204-schema-data' type='hidden' value=''></input>
+                              </div>
+                            </div>
+                            <h3 id="examples-Auth-authSignoutPost-title-401"></h3>
+                            <p id="examples-Auth-authSignoutPost-description-401" class="marked"></p>
+                            <script>
+                              var responseAuth401_description = `Unauthorized - authentication required`;
+                              var responseAuth401_description_break = responseAuth401_description.indexOf('\n');
+                              if (responseAuth401_description_break == -1) {
+                                $("#examples-Auth-authSignoutPost-title-401").text("Status: 401 - " + responseAuth401_description);
+                              } else {
+                                $("#examples-Auth-authSignoutPost-title-401").text("Status: 401 - " + responseAuth401_description.substring(0, responseAuth401_description_break));
+                                $("#examples-Auth-authSignoutPost-description-401").html(responseAuth401_description.substring(responseAuth401_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Auth-authSignoutPost-401" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Auth-authSignoutPost-401-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Auth-authSignoutPost-401-wrapper" style='margin-bottom: 10px;'>
+                              <div class="tab-pane active" id="responses-Auth-authSignoutPost-401-schema">
+                                <div id="responses-Auth-authSignoutPost-schema-401" class="exampleStyle">
+                                  <script>
+                                    $(document).ready(function() {
+                                      var schemaWrapper = {
+  "description" : "Unauthorized - authentication required",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/Error"
+      }
+    }
+  }
+};
+                                      var schema = findNode('schema',schemaWrapper).schema;
+                                      if (!schema) {
+                                        schema = schemaWrapper.schema;
+                                      }
+                                      if (schema == null) {
+                                        return;
+                                      }
+                                      if (schema.$ref != null) {
+                                        schema = defsParser.$refs.get(schema.$ref);
+                                        if (schema.properties != null) {
+                                          Object.keys(schema.properties).forEach( (item) => {
+                                            if (schema.properties[item].$ref != null) {
+                                              schema.properties[item] = defsParser.$refs.get(schema.properties[item].$ref);
+                                            }
+                                          });
+                                        }
+                                      } else if (schema.items != null && schema.items.$ref != null) {
+                                        schema.items = defsParser.$refs.get(schema.items.$ref);
+                                      } else {
+                                        schemaWrapper.definitions = Object.assign({}, defs);
+                                        $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                          console.log(err);
+                                        });
+                                      }
+
+                                      var view = new JSONSchemaView(schema, 3);
+                                      $('#responses-Auth-authSignoutPost-401-schema-data').val(JSON.stringify(schema));
+                                      var result = $('#responses-Auth-authSignoutPost-schema-401');
+                                      result.empty();
+                                      result.append(view.render());
+                                    });
+                                  </script>
+                                </div>
+                                <input id='responses-Auth-authSignoutPost-401-schema-data' type='hidden' value=''></input>
+                              </div>
+                            </div>
+                            <h3 id="examples-Auth-authSignoutPost-title-500"></h3>
+                            <p id="examples-Auth-authSignoutPost-description-500" class="marked"></p>
+                            <script>
+                              var responseAuth500_description = `Internal server error`;
+                              var responseAuth500_description_break = responseAuth500_description.indexOf('\n');
+                              if (responseAuth500_description_break == -1) {
+                                $("#examples-Auth-authSignoutPost-title-500").text("Status: 500 - " + responseAuth500_description);
+                              } else {
+                                $("#examples-Auth-authSignoutPost-title-500").text("Status: 500 - " + responseAuth500_description.substring(0, responseAuth500_description_break));
+                                $("#examples-Auth-authSignoutPost-description-500").html(responseAuth500_description.substring(responseAuth500_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Auth-authSignoutPost-500" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Auth-authSignoutPost-500-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Auth-authSignoutPost-500-wrapper" style='margin-bottom: 10px;'>
+                              <div class="tab-pane active" id="responses-Auth-authSignoutPost-500-schema">
+                                <div id="responses-Auth-authSignoutPost-schema-500" class="exampleStyle">
+                                  <script>
+                                    $(document).ready(function() {
+                                      var schemaWrapper = {
+  "description" : "Internal server error",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/Error"
+      }
+    }
+  }
+};
+                                      var schema = findNode('schema',schemaWrapper).schema;
+                                      if (!schema) {
+                                        schema = schemaWrapper.schema;
+                                      }
+                                      if (schema == null) {
+                                        return;
+                                      }
+                                      if (schema.$ref != null) {
+                                        schema = defsParser.$refs.get(schema.$ref);
+                                        if (schema.properties != null) {
+                                          Object.keys(schema.properties).forEach( (item) => {
+                                            if (schema.properties[item].$ref != null) {
+                                              schema.properties[item] = defsParser.$refs.get(schema.properties[item].$ref);
+                                            }
+                                          });
+                                        }
+                                      } else if (schema.items != null && schema.items.$ref != null) {
+                                        schema.items = defsParser.$refs.get(schema.items.$ref);
+                                      } else {
+                                        schemaWrapper.definitions = Object.assign({}, defs);
+                                        $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                          console.log(err);
+                                        });
+                                      }
+
+                                      var view = new JSONSchemaView(schema, 3);
+                                      $('#responses-Auth-authSignoutPost-500-schema-data').val(JSON.stringify(schema));
+                                      var result = $('#responses-Auth-authSignoutPost-schema-500');
+                                      result.empty();
+                                      result.append(view.render());
+                                    });
+                                  </script>
+                                </div>
+                                <input id='responses-Auth-authSignoutPost-500-schema-data' type='hidden' value=''></input>
+                              </div>
+                            </div>
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Auth-authSignupPost">
+                      <article id="api-Auth-authSignupPost-0" data-group="User" data-name="authSignupPost" data-version="0">
+                        <div class="pull-left">
+                          <h1>authSignupPost</h1>
+                          <p>Sign up with email or phone</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">Register a new user with email/phone and password. The system will automatically detect whether the identifier is an email or phone number.</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/auth/signup</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Auth-authSignupPost-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Auth-authSignupPost-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Auth-authSignupPost-0-dart">Dart</a></li>
+                          <li class=""><a href="#examples-Auth-authSignupPost-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Auth-authSignupPost-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Auth-authSignupPost-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Auth-authSignupPost-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Auth-authSignupPost-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Auth-authSignupPost-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Auth-authSignupPost-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Auth-authSignupPost-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Auth-authSignupPost-0-python">Python</a></li>
+                          <li class=""><a href="#examples-Auth-authSignupPost-0-rust">Rust</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Auth-authSignupPost-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X POST \
+ -H "Accept: application/json" \
+ -H "Content-Type: application/json" \
+ "http://localhost:8080/api/v1/auth/signup" \
+ -d '{
+  &quot;identifier&quot; : &quot;identifier&quot;,
+  &quot;password&quot; : &quot;password&quot;,
+  &quot;redirect_to&quot; : &quot;https://openapi-generator.tech&quot;
+}'
+</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Auth-authSignupPost-0-java">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
+import org.openapitools.client.auth.*;
+import org.openapitools.client.model.*;
+import org.openapitools.client.api.AuthApi;
+
+import java.io.File;
+import java.util.*;
+
+public class AuthApiExample {
+    public static void main(String[] args) {
+
+        // Create an instance of the API class
+        AuthApi apiInstance = new AuthApi();
+        SignUpRequest signUpRequest = ; // SignUpRequest | 
+
+        try {
+            _auth_signup_post_201_response result = apiInstance.authSignupPost(signUpRequest);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling AuthApi#authSignupPost");
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Auth-authSignupPost-0-dart">
+                            <pre class="prettyprint"><code class="language-dart">import 'package:openapi/api.dart';
+
+final api_instance = DefaultApi();
+
+final SignUpRequest signUpRequest = new SignUpRequest(); // SignUpRequest | 
+
+try {
+    final result = await api_instance.authSignupPost(signUpRequest);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->authSignupPost: $e\n');
+}
+
+</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Auth-authSignupPost-0-android">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.AuthApi;
+
+public class AuthApiExample {
+    public static void main(String[] args) {
+        AuthApi apiInstance = new AuthApi();
+        SignUpRequest signUpRequest = ; // SignUpRequest | 
+
+        try {
+            _auth_signup_post_201_response result = apiInstance.authSignupPost(signUpRequest);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling AuthApi#authSignupPost");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Auth-authSignupPost-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Auth-authSignupPost-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">
+
+// Create an instance of the API class
+AuthApi *apiInstance = [[AuthApi alloc] init];
+SignUpRequest *signUpRequest = ; // 
+
+// Sign up with email or phone
+[apiInstance authSignupPostWith:signUpRequest
+              completionHandler: ^(_auth_signup_post_201_response output, NSError* error) {
+    if (output) {
+        NSLog(@"%@", output);
+    }
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Auth-authSignupPost-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var OcBackendApi = require('oc_backend_api');
+
+// Create an instance of the API class
+var api = new OcBackendApi.AuthApi()
+var signUpRequest = ; // {SignUpRequest} 
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.authSignupPost(signUpRequest, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Auth-authSignupPost-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Auth-authSignupPost-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using Org.OpenAPITools.Api;
+using Org.OpenAPITools.Client;
+using Org.OpenAPITools.Model;
+
+namespace Example
+{
+    public class authSignupPostExample
+    {
+        public void main()
+        {
+
+            // Create an instance of the API class
+            var apiInstance = new AuthApi();
+            var signUpRequest = new SignUpRequest(); // SignUpRequest | 
+
+            try {
+                // Sign up with email or phone
+                _auth_signup_post_201_response result = apiInstance.authSignupPost(signUpRequest);
+                Debug.WriteLine(result);
+            } catch (Exception e) {
+                Debug.Print("Exception when calling AuthApi.authSignupPost: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Auth-authSignupPost-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+// Create an instance of the API class
+$api_instance = new OpenAPITools\Client\Api\AuthApi();
+$signUpRequest = ; // SignUpRequest | 
+
+try {
+    $result = $api_instance->authSignupPost($signUpRequest);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling AuthApi->authSignupPost: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Auth-authSignupPost-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::OPenAPIClient::Configuration;
+use WWW::OPenAPIClient::AuthApi;
+
+# Create an instance of the API class
+my $api_instance = WWW::OPenAPIClient::AuthApi->new();
+my $signUpRequest = WWW::OPenAPIClient::Object::SignUpRequest->new(); # SignUpRequest | 
+
+eval {
+    my $result = $api_instance->authSignupPost(signUpRequest => $signUpRequest);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling AuthApi->authSignupPost: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Auth-authSignupPost-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import openapi_client
+from openapi_client.rest import ApiException
+from pprint import pprint
+
+# Create an instance of the API class
+api_instance = openapi_client.AuthApi()
+signUpRequest =  # SignUpRequest | 
+
+try:
+    # Sign up with email or phone
+    api_response = api_instance.auth_signup_post(signUpRequest)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling AuthApi->authSignupPost: %s\n" % e)</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Auth-authSignupPost-0-rust">
+                              <pre class="prettyprint"><code class="language-rust">extern crate AuthApi;
+
+pub fn main() {
+    let signUpRequest = ; // SignUpRequest
+
+    let mut context = AuthApi::Context::default();
+    let result = client.authSignupPost(signUpRequest, &context).wait();
+
+    println!("{:?}", result);
+}
+</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Scopes</h2>
+                          <table>
+                            
+                          </table>
+
+                          <h2>Parameters</h2>
+
+
+
+                            <div class="methodsubtabletitle">Body parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">signUpRequest <span style="color:red;">*</span></td>
+<td>
+<p class="marked"></p>
+<script>
+$(document).ready(function() {
+  var schemaWrapper = {
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/SignUpRequest"
+      }
+    }
+  },
+  "required" : true
+};
+
+  var schema = findNode('schema',schemaWrapper).schema;
+  if (!schema) {
+    schema = schemaWrapper.schema;
+  }
+  if (schema.$ref != null) {
+    schema = defsParser.$refs.get(schema.$ref);
+  } else if (schema.items != null && schema.items.$ref != null) {
+    schema.items = defsParser.$refs.get(schema.items.$ref);
+  } else {
+    schemaWrapper.definitions = Object.assign({}, defs);
+    $RefParser.dereference(schemaWrapper).catch(function(err) {
+      console.log(err);
+    });
+  }
+
+  var view = new JSONSchemaView(schema,2,{isBodyParam: true});
+  var result = $('#d2e199_authSignupPost_signUpRequest');
+  result.empty();
+  result.append(view.render());
+});
+</script>
+<div id="d2e199_authSignupPost_signUpRequest"></div>
+</td>
+</tr>
+
+                            </table>
+
+
+
+                          <h2>Responses</h2>
+                            <h3 id="examples-Auth-authSignupPost-title-201"></h3>
+                            <p id="examples-Auth-authSignupPost-description-201" class="marked"></p>
+                            <script>
+                              var responseAuth201_description = `User registered successfully`;
+                              var responseAuth201_description_break = responseAuth201_description.indexOf('\n');
+                              if (responseAuth201_description_break == -1) {
+                                $("#examples-Auth-authSignupPost-title-201").text("Status: 201 - " + responseAuth201_description);
+                              } else {
+                                $("#examples-Auth-authSignupPost-title-201").text("Status: 201 - " + responseAuth201_description.substring(0, responseAuth201_description_break));
+                                $("#examples-Auth-authSignupPost-description-201").html(responseAuth201_description.substring(responseAuth201_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Auth-authSignupPost-201" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Auth-authSignupPost-201-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Auth-authSignupPost-201-wrapper" style='margin-bottom: 10px;'>
+                              <div class="tab-pane active" id="responses-Auth-authSignupPost-201-schema">
+                                <div id="responses-Auth-authSignupPost-schema-201" class="exampleStyle">
+                                  <script>
+                                    $(document).ready(function() {
+                                      var schemaWrapper = {
+  "description" : "User registered successfully",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/_auth_signup_post_201_response"
+      }
+    }
+  }
+};
+                                      var schema = findNode('schema',schemaWrapper).schema;
+                                      if (!schema) {
+                                        schema = schemaWrapper.schema;
+                                      }
+                                      if (schema == null) {
+                                        return;
+                                      }
+                                      if (schema.$ref != null) {
+                                        schema = defsParser.$refs.get(schema.$ref);
+                                        if (schema.properties != null) {
+                                          Object.keys(schema.properties).forEach( (item) => {
+                                            if (schema.properties[item].$ref != null) {
+                                              schema.properties[item] = defsParser.$refs.get(schema.properties[item].$ref);
+                                            }
+                                          });
+                                        }
+                                      } else if (schema.items != null && schema.items.$ref != null) {
+                                        schema.items = defsParser.$refs.get(schema.items.$ref);
+                                      } else {
+                                        schemaWrapper.definitions = Object.assign({}, defs);
+                                        $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                          console.log(err);
+                                        });
+                                      }
+
+                                      var view = new JSONSchemaView(schema, 3);
+                                      $('#responses-Auth-authSignupPost-201-schema-data').val(JSON.stringify(schema));
+                                      var result = $('#responses-Auth-authSignupPost-schema-201');
+                                      result.empty();
+                                      result.append(view.render());
+                                    });
+                                  </script>
+                                </div>
+                                <input id='responses-Auth-authSignupPost-201-schema-data' type='hidden' value=''></input>
+                              </div>
+                            </div>
+                            <h3 id="examples-Auth-authSignupPost-title-400"></h3>
+                            <p id="examples-Auth-authSignupPost-description-400" class="marked"></p>
+                            <script>
+                              var responseAuth400_description = `Bad request`;
+                              var responseAuth400_description_break = responseAuth400_description.indexOf('\n');
+                              if (responseAuth400_description_break == -1) {
+                                $("#examples-Auth-authSignupPost-title-400").text("Status: 400 - " + responseAuth400_description);
+                              } else {
+                                $("#examples-Auth-authSignupPost-title-400").text("Status: 400 - " + responseAuth400_description.substring(0, responseAuth400_description_break));
+                                $("#examples-Auth-authSignupPost-description-400").html(responseAuth400_description.substring(responseAuth400_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Auth-authSignupPost-400" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Auth-authSignupPost-400-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Auth-authSignupPost-400-wrapper" style='margin-bottom: 10px;'>
+                              <div class="tab-pane active" id="responses-Auth-authSignupPost-400-schema">
+                                <div id="responses-Auth-authSignupPost-schema-400" class="exampleStyle">
+                                  <script>
+                                    $(document).ready(function() {
+                                      var schemaWrapper = {
+  "description" : "Bad request",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/Error"
+      }
+    }
+  }
+};
+                                      var schema = findNode('schema',schemaWrapper).schema;
+                                      if (!schema) {
+                                        schema = schemaWrapper.schema;
+                                      }
+                                      if (schema == null) {
+                                        return;
+                                      }
+                                      if (schema.$ref != null) {
+                                        schema = defsParser.$refs.get(schema.$ref);
+                                        if (schema.properties != null) {
+                                          Object.keys(schema.properties).forEach( (item) => {
+                                            if (schema.properties[item].$ref != null) {
+                                              schema.properties[item] = defsParser.$refs.get(schema.properties[item].$ref);
+                                            }
+                                          });
+                                        }
+                                      } else if (schema.items != null && schema.items.$ref != null) {
+                                        schema.items = defsParser.$refs.get(schema.items.$ref);
+                                      } else {
+                                        schemaWrapper.definitions = Object.assign({}, defs);
+                                        $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                          console.log(err);
+                                        });
+                                      }
+
+                                      var view = new JSONSchemaView(schema, 3);
+                                      $('#responses-Auth-authSignupPost-400-schema-data').val(JSON.stringify(schema));
+                                      var result = $('#responses-Auth-authSignupPost-schema-400');
+                                      result.empty();
+                                      result.append(view.render());
+                                    });
+                                  </script>
+                                </div>
+                                <input id='responses-Auth-authSignupPost-400-schema-data' type='hidden' value=''></input>
+                              </div>
+                            </div>
+                            <h3 id="examples-Auth-authSignupPost-title-409"></h3>
+                            <p id="examples-Auth-authSignupPost-description-409" class="marked"></p>
+                            <script>
+                              var responseAuth409_description = `Email or phone already registered`;
+                              var responseAuth409_description_break = responseAuth409_description.indexOf('\n');
+                              if (responseAuth409_description_break == -1) {
+                                $("#examples-Auth-authSignupPost-title-409").text("Status: 409 - " + responseAuth409_description);
+                              } else {
+                                $("#examples-Auth-authSignupPost-title-409").text("Status: 409 - " + responseAuth409_description.substring(0, responseAuth409_description_break));
+                                $("#examples-Auth-authSignupPost-description-409").html(responseAuth409_description.substring(responseAuth409_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Auth-authSignupPost-409" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Auth-authSignupPost-409-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Auth-authSignupPost-409-wrapper" style='margin-bottom: 10px;'>
+                              <div class="tab-pane active" id="responses-Auth-authSignupPost-409-schema">
+                                <div id="responses-Auth-authSignupPost-schema-409" class="exampleStyle">
+                                  <script>
+                                    $(document).ready(function() {
+                                      var schemaWrapper = {
+  "description" : "Email or phone already registered",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/Error"
+      }
+    }
+  }
+};
+                                      var schema = findNode('schema',schemaWrapper).schema;
+                                      if (!schema) {
+                                        schema = schemaWrapper.schema;
+                                      }
+                                      if (schema == null) {
+                                        return;
+                                      }
+                                      if (schema.$ref != null) {
+                                        schema = defsParser.$refs.get(schema.$ref);
+                                        if (schema.properties != null) {
+                                          Object.keys(schema.properties).forEach( (item) => {
+                                            if (schema.properties[item].$ref != null) {
+                                              schema.properties[item] = defsParser.$refs.get(schema.properties[item].$ref);
+                                            }
+                                          });
+                                        }
+                                      } else if (schema.items != null && schema.items.$ref != null) {
+                                        schema.items = defsParser.$refs.get(schema.items.$ref);
+                                      } else {
+                                        schemaWrapper.definitions = Object.assign({}, defs);
+                                        $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                          console.log(err);
+                                        });
+                                      }
+
+                                      var view = new JSONSchemaView(schema, 3);
+                                      $('#responses-Auth-authSignupPost-409-schema-data').val(JSON.stringify(schema));
+                                      var result = $('#responses-Auth-authSignupPost-schema-409');
+                                      result.empty();
+                                      result.append(view.render());
+                                    });
+                                  </script>
+                                </div>
+                                <input id='responses-Auth-authSignupPost-409-schema-data' type='hidden' value=''></input>
+                              </div>
+                            </div>
+                            <h3 id="examples-Auth-authSignupPost-title-500"></h3>
+                            <p id="examples-Auth-authSignupPost-description-500" class="marked"></p>
+                            <script>
+                              var responseAuth500_description = `Internal server error`;
+                              var responseAuth500_description_break = responseAuth500_description.indexOf('\n');
+                              if (responseAuth500_description_break == -1) {
+                                $("#examples-Auth-authSignupPost-title-500").text("Status: 500 - " + responseAuth500_description);
+                              } else {
+                                $("#examples-Auth-authSignupPost-title-500").text("Status: 500 - " + responseAuth500_description.substring(0, responseAuth500_description_break));
+                                $("#examples-Auth-authSignupPost-description-500").html(responseAuth500_description.substring(responseAuth500_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Auth-authSignupPost-500" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Auth-authSignupPost-500-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Auth-authSignupPost-500-wrapper" style='margin-bottom: 10px;'>
+                              <div class="tab-pane active" id="responses-Auth-authSignupPost-500-schema">
+                                <div id="responses-Auth-authSignupPost-schema-500" class="exampleStyle">
+                                  <script>
+                                    $(document).ready(function() {
+                                      var schemaWrapper = {
+  "description" : "Internal server error",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/Error"
+      }
+    }
+  }
+};
+                                      var schema = findNode('schema',schemaWrapper).schema;
+                                      if (!schema) {
+                                        schema = schemaWrapper.schema;
+                                      }
+                                      if (schema == null) {
+                                        return;
+                                      }
+                                      if (schema.$ref != null) {
+                                        schema = defsParser.$refs.get(schema.$ref);
+                                        if (schema.properties != null) {
+                                          Object.keys(schema.properties).forEach( (item) => {
+                                            if (schema.properties[item].$ref != null) {
+                                              schema.properties[item] = defsParser.$refs.get(schema.properties[item].$ref);
+                                            }
+                                          });
+                                        }
+                                      } else if (schema.items != null && schema.items.$ref != null) {
+                                        schema.items = defsParser.$refs.get(schema.items.$ref);
+                                      } else {
+                                        schemaWrapper.definitions = Object.assign({}, defs);
+                                        $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                          console.log(err);
+                                        });
+                                      }
+
+                                      var view = new JSONSchemaView(schema, 3);
+                                      $('#responses-Auth-authSignupPost-500-schema-data').val(JSON.stringify(schema));
+                                      var result = $('#responses-Auth-authSignupPost-schema-500');
+                                      result.empty();
+                                      result.append(view.render());
+                                    });
+                                  </script>
+                                </div>
+                                <input id='responses-Auth-authSignupPost-500-schema-data' type='hidden' value=''></input>
+                              </div>
+                            </div>
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Auth-authVerifyOtpPost">
+                      <article id="api-Auth-authVerifyOtpPost-0" data-group="User" data-name="authVerifyOtpPost" data-version="0">
+                        <div class="pull-left">
+                          <h1>authVerifyOtpPost</h1>
+                          <p>Verify OTP</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">Verify one-time password for phone authentication</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/auth/verify-otp</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Auth-authVerifyOtpPost-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Auth-authVerifyOtpPost-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Auth-authVerifyOtpPost-0-dart">Dart</a></li>
+                          <li class=""><a href="#examples-Auth-authVerifyOtpPost-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Auth-authVerifyOtpPost-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Auth-authVerifyOtpPost-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Auth-authVerifyOtpPost-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Auth-authVerifyOtpPost-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Auth-authVerifyOtpPost-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Auth-authVerifyOtpPost-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Auth-authVerifyOtpPost-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Auth-authVerifyOtpPost-0-python">Python</a></li>
+                          <li class=""><a href="#examples-Auth-authVerifyOtpPost-0-rust">Rust</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Auth-authVerifyOtpPost-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X POST \
+ -H "Accept: application/json" \
+ -H "Content-Type: application/json" \
+ "http://localhost:8080/api/v1/auth/verify-otp" \
+ -d '{
+  &quot;phone&quot; : &quot;phone&quot;,
+  &quot;type&quot; : &quot;sms&quot;,
+  &quot;token&quot; : &quot;token&quot;
+}'
+</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Auth-authVerifyOtpPost-0-java">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
+import org.openapitools.client.auth.*;
+import org.openapitools.client.model.*;
+import org.openapitools.client.api.AuthApi;
+
+import java.io.File;
+import java.util.*;
+
+public class AuthApiExample {
+    public static void main(String[] args) {
+
+        // Create an instance of the API class
+        AuthApi apiInstance = new AuthApi();
+        VerifyOTPRequest verifyOTPRequest = ; // VerifyOTPRequest | 
+
+        try {
+            _auth_signin_post_200_response result = apiInstance.authVerifyOtpPost(verifyOTPRequest);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling AuthApi#authVerifyOtpPost");
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Auth-authVerifyOtpPost-0-dart">
+                            <pre class="prettyprint"><code class="language-dart">import 'package:openapi/api.dart';
+
+final api_instance = DefaultApi();
+
+final VerifyOTPRequest verifyOTPRequest = new VerifyOTPRequest(); // VerifyOTPRequest | 
+
+try {
+    final result = await api_instance.authVerifyOtpPost(verifyOTPRequest);
+    print(result);
+} catch (e) {
+    print('Exception when calling DefaultApi->authVerifyOtpPost: $e\n');
+}
+
+</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Auth-authVerifyOtpPost-0-android">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.AuthApi;
+
+public class AuthApiExample {
+    public static void main(String[] args) {
+        AuthApi apiInstance = new AuthApi();
+        VerifyOTPRequest verifyOTPRequest = ; // VerifyOTPRequest | 
+
+        try {
+            _auth_signin_post_200_response result = apiInstance.authVerifyOtpPost(verifyOTPRequest);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling AuthApi#authVerifyOtpPost");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Auth-authVerifyOtpPost-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Auth-authVerifyOtpPost-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">
+
+// Create an instance of the API class
+AuthApi *apiInstance = [[AuthApi alloc] init];
+VerifyOTPRequest *verifyOTPRequest = ; // 
+
+// Verify OTP
+[apiInstance authVerifyOtpPostWith:verifyOTPRequest
+              completionHandler: ^(_auth_signin_post_200_response output, NSError* error) {
+    if (output) {
+        NSLog(@"%@", output);
+    }
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Auth-authVerifyOtpPost-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var OcBackendApi = require('oc_backend_api');
+
+// Create an instance of the API class
+var api = new OcBackendApi.AuthApi()
+var verifyOTPRequest = ; // {VerifyOTPRequest} 
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.authVerifyOtpPost(verifyOTPRequest, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Auth-authVerifyOtpPost-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Auth-authVerifyOtpPost-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using Org.OpenAPITools.Api;
+using Org.OpenAPITools.Client;
+using Org.OpenAPITools.Model;
+
+namespace Example
+{
+    public class authVerifyOtpPostExample
+    {
+        public void main()
+        {
+
+            // Create an instance of the API class
+            var apiInstance = new AuthApi();
+            var verifyOTPRequest = new VerifyOTPRequest(); // VerifyOTPRequest | 
+
+            try {
+                // Verify OTP
+                _auth_signin_post_200_response result = apiInstance.authVerifyOtpPost(verifyOTPRequest);
+                Debug.WriteLine(result);
+            } catch (Exception e) {
+                Debug.Print("Exception when calling AuthApi.authVerifyOtpPost: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Auth-authVerifyOtpPost-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+// Create an instance of the API class
+$api_instance = new OpenAPITools\Client\Api\AuthApi();
+$verifyOTPRequest = ; // VerifyOTPRequest | 
+
+try {
+    $result = $api_instance->authVerifyOtpPost($verifyOTPRequest);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling AuthApi->authVerifyOtpPost: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Auth-authVerifyOtpPost-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::OPenAPIClient::Configuration;
+use WWW::OPenAPIClient::AuthApi;
+
+# Create an instance of the API class
+my $api_instance = WWW::OPenAPIClient::AuthApi->new();
+my $verifyOTPRequest = WWW::OPenAPIClient::Object::VerifyOTPRequest->new(); # VerifyOTPRequest | 
+
+eval {
+    my $result = $api_instance->authVerifyOtpPost(verifyOTPRequest => $verifyOTPRequest);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling AuthApi->authVerifyOtpPost: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Auth-authVerifyOtpPost-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import openapi_client
+from openapi_client.rest import ApiException
+from pprint import pprint
+
+# Create an instance of the API class
+api_instance = openapi_client.AuthApi()
+verifyOTPRequest =  # VerifyOTPRequest | 
+
+try:
+    # Verify OTP
+    api_response = api_instance.auth_verify_otp_post(verifyOTPRequest)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling AuthApi->authVerifyOtpPost: %s\n" % e)</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Auth-authVerifyOtpPost-0-rust">
+                              <pre class="prettyprint"><code class="language-rust">extern crate AuthApi;
+
+pub fn main() {
+    let verifyOTPRequest = ; // VerifyOTPRequest
+
+    let mut context = AuthApi::Context::default();
+    let result = client.authVerifyOtpPost(verifyOTPRequest, &context).wait();
+
+    println!("{:?}", result);
+}
+</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Scopes</h2>
+                          <table>
+                            
+                          </table>
+
+                          <h2>Parameters</h2>
+
+
+
+                            <div class="methodsubtabletitle">Body parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">verifyOTPRequest <span style="color:red;">*</span></td>
+<td>
+<p class="marked"></p>
+<script>
+$(document).ready(function() {
+  var schemaWrapper = {
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/VerifyOTPRequest"
+      }
+    }
+  },
+  "required" : true
+};
+
+  var schema = findNode('schema',schemaWrapper).schema;
+  if (!schema) {
+    schema = schemaWrapper.schema;
+  }
+  if (schema.$ref != null) {
+    schema = defsParser.$refs.get(schema.$ref);
+  } else if (schema.items != null && schema.items.$ref != null) {
+    schema.items = defsParser.$refs.get(schema.items.$ref);
+  } else {
+    schemaWrapper.definitions = Object.assign({}, defs);
+    $RefParser.dereference(schemaWrapper).catch(function(err) {
+      console.log(err);
+    });
+  }
+
+  var view = new JSONSchemaView(schema,2,{isBodyParam: true});
+  var result = $('#d2e199_authVerifyOtpPost_verifyOTPRequest');
+  result.empty();
+  result.append(view.render());
+});
+</script>
+<div id="d2e199_authVerifyOtpPost_verifyOTPRequest"></div>
+</td>
+</tr>
+
+                            </table>
+
+
+
+                          <h2>Responses</h2>
+                            <h3 id="examples-Auth-authVerifyOtpPost-title-200"></h3>
+                            <p id="examples-Auth-authVerifyOtpPost-description-200" class="marked"></p>
+                            <script>
+                              var responseAuth200_description = `OTP verified successfully`;
+                              var responseAuth200_description_break = responseAuth200_description.indexOf('\n');
+                              if (responseAuth200_description_break == -1) {
+                                $("#examples-Auth-authVerifyOtpPost-title-200").text("Status: 200 - " + responseAuth200_description);
+                              } else {
+                                $("#examples-Auth-authVerifyOtpPost-title-200").text("Status: 200 - " + responseAuth200_description.substring(0, responseAuth200_description_break));
+                                $("#examples-Auth-authVerifyOtpPost-description-200").html(responseAuth200_description.substring(responseAuth200_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Auth-authVerifyOtpPost-200" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Auth-authVerifyOtpPost-200-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Auth-authVerifyOtpPost-200-wrapper" style='margin-bottom: 10px;'>
+                              <div class="tab-pane active" id="responses-Auth-authVerifyOtpPost-200-schema">
+                                <div id="responses-Auth-authVerifyOtpPost-schema-200" class="exampleStyle">
+                                  <script>
+                                    $(document).ready(function() {
+                                      var schemaWrapper = {
+  "description" : "OTP verified successfully",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/_auth_signin_post_200_response"
+      }
+    }
+  }
+};
+                                      var schema = findNode('schema',schemaWrapper).schema;
+                                      if (!schema) {
+                                        schema = schemaWrapper.schema;
+                                      }
+                                      if (schema == null) {
+                                        return;
+                                      }
+                                      if (schema.$ref != null) {
+                                        schema = defsParser.$refs.get(schema.$ref);
+                                        if (schema.properties != null) {
+                                          Object.keys(schema.properties).forEach( (item) => {
+                                            if (schema.properties[item].$ref != null) {
+                                              schema.properties[item] = defsParser.$refs.get(schema.properties[item].$ref);
+                                            }
+                                          });
+                                        }
+                                      } else if (schema.items != null && schema.items.$ref != null) {
+                                        schema.items = defsParser.$refs.get(schema.items.$ref);
+                                      } else {
+                                        schemaWrapper.definitions = Object.assign({}, defs);
+                                        $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                          console.log(err);
+                                        });
+                                      }
+
+                                      var view = new JSONSchemaView(schema, 3);
+                                      $('#responses-Auth-authVerifyOtpPost-200-schema-data').val(JSON.stringify(schema));
+                                      var result = $('#responses-Auth-authVerifyOtpPost-schema-200');
+                                      result.empty();
+                                      result.append(view.render());
+                                    });
+                                  </script>
+                                </div>
+                                <input id='responses-Auth-authVerifyOtpPost-200-schema-data' type='hidden' value=''></input>
+                              </div>
+                            </div>
+                            <h3 id="examples-Auth-authVerifyOtpPost-title-400"></h3>
+                            <p id="examples-Auth-authVerifyOtpPost-description-400" class="marked"></p>
+                            <script>
+                              var responseAuth400_description = `Bad request`;
+                              var responseAuth400_description_break = responseAuth400_description.indexOf('\n');
+                              if (responseAuth400_description_break == -1) {
+                                $("#examples-Auth-authVerifyOtpPost-title-400").text("Status: 400 - " + responseAuth400_description);
+                              } else {
+                                $("#examples-Auth-authVerifyOtpPost-title-400").text("Status: 400 - " + responseAuth400_description.substring(0, responseAuth400_description_break));
+                                $("#examples-Auth-authVerifyOtpPost-description-400").html(responseAuth400_description.substring(responseAuth400_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Auth-authVerifyOtpPost-400" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Auth-authVerifyOtpPost-400-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Auth-authVerifyOtpPost-400-wrapper" style='margin-bottom: 10px;'>
+                              <div class="tab-pane active" id="responses-Auth-authVerifyOtpPost-400-schema">
+                                <div id="responses-Auth-authVerifyOtpPost-schema-400" class="exampleStyle">
+                                  <script>
+                                    $(document).ready(function() {
+                                      var schemaWrapper = {
+  "description" : "Bad request",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/Error"
+      }
+    }
+  }
+};
+                                      var schema = findNode('schema',schemaWrapper).schema;
+                                      if (!schema) {
+                                        schema = schemaWrapper.schema;
+                                      }
+                                      if (schema == null) {
+                                        return;
+                                      }
+                                      if (schema.$ref != null) {
+                                        schema = defsParser.$refs.get(schema.$ref);
+                                        if (schema.properties != null) {
+                                          Object.keys(schema.properties).forEach( (item) => {
+                                            if (schema.properties[item].$ref != null) {
+                                              schema.properties[item] = defsParser.$refs.get(schema.properties[item].$ref);
+                                            }
+                                          });
+                                        }
+                                      } else if (schema.items != null && schema.items.$ref != null) {
+                                        schema.items = defsParser.$refs.get(schema.items.$ref);
+                                      } else {
+                                        schemaWrapper.definitions = Object.assign({}, defs);
+                                        $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                          console.log(err);
+                                        });
+                                      }
+
+                                      var view = new JSONSchemaView(schema, 3);
+                                      $('#responses-Auth-authVerifyOtpPost-400-schema-data').val(JSON.stringify(schema));
+                                      var result = $('#responses-Auth-authVerifyOtpPost-schema-400');
+                                      result.empty();
+                                      result.append(view.render());
+                                    });
+                                  </script>
+                                </div>
+                                <input id='responses-Auth-authVerifyOtpPost-400-schema-data' type='hidden' value=''></input>
+                              </div>
+                            </div>
+                            <h3 id="examples-Auth-authVerifyOtpPost-title-401"></h3>
+                            <p id="examples-Auth-authVerifyOtpPost-description-401" class="marked"></p>
+                            <script>
+                              var responseAuth401_description = `Invalid or expired OTP`;
+                              var responseAuth401_description_break = responseAuth401_description.indexOf('\n');
+                              if (responseAuth401_description_break == -1) {
+                                $("#examples-Auth-authVerifyOtpPost-title-401").text("Status: 401 - " + responseAuth401_description);
+                              } else {
+                                $("#examples-Auth-authVerifyOtpPost-title-401").text("Status: 401 - " + responseAuth401_description.substring(0, responseAuth401_description_break));
+                                $("#examples-Auth-authVerifyOtpPost-description-401").html(responseAuth401_description.substring(responseAuth401_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Auth-authVerifyOtpPost-401" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Auth-authVerifyOtpPost-401-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Auth-authVerifyOtpPost-401-wrapper" style='margin-bottom: 10px;'>
+                              <div class="tab-pane active" id="responses-Auth-authVerifyOtpPost-401-schema">
+                                <div id="responses-Auth-authVerifyOtpPost-schema-401" class="exampleStyle">
+                                  <script>
+                                    $(document).ready(function() {
+                                      var schemaWrapper = {
+  "description" : "Invalid or expired OTP",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/Error"
+      }
+    }
+  }
+};
+                                      var schema = findNode('schema',schemaWrapper).schema;
+                                      if (!schema) {
+                                        schema = schemaWrapper.schema;
+                                      }
+                                      if (schema == null) {
+                                        return;
+                                      }
+                                      if (schema.$ref != null) {
+                                        schema = defsParser.$refs.get(schema.$ref);
+                                        if (schema.properties != null) {
+                                          Object.keys(schema.properties).forEach( (item) => {
+                                            if (schema.properties[item].$ref != null) {
+                                              schema.properties[item] = defsParser.$refs.get(schema.properties[item].$ref);
+                                            }
+                                          });
+                                        }
+                                      } else if (schema.items != null && schema.items.$ref != null) {
+                                        schema.items = defsParser.$refs.get(schema.items.$ref);
+                                      } else {
+                                        schemaWrapper.definitions = Object.assign({}, defs);
+                                        $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                          console.log(err);
+                                        });
+                                      }
+
+                                      var view = new JSONSchemaView(schema, 3);
+                                      $('#responses-Auth-authVerifyOtpPost-401-schema-data').val(JSON.stringify(schema));
+                                      var result = $('#responses-Auth-authVerifyOtpPost-schema-401');
+                                      result.empty();
+                                      result.append(view.render());
+                                    });
+                                  </script>
+                                </div>
+                                <input id='responses-Auth-authVerifyOtpPost-401-schema-data' type='hidden' value=''></input>
+                              </div>
+                            </div>
+                            <h3 id="examples-Auth-authVerifyOtpPost-title-500"></h3>
+                            <p id="examples-Auth-authVerifyOtpPost-description-500" class="marked"></p>
+                            <script>
+                              var responseAuth500_description = `Internal server error`;
+                              var responseAuth500_description_break = responseAuth500_description.indexOf('\n');
+                              if (responseAuth500_description_break == -1) {
+                                $("#examples-Auth-authVerifyOtpPost-title-500").text("Status: 500 - " + responseAuth500_description);
+                              } else {
+                                $("#examples-Auth-authVerifyOtpPost-title-500").text("Status: 500 - " + responseAuth500_description.substring(0, responseAuth500_description_break));
+                                $("#examples-Auth-authVerifyOtpPost-description-500").html(responseAuth500_description.substring(responseAuth500_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Auth-authVerifyOtpPost-500" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Auth-authVerifyOtpPost-500-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Auth-authVerifyOtpPost-500-wrapper" style='margin-bottom: 10px;'>
+                              <div class="tab-pane active" id="responses-Auth-authVerifyOtpPost-500-schema">
+                                <div id="responses-Auth-authVerifyOtpPost-schema-500" class="exampleStyle">
+                                  <script>
+                                    $(document).ready(function() {
+                                      var schemaWrapper = {
+  "description" : "Internal server error",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/Error"
+      }
+    }
+  }
+};
+                                      var schema = findNode('schema',schemaWrapper).schema;
+                                      if (!schema) {
+                                        schema = schemaWrapper.schema;
+                                      }
+                                      if (schema == null) {
+                                        return;
+                                      }
+                                      if (schema.$ref != null) {
+                                        schema = defsParser.$refs.get(schema.$ref);
+                                        if (schema.properties != null) {
+                                          Object.keys(schema.properties).forEach( (item) => {
+                                            if (schema.properties[item].$ref != null) {
+                                              schema.properties[item] = defsParser.$refs.get(schema.properties[item].$ref);
+                                            }
+                                          });
+                                        }
+                                      } else if (schema.items != null && schema.items.$ref != null) {
+                                        schema.items = defsParser.$refs.get(schema.items.$ref);
+                                      } else {
+                                        schemaWrapper.definitions = Object.assign({}, defs);
+                                        $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                          console.log(err);
+                                        });
+                                      }
+
+                                      var view = new JSONSchemaView(schema, 3);
+                                      $('#responses-Auth-authVerifyOtpPost-500-schema-data').val(JSON.stringify(schema));
+                                      var result = $('#responses-Auth-authVerifyOtpPost-schema-500');
+                                      result.empty();
+                                      result.append(view.render());
+                                    });
+                                  </script>
+                                </div>
+                                <input id='responses-Auth-authVerifyOtpPost-500-schema-data' type='hidden' value=''></input>
+                              </div>
+                            </div>
+                        </article>
+                      </div>
+                      <hr>
+                  </section>
                 <section id="api-OC">
                   <h1>OC</h1>
                     <div id="api-OC-ocGet">
