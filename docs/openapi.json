@@ -255,6 +255,29 @@
         "tags" : [ "Auth" ]
       }
     },
+    "/config/supabase" : {
+      "get" : {
+        "description" : "Retrieve Supabase configuration for client-side initialization",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_config_supabase_get_200_response"
+                }
+              }
+            },
+            "description" : "Supabase configuration information"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "security" : [ ],
+        "summary" : "Get Supabase configuration",
+        "tags" : [ "Config" ]
+      }
+    },
     "/users/{id}/profile" : {
       "get" : {
         "description" : "Retrieve a user's profile information including basic info, social stats, and content overview",
@@ -2695,6 +2718,20 @@
         "required" : [ "session", "user" ],
         "type" : "object"
       },
+      "SupabaseConfig" : {
+        "properties" : {
+          "project_reference" : {
+            "description" : "Supabase project reference ID",
+            "type" : "string"
+          },
+          "api_anno_key" : {
+            "description" : "Supabase anonymous API key",
+            "type" : "string"
+          }
+        },
+        "required" : [ "api_anno_key", "project_reference" ],
+        "type" : "object"
+      },
       "AuthUser" : {
         "properties" : {
           "id" : {
@@ -2863,6 +2900,14 @@
         "properties" : {
           "data" : {
             "$ref" : "#/components/schemas/OAuthResponse"
+          }
+        },
+        "type" : "object"
+      },
+      "_config_supabase_get_200_response" : {
+        "properties" : {
+          "data" : {
+            "$ref" : "#/components/schemas/SupabaseConfig"
           }
         },
         "type" : "object"
