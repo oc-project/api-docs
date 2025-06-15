@@ -63,6 +63,42 @@
         },
         "summary" : "Get current user profile",
         "tags" : [ "UserProfiles" ]
+      },
+      "put" : {
+        "description" : "Update the authenticated user's profile information",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UpdateUserProfileRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_me_get_200_response"
+                }
+              }
+            },
+            "description" : "User profile updated successfully"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "summary" : "Update current user profile",
+        "tags" : [ "UserProfiles" ]
       }
     },
     "/users/{id}/profile" : {
@@ -99,56 +135,6 @@
         },
         "security" : [ ],
         "summary" : "Get user profile",
-        "tags" : [ "UserProfiles" ]
-      },
-      "put" : {
-        "description" : "Update the authenticated user's profile information",
-        "parameters" : [ {
-          "description" : "User ID (must be the authenticated user)",
-          "explode" : false,
-          "in" : "path",
-          "name" : "id",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          },
-          "style" : "simple"
-        } ],
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/UpdateUserProfileRequest"
-              }
-            }
-          },
-          "required" : true
-        },
-        "responses" : {
-          "200" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/_me_get_200_response"
-                }
-              }
-            },
-            "description" : "User profile updated successfully"
-          },
-          "400" : {
-            "$ref" : "#/components/responses/BadRequest"
-          },
-          "403" : {
-            "$ref" : "#/components/responses/Forbidden"
-          },
-          "404" : {
-            "$ref" : "#/components/responses/NotFound"
-          },
-          "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
-          }
-        },
-        "summary" : "Update user profile",
         "tags" : [ "UserProfiles" ]
       }
     },
