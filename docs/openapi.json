@@ -1639,7 +1639,7 @@
       },
       "UserProfileSummary" : {
         "properties" : {
-          "id" : {
+          "user_id" : {
             "description" : "User unique identifier",
             "type" : "string"
           },
@@ -1684,7 +1684,7 @@
             "type" : "boolean"
           }
         },
-        "required" : [ "display_id", "followers_count", "following_count", "id", "nickname" ],
+        "required" : [ "display_id", "followers_count", "following_count", "nickname", "user_id" ],
         "type" : "object"
       },
       "UpdateUserProfileRequest" : {
