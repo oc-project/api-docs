@@ -40,6 +40,31 @@
         "tags" : [ "Config" ]
       }
     },
+    "/me" : {
+      "get" : {
+        "description" : "Retrieve the authenticated user's profile information including basic info, social stats, and content overview",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_me_get_200_response"
+                }
+              }
+            },
+            "description" : "Current user's profile information"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "summary" : "Get current user profile",
+        "tags" : [ "UserProfiles" ]
+      }
+    },
     "/users/{id}/profile" : {
       "get" : {
         "description" : "Retrieve a user's profile information including basic info, social stats, and content overview",
@@ -53,35 +78,13 @@
             "type" : "string"
           },
           "style" : "simple"
-        }, {
-          "description" : "Include followers list in response",
-          "explode" : true,
-          "in" : "query",
-          "name" : "include_followers",
-          "required" : false,
-          "schema" : {
-            "default" : false,
-            "type" : "boolean"
-          },
-          "style" : "form"
-        }, {
-          "description" : "Include following list in response",
-          "explode" : true,
-          "in" : "query",
-          "name" : "include_following",
-          "required" : false,
-          "schema" : {
-            "default" : false,
-            "type" : "boolean"
-          },
-          "style" : "form"
         } ],
         "responses" : {
           "200" : {
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/_users__id__profile_get_200_response"
+                  "$ref" : "#/components/schemas/_me_get_200_response"
                 }
               }
             },
@@ -126,7 +129,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/_users__id__profile_get_200_response"
+                  "$ref" : "#/components/schemas/_me_get_200_response"
                 }
               }
             },
@@ -1600,38 +1603,6 @@
             "description" : "Profile last update timestamp",
             "format" : "date-time",
             "type" : "string"
-          },
-          "followers" : {
-            "description" : "List of followers (only included if requested)",
-            "items" : {
-              "$ref" : "#/components/schemas/UserProfileSummary"
-            },
-            "nullable" : true,
-            "type" : "array"
-          },
-          "following" : {
-            "description" : "List of users being followed (only included if requested)",
-            "items" : {
-              "$ref" : "#/components/schemas/UserProfileSummary"
-            },
-            "nullable" : true,
-            "type" : "array"
-          },
-          "recent_posts" : {
-            "description" : "Recent posts by this user",
-            "items" : {
-              "$ref" : "#/components/schemas/PostSummary"
-            },
-            "nullable" : true,
-            "type" : "array"
-          },
-          "oc_characters" : {
-            "description" : "OC characters created by this user",
-            "items" : {
-              "$ref" : "#/components/schemas/OCSummary"
-            },
-            "nullable" : true,
-            "type" : "array"
           }
         },
         "required" : [ "created_at", "display_id", "followers_count", "following_count", "id", "nickname", "oc_characters_count", "posts_count", "updated_at" ],
@@ -2441,7 +2412,7 @@
         },
         "type" : "object"
       },
-      "_users__id__profile_get_200_response" : {
+      "_me_get_200_response" : {
         "properties" : {
           "data" : {
             "$ref" : "#/components/schemas/UserProfile"
