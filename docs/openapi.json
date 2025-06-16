@@ -1166,266 +1166,6 @@
         "summary" : "Delete a comment",
         "tags" : [ "Posts" ]
       }
-    },
-    "/posts/drafts" : {
-      "get" : {
-        "description" : "Get a list of draft posts for the authenticated user",
-        "parameters" : [ {
-          "description" : "Maximum number of items to return",
-          "explode" : true,
-          "in" : "query",
-          "name" : "limit",
-          "required" : false,
-          "schema" : {
-            "default" : 20,
-            "maximum" : 100,
-            "minimum" : 1,
-            "type" : "integer"
-          },
-          "style" : "form"
-        }, {
-          "description" : "Number of items to skip",
-          "explode" : true,
-          "in" : "query",
-          "name" : "offset",
-          "required" : false,
-          "schema" : {
-            "default" : 0,
-            "minimum" : 0,
-            "type" : "integer"
-          },
-          "style" : "form"
-        } ],
-        "responses" : {
-          "200" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/_posts_drafts_get_200_response"
-                }
-              }
-            },
-            "description" : "List of draft posts"
-          },
-          "401" : {
-            "$ref" : "#/components/responses/Unauthorized"
-          },
-          "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
-          }
-        },
-        "summary" : "Get user's draft posts",
-        "tags" : [ "Posts" ]
-      },
-      "post" : {
-        "description" : "Save a post as draft",
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/CreateDraftRequest"
-              }
-            }
-          },
-          "required" : true
-        },
-        "responses" : {
-          "201" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/_posts_drafts_post_201_response"
-                }
-              }
-            },
-            "description" : "Draft saved successfully"
-          },
-          "400" : {
-            "$ref" : "#/components/responses/BadRequest"
-          },
-          "401" : {
-            "$ref" : "#/components/responses/Unauthorized"
-          },
-          "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
-          }
-        },
-        "summary" : "Create or update a draft post",
-        "tags" : [ "Posts" ]
-      }
-    },
-    "/posts/drafts/{id}" : {
-      "delete" : {
-        "description" : "Delete a draft post",
-        "parameters" : [ {
-          "description" : "Draft ID",
-          "explode" : false,
-          "in" : "path",
-          "name" : "id",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          },
-          "style" : "simple"
-        } ],
-        "responses" : {
-          "204" : {
-            "description" : "Draft deleted successfully"
-          },
-          "401" : {
-            "$ref" : "#/components/responses/Unauthorized"
-          },
-          "403" : {
-            "$ref" : "#/components/responses/Forbidden"
-          },
-          "404" : {
-            "$ref" : "#/components/responses/NotFound"
-          },
-          "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
-          }
-        },
-        "summary" : "Delete a draft post",
-        "tags" : [ "Posts" ]
-      },
-      "get" : {
-        "description" : "Get detailed information about a specific draft",
-        "parameters" : [ {
-          "description" : "Draft ID",
-          "explode" : false,
-          "in" : "path",
-          "name" : "id",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          },
-          "style" : "simple"
-        } ],
-        "responses" : {
-          "200" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/_posts_drafts_post_201_response"
-                }
-              }
-            },
-            "description" : "Draft details"
-          },
-          "401" : {
-            "$ref" : "#/components/responses/Unauthorized"
-          },
-          "403" : {
-            "$ref" : "#/components/responses/Forbidden"
-          },
-          "404" : {
-            "$ref" : "#/components/responses/NotFound"
-          },
-          "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
-          }
-        },
-        "summary" : "Get draft post details",
-        "tags" : [ "Posts" ]
-      },
-      "put" : {
-        "description" : "Update an existing draft post",
-        "parameters" : [ {
-          "description" : "Draft ID",
-          "explode" : false,
-          "in" : "path",
-          "name" : "id",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          },
-          "style" : "simple"
-        } ],
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/UpdateDraftRequest"
-              }
-            }
-          },
-          "required" : true
-        },
-        "responses" : {
-          "200" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/_posts_drafts_post_201_response"
-                }
-              }
-            },
-            "description" : "Draft updated successfully"
-          },
-          "400" : {
-            "$ref" : "#/components/responses/BadRequest"
-          },
-          "401" : {
-            "$ref" : "#/components/responses/Unauthorized"
-          },
-          "403" : {
-            "$ref" : "#/components/responses/Forbidden"
-          },
-          "404" : {
-            "$ref" : "#/components/responses/NotFound"
-          },
-          "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
-          }
-        },
-        "summary" : "Update a draft post",
-        "tags" : [ "Posts" ]
-      }
-    },
-    "/posts/drafts/{id}/publish" : {
-      "post" : {
-        "description" : "Convert a draft post to a published post",
-        "parameters" : [ {
-          "description" : "Draft ID",
-          "explode" : false,
-          "in" : "path",
-          "name" : "id",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          },
-          "style" : "simple"
-        } ],
-        "responses" : {
-          "201" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/_posts_post_201_response"
-                }
-              }
-            },
-            "description" : "Draft published successfully"
-          },
-          "400" : {
-            "$ref" : "#/components/responses/BadRequest"
-          },
-          "401" : {
-            "$ref" : "#/components/responses/Unauthorized"
-          },
-          "403" : {
-            "$ref" : "#/components/responses/Forbidden"
-          },
-          "404" : {
-            "$ref" : "#/components/responses/NotFound"
-          },
-          "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
-          }
-        },
-        "summary" : "Publish a draft post",
-        "tags" : [ "Posts" ]
-      }
     }
   },
   "components" : {
@@ -1526,12 +1266,6 @@
             "maxLength" : 20,
             "type" : "string"
           },
-          "avatar_url" : {
-            "description" : "User avatar image URL",
-            "format" : "uri",
-            "nullable" : true,
-            "type" : "string"
-          },
           "bio" : {
             "description" : "User biography/signature",
             "maxLength" : 100,
@@ -1547,6 +1281,12 @@
           "website" : {
             "description" : "User personal website",
             "format" : "uri",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "avatar_image_id" : {
+            "description" : "User avatar image identifier",
+            "maxLength" : 26,
             "nullable" : true,
             "type" : "string"
           },
@@ -1589,9 +1329,17 @@
             "description" : "Profile last update timestamp",
             "format" : "date-time",
             "type" : "string"
+          },
+          "bucket" : {
+            "description" : "Supabase avatar bucket name",
+            "type" : "string"
+          },
+          "image_path" : {
+            "description" : "User avatar image path",
+            "type" : "string"
           }
         },
-        "required" : [ "created_at", "display_id", "followers_count", "following_count", "id", "nickname", "oc_characters_count", "posts_count", "updated_at" ],
+        "required" : [ "bucket", "created_at", "display_id", "followers_count", "following_count", "id", "image_path", "nickname", "oc_characters_count", "posts_count", "updated_at" ],
         "type" : "object"
       },
       "UserProfileSummary" : {
@@ -1606,12 +1354,6 @@
           },
           "nickname" : {
             "description" : "User display name",
-            "type" : "string"
-          },
-          "avatar_url" : {
-            "description" : "User avatar image URL",
-            "format" : "uri",
-            "nullable" : true,
             "type" : "string"
           },
           "bio" : {
@@ -1639,9 +1381,23 @@
             "description" : "Whether this user is following the current user",
             "nullable" : true,
             "type" : "boolean"
+          },
+          "avatar_image_id" : {
+            "description" : "User avatar image identifier",
+            "maxLength" : 26,
+            "nullable" : true,
+            "type" : "string"
+          },
+          "bucket" : {
+            "description" : "Supabase avatar bucket name",
+            "type" : "string"
+          },
+          "image_path" : {
+            "description" : "User avatar image path",
+            "type" : "string"
           }
         },
-        "required" : [ "display_id", "followers_count", "following_count", "nickname", "user_id" ],
+        "required" : [ "bucket", "display_id", "followers_count", "following_count", "image_path", "nickname", "user_id" ],
         "type" : "object"
       },
       "UpdateUserProfileRequest" : {
@@ -1667,9 +1423,9 @@
             "format" : "uri",
             "type" : "string"
           },
-          "avatar_url" : {
-            "description" : "User avatar image URL",
-            "format" : "uri",
+          "avatar_image_id" : {
+            "description" : "User avatar image identifier",
+            "maxLength" : 26,
             "type" : "string"
           }
         },
@@ -1746,10 +1502,14 @@
             "description" : "OC name",
             "type" : "string"
           },
-          "avatar_url" : {
-            "description" : "OC avatar image URL",
-            "format" : "uri",
+          "avatar_image_id" : {
+            "description" : "OC avatar image ID",
+            "maxLength" : 26,
             "nullable" : true,
+            "type" : "string"
+          },
+          "bucket" : {
+            "description" : "Supabase OC images bucket name",
             "type" : "string"
           },
           "description" : {
@@ -1759,7 +1519,7 @@
             "type" : "string"
           }
         },
-        "required" : [ "id", "name" ],
+        "required" : [ "bucket", "id", "name" ],
         "type" : "object"
       },
       "OC" : {
@@ -1773,10 +1533,14 @@
             "maxLength" : 20,
             "type" : "string"
           },
-          "avatar_url" : {
-            "description" : "OC avatar image URL",
-            "format" : "uri",
+          "avatar_image_id" : {
+            "description" : "OC avatar image ID",
+            "maxLength" : 26,
             "nullable" : true,
+            "type" : "string"
+          },
+          "bucket" : {
+            "description" : "Supabase OC images bucket name",
             "type" : "string"
           },
           "description" : {
@@ -1804,7 +1568,7 @@
             "type" : "string"
           }
         },
-        "required" : [ "created_at", "creator", "id", "name", "posts_count", "updated_at" ],
+        "required" : [ "bucket", "created_at", "creator", "id", "name", "posts_count", "updated_at" ],
         "type" : "object"
       },
       "OCDetails" : {
@@ -1818,10 +1582,14 @@
             "maxLength" : 20,
             "type" : "string"
           },
-          "avatar_url" : {
-            "description" : "OC avatar image URL",
-            "format" : "uri",
+          "avatar_image_id" : {
+            "description" : "OC avatar image ID",
+            "maxLength" : 26,
             "nullable" : true,
+            "type" : "string"
+          },
+          "bucket" : {
+            "description" : "Supabase OC images bucket name",
             "type" : "string"
           },
           "description" : {
@@ -1864,7 +1632,7 @@
             "type" : "string"
           }
         },
-        "required" : [ "created_at", "creator", "id", "image_gallery", "name", "posts_count", "recent_posts", "updated_at" ],
+        "required" : [ "bucket", "created_at", "creator", "id", "image_gallery", "name", "posts_count", "recent_posts", "updated_at" ],
         "type" : "object"
       },
       "OCImage" : {
@@ -1873,9 +1641,13 @@
             "description" : "Image unique identifier",
             "type" : "string"
           },
-          "image_url" : {
-            "description" : "Image URL",
-            "format" : "uri",
+          "image_id" : {
+            "description" : "Image ID",
+            "maxLength" : 26,
+            "type" : "string"
+          },
+          "bucket" : {
+            "description" : "Storage bucket name",
             "type" : "string"
           },
           "description" : {
@@ -1890,7 +1662,7 @@
             "type" : "string"
           }
         },
-        "required" : [ "id", "image_url", "uploaded_at" ],
+        "required" : [ "bucket", "id", "image_id", "uploaded_at" ],
         "type" : "object"
       },
       "CreateOCRequest" : {
@@ -1901,9 +1673,9 @@
             "minLength" : 1,
             "type" : "string"
           },
-          "avatar_url" : {
-            "description" : "OC avatar image URL",
-            "format" : "uri",
+          "avatar_image_id" : {
+            "description" : "OC avatar image ID",
+            "maxLength" : 26,
             "type" : "string"
           },
           "description" : {
@@ -1925,9 +1697,9 @@
       },
       "CreateOCImageRequest" : {
         "properties" : {
-          "image_url" : {
-            "description" : "Image URL",
-            "format" : "uri",
+          "image_id" : {
+            "description" : "Image ID",
+            "maxLength" : 26,
             "type" : "string"
           },
           "description" : {
@@ -1936,7 +1708,7 @@
             "type" : "string"
           }
         },
-        "required" : [ "image_url" ],
+        "required" : [ "image_id" ],
         "type" : "object"
       },
       "UpdateOCRequest" : {
@@ -1947,9 +1719,9 @@
             "minLength" : 1,
             "type" : "string"
           },
-          "avatar_url" : {
-            "description" : "OC avatar image URL",
-            "format" : "uri",
+          "avatar_image_id" : {
+            "description" : "OC avatar image ID",
+            "maxLength" : 26,
             "type" : "string"
           },
           "description" : {
@@ -1974,9 +1746,9 @@
             "description" : "Image ID (for existing images)",
             "type" : "string"
           },
-          "image_url" : {
-            "description" : "Image URL",
-            "format" : "uri",
+          "image_id" : {
+            "description" : "Image ID",
+            "maxLength" : 26,
             "type" : "string"
           },
           "description" : {
@@ -2037,6 +1809,10 @@
             "description" : "Whether the post is public",
             "type" : "boolean"
           },
+          "is_draft" : {
+            "description" : "Whether the post is a draft",
+            "type" : "boolean"
+          },
           "created_at" : {
             "description" : "Post creation timestamp",
             "format" : "date-time",
@@ -2048,7 +1824,7 @@
             "type" : "string"
           }
         },
-        "required" : [ "comments_count", "content", "created_at", "id", "images", "is_public", "likes_count", "oc", "updated_at", "user" ],
+        "required" : [ "comments_count", "content", "created_at", "id", "images", "is_draft", "is_public", "likes_count", "updated_at", "user" ],
         "type" : "object"
       },
       "PostDetails" : {
@@ -2095,6 +1871,10 @@
             "description" : "Whether the post is public",
             "type" : "boolean"
           },
+          "is_draft" : {
+            "description" : "Whether the post is a draft",
+            "type" : "boolean"
+          },
           "recent_comments" : {
             "description" : "Recent comments on this post",
             "items" : {
@@ -2114,7 +1894,7 @@
             "type" : "string"
           }
         },
-        "required" : [ "comments_count", "content", "created_at", "id", "images", "is_public", "likes_count", "oc", "recent_comments", "updated_at", "user" ],
+        "required" : [ "comments_count", "content", "created_at", "id", "images", "is_draft", "is_public", "likes_count", "recent_comments", "updated_at", "user" ],
         "type" : "object"
       },
       "PostImage" : {
@@ -2187,43 +1967,6 @@
         "required" : [ "content", "created_at", "id", "updated_at", "user" ],
         "type" : "object"
       },
-      "PostDraft" : {
-        "properties" : {
-          "id" : {
-            "description" : "Draft unique identifier",
-            "type" : "string"
-          },
-          "content" : {
-            "description" : "Draft text content",
-            "maxLength" : 1000,
-            "type" : "string"
-          },
-          "oc" : {
-            "$ref" : "#/components/schemas/OCSummary"
-          },
-          "image_urls" : {
-            "description" : "Draft image URLs",
-            "items" : {
-              "format" : "uri",
-              "type" : "string"
-            },
-            "maxItems" : 9,
-            "type" : "array"
-          },
-          "created_at" : {
-            "description" : "Draft creation timestamp",
-            "format" : "date-time",
-            "type" : "string"
-          },
-          "updated_at" : {
-            "description" : "Draft last update timestamp",
-            "format" : "date-time",
-            "type" : "string"
-          }
-        },
-        "required" : [ "content", "created_at", "id", "image_urls", "updated_at" ],
-        "type" : "object"
-      },
       "CreatePostRequest" : {
         "properties" : {
           "content" : {
@@ -2234,6 +1977,7 @@
           },
           "oc_id" : {
             "description" : "OC character ID",
+            "nullable" : true,
             "type" : "string"
           },
           "image_urls" : {
@@ -2249,9 +1993,14 @@
             "default" : true,
             "description" : "Whether the post is public",
             "type" : "boolean"
+          },
+          "is_draft" : {
+            "default" : false,
+            "description" : "Whether the post is a draft",
+            "type" : "boolean"
           }
         },
-        "required" : [ "content", "oc_id" ],
+        "required" : [ "content" ],
         "type" : "object"
       },
       "UpdatePostRequest" : {
@@ -2264,6 +2013,7 @@
           },
           "oc_id" : {
             "description" : "Updated OC character ID",
+            "nullable" : true,
             "type" : "string"
           },
           "image_urls" : {
@@ -2277,6 +2027,10 @@
           },
           "is_public" : {
             "description" : "Whether the post is public",
+            "type" : "boolean"
+          },
+          "is_draft" : {
+            "description" : "Whether the post is a draft",
             "type" : "boolean"
           }
         },
@@ -2294,55 +2048,6 @@
         "required" : [ "content" ],
         "type" : "object"
       },
-      "CreateDraftRequest" : {
-        "properties" : {
-          "content" : {
-            "description" : "Draft text content",
-            "maxLength" : 1000,
-            "minLength" : 1,
-            "type" : "string"
-          },
-          "oc_id" : {
-            "description" : "OC character ID",
-            "type" : "string"
-          },
-          "image_urls" : {
-            "description" : "Draft image URLs",
-            "items" : {
-              "format" : "uri",
-              "type" : "string"
-            },
-            "maxItems" : 9,
-            "type" : "array"
-          }
-        },
-        "required" : [ "content" ],
-        "type" : "object"
-      },
-      "UpdateDraftRequest" : {
-        "properties" : {
-          "content" : {
-            "description" : "Updated draft text content",
-            "maxLength" : 1000,
-            "minLength" : 1,
-            "type" : "string"
-          },
-          "oc_id" : {
-            "description" : "Updated OC character ID",
-            "type" : "string"
-          },
-          "image_urls" : {
-            "description" : "Updated draft image URLs",
-            "items" : {
-              "format" : "uri",
-              "type" : "string"
-            },
-            "maxItems" : 9,
-            "type" : "array"
-          }
-        },
-        "type" : "object"
-      },
       "SupabaseConfig" : {
         "properties" : {
           "project_reference" : {
@@ -2352,9 +2057,12 @@
           "api_anno_key" : {
             "description" : "Supabase anonymous API key",
             "type" : "string"
+          },
+          "bucket_names" : {
+            "$ref" : "#/components/schemas/SupabaseConfig_bucket_names"
           }
         },
-        "required" : [ "api_anno_key", "project_reference" ],
+        "required" : [ "api_anno_key", "bucket_names", "project_reference" ],
         "type" : "object"
       },
       "PaginationMeta" : {
@@ -2532,26 +2240,19 @@
         },
         "type" : "object"
       },
-      "_posts_drafts_get_200_response" : {
+      "SupabaseConfig_bucket_names" : {
+        "description" : "Storage bucket names configuration",
         "properties" : {
-          "data" : {
-            "items" : {
-              "$ref" : "#/components/schemas/PostDraft"
-            },
-            "type" : "array"
+          "avatar" : {
+            "description" : "Avatar images bucket name",
+            "type" : "string"
           },
-          "meta" : {
-            "$ref" : "#/components/schemas/PaginationMeta"
+          "oc_images" : {
+            "description" : "OC images bucket name",
+            "type" : "string"
           }
         },
-        "type" : "object"
-      },
-      "_posts_drafts_post_201_response" : {
-        "properties" : {
-          "data" : {
-            "$ref" : "#/components/schemas/PostDraft"
-          }
-        },
+        "required" : [ "avatar", "oc_images" ],
         "type" : "object"
       }
     },
