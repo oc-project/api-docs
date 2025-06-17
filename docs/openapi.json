@@ -1251,6 +1251,22 @@
       }
     },
     "schemas" : {
+      "Image" : {
+        "properties" : {
+          "id" : {
+            "description" : "Image unique identifier",
+            "maxLength" : 26,
+            "nullable" : true,
+            "type" : "string"
+          },
+          "bucket" : {
+            "description" : "Storage bucket name",
+            "type" : "string"
+          }
+        },
+        "required" : [ "bucket" ],
+        "type" : "object"
+      },
       "UserProfile" : {
         "properties" : {
           "id" : {
@@ -1284,11 +1300,8 @@
             "nullable" : true,
             "type" : "string"
           },
-          "avatar_image_id" : {
-            "description" : "User avatar image identifier",
-            "maxLength" : 26,
-            "nullable" : true,
-            "type" : "string"
+          "avatar" : {
+            "$ref" : "#/components/schemas/Image"
           },
           "followers_count" : {
             "description" : "Number of followers",
@@ -1329,17 +1342,9 @@
             "description" : "Profile last update timestamp",
             "format" : "date-time",
             "type" : "string"
-          },
-          "bucket" : {
-            "description" : "Supabase avatar bucket name",
-            "type" : "string"
-          },
-          "image_path" : {
-            "description" : "User avatar image path",
-            "type" : "string"
           }
         },
-        "required" : [ "bucket", "created_at", "display_id", "followers_count", "following_count", "id", "image_path", "nickname", "oc_characters_count", "posts_count", "updated_at" ],
+        "required" : [ "avatar", "created_at", "display_id", "followers_count", "following_count", "id", "nickname", "oc_characters_count", "posts_count", "updated_at" ],
         "type" : "object"
       },
       "UserProfileSummary" : {
@@ -1382,22 +1387,11 @@
             "nullable" : true,
             "type" : "boolean"
           },
-          "avatar_image_id" : {
-            "description" : "User avatar image identifier",
-            "maxLength" : 26,
-            "nullable" : true,
-            "type" : "string"
-          },
-          "bucket" : {
-            "description" : "Supabase avatar bucket name",
-            "type" : "string"
-          },
-          "image_path" : {
-            "description" : "User avatar image path",
-            "type" : "string"
+          "avatar" : {
+            "$ref" : "#/components/schemas/Image"
           }
         },
-        "required" : [ "bucket", "display_id", "followers_count", "following_count", "image_path", "nickname", "user_id" ],
+        "required" : [ "avatar", "display_id", "followers_count", "following_count", "nickname", "user_id" ],
         "type" : "object"
       },
       "UpdateUserProfileRequest" : {
@@ -1423,10 +1417,8 @@
             "format" : "uri",
             "type" : "string"
           },
-          "avatar_image_id" : {
-            "description" : "User avatar image identifier",
-            "maxLength" : 26,
-            "type" : "string"
+          "avatar" : {
+            "$ref" : "#/components/schemas/Image"
           }
         },
         "type" : "object"
@@ -1502,15 +1494,8 @@
             "description" : "OC name",
             "type" : "string"
           },
-          "avatar_image_id" : {
-            "description" : "OC avatar image ID",
-            "maxLength" : 26,
-            "nullable" : true,
-            "type" : "string"
-          },
-          "bucket" : {
-            "description" : "Supabase OC images bucket name",
-            "type" : "string"
+          "avatar" : {
+            "$ref" : "#/components/schemas/Image"
           },
           "description" : {
             "description" : "Brief OC description",
@@ -1519,7 +1504,7 @@
             "type" : "string"
           }
         },
-        "required" : [ "bucket", "id", "name" ],
+        "required" : [ "avatar", "id", "name" ],
         "type" : "object"
       },
       "OC" : {
@@ -1533,15 +1518,8 @@
             "maxLength" : 20,
             "type" : "string"
           },
-          "avatar_image_id" : {
-            "description" : "OC avatar image ID",
-            "maxLength" : 26,
-            "nullable" : true,
-            "type" : "string"
-          },
-          "bucket" : {
-            "description" : "Supabase OC images bucket name",
-            "type" : "string"
+          "avatar" : {
+            "$ref" : "#/components/schemas/Image"
           },
           "description" : {
             "description" : "OC character description/bio",
@@ -1568,7 +1546,7 @@
             "type" : "string"
           }
         },
-        "required" : [ "bucket", "created_at", "creator", "id", "name", "posts_count", "updated_at" ],
+        "required" : [ "avatar", "created_at", "creator", "id", "name", "posts_count", "updated_at" ],
         "type" : "object"
       },
       "OCDetails" : {
@@ -1582,15 +1560,8 @@
             "maxLength" : 20,
             "type" : "string"
           },
-          "avatar_image_id" : {
-            "description" : "OC avatar image ID",
-            "maxLength" : 26,
-            "nullable" : true,
-            "type" : "string"
-          },
-          "bucket" : {
-            "description" : "Supabase OC images bucket name",
-            "type" : "string"
+          "avatar" : {
+            "$ref" : "#/components/schemas/Image"
           },
           "description" : {
             "description" : "OC character description/bio",
@@ -1632,7 +1603,7 @@
             "type" : "string"
           }
         },
-        "required" : [ "bucket", "created_at", "creator", "id", "image_gallery", "name", "posts_count", "recent_posts", "updated_at" ],
+        "required" : [ "avatar", "created_at", "creator", "id", "image_gallery", "name", "posts_count", "recent_posts", "updated_at" ],
         "type" : "object"
       },
       "OCImage" : {
@@ -1641,14 +1612,8 @@
             "description" : "Image unique identifier",
             "type" : "string"
           },
-          "image_id" : {
-            "description" : "Image ID",
-            "maxLength" : 26,
-            "type" : "string"
-          },
-          "bucket" : {
-            "description" : "Storage bucket name",
-            "type" : "string"
+          "image" : {
+            "$ref" : "#/components/schemas/Image"
           },
           "description" : {
             "description" : "Image description",
@@ -1662,7 +1627,7 @@
             "type" : "string"
           }
         },
-        "required" : [ "bucket", "id", "image_id", "uploaded_at" ],
+        "required" : [ "id", "image", "uploaded_at" ],
         "type" : "object"
       },
       "CreateOCRequest" : {
@@ -1673,10 +1638,8 @@
             "minLength" : 1,
             "type" : "string"
           },
-          "avatar_image_id" : {
-            "description" : "OC avatar image ID",
-            "maxLength" : 26,
-            "type" : "string"
+          "avatar" : {
+            "$ref" : "#/components/schemas/Image"
           },
           "description" : {
             "description" : "OC character description/bio",
@@ -1697,10 +1660,8 @@
       },
       "CreateOCImageRequest" : {
         "properties" : {
-          "image_id" : {
-            "description" : "Image ID",
-            "maxLength" : 26,
-            "type" : "string"
+          "image" : {
+            "$ref" : "#/components/schemas/Image"
           },
           "description" : {
             "description" : "Image description",
@@ -1708,7 +1669,7 @@
             "type" : "string"
           }
         },
-        "required" : [ "image_id" ],
+        "required" : [ "image" ],
         "type" : "object"
       },
       "UpdateOCRequest" : {
@@ -1719,10 +1680,8 @@
             "minLength" : 1,
             "type" : "string"
           },
-          "avatar_image_id" : {
-            "description" : "OC avatar image ID",
-            "maxLength" : 26,
-            "type" : "string"
+          "avatar" : {
+            "$ref" : "#/components/schemas/Image"
           },
           "description" : {
             "description" : "OC character description/bio",
@@ -1746,10 +1705,8 @@
             "description" : "Image ID (for existing images)",
             "type" : "string"
           },
-          "image_id" : {
-            "description" : "Image ID",
-            "maxLength" : 26,
-            "type" : "string"
+          "image" : {
+            "$ref" : "#/components/schemas/Image"
           },
           "description" : {
             "description" : "Image description",
@@ -1785,7 +1742,7 @@
           "images" : {
             "description" : "Post images",
             "items" : {
-              "$ref" : "#/components/schemas/PostImage"
+              "$ref" : "#/components/schemas/Post_images_inner"
             },
             "maxItems" : 9,
             "type" : "array"
@@ -1847,7 +1804,7 @@
           "images" : {
             "description" : "Post images",
             "items" : {
-              "$ref" : "#/components/schemas/PostImage"
+              "$ref" : "#/components/schemas/Post_images_inner"
             },
             "maxItems" : 9,
             "type" : "array"
@@ -1895,30 +1852,6 @@
           }
         },
         "required" : [ "comments_count", "content", "created_at", "id", "images", "is_draft", "is_public", "likes_count", "recent_comments", "updated_at", "user" ],
-        "type" : "object"
-      },
-      "PostImage" : {
-        "properties" : {
-          "id" : {
-            "description" : "Image unique identifier",
-            "type" : "string"
-          },
-          "image_url" : {
-            "description" : "Image URL",
-            "format" : "uri",
-            "type" : "string"
-          },
-          "display_order" : {
-            "description" : "Display order of the image",
-            "type" : "integer"
-          },
-          "created_at" : {
-            "description" : "Image upload timestamp",
-            "format" : "date-time",
-            "type" : "string"
-          }
-        },
-        "required" : [ "created_at", "display_order", "id", "image_url" ],
         "type" : "object"
       },
       "PostLike" : {
@@ -2238,6 +2171,17 @@
             "$ref" : "#/components/schemas/PostComment"
           }
         },
+        "type" : "object"
+      },
+      "Post_images_inner" : {
+        "properties" : {
+          "image_url" : {
+            "description" : "Image URL",
+            "format" : "uri",
+            "type" : "string"
+          }
+        },
+        "required" : [ "image_url" ],
         "type" : "object"
       },
       "SupabaseConfig_bucket_names" : {
