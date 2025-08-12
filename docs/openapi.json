@@ -80,14 +80,7 @@
           "required" : true
         },
         "responses" : {
-          "200" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/_me_get_200_response"
-                }
-              }
-            },
+          "204" : {
             "description" : "User profile updated successfully"
           },
           "400" : {
@@ -414,7 +407,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/_oc_post_201_response"
+                  "$ref" : "#/components/schemas/_users__id__follow_post_201_response"
                 }
               }
             },
@@ -537,14 +530,7 @@
           "required" : true
         },
         "responses" : {
-          "200" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/_oc_post_201_response"
-                }
-              }
-            },
+          "204" : {
             "description" : "OC character updated successfully"
           },
           "400" : {
@@ -655,13 +641,16 @@
           },
           "style" : "form"
         }, {
-          "description" : "OC ID to filter posts by specific character",
-          "explode" : true,
+          "description" : "OC IDs to filter posts by specific characters (comma-separated)",
+          "explode" : false,
           "in" : "query",
-          "name" : "oc_id",
+          "name" : "oc_ids",
           "required" : false,
           "schema" : {
-            "type" : "string"
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
           },
           "style" : "form"
         }, {
@@ -713,7 +702,7 @@
         "tags" : [ "Posts" ]
       },
       "post" : {
-        "description" : "Create a new diary post associated with an OC character",
+        "description" : "Create a new diary post that can be associated with multiple OC characters",
         "requestBody" : {
           "content" : {
             "application/json" : {
@@ -729,7 +718,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/_posts_post_201_response"
+                  "$ref" : "#/components/schemas/_users__id__follow_post_201_response"
                 }
               }
             },
@@ -842,14 +831,7 @@
           "required" : true
         },
         "responses" : {
-          "200" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/_posts_post_201_response"
-                }
-              }
-            },
+          "204" : {
             "description" : "Post updated successfully"
           },
           "400" : {
@@ -921,7 +903,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/_posts__id__like_post_201_response"
+                  "$ref" : "#/components/schemas/_users__id__follow_post_201_response"
                 }
               }
             },
@@ -1102,7 +1084,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/_posts__id__comments_post_201_response"
+                  "$ref" : "#/components/schemas/_users__id__follow_post_201_response"
                 }
               }
             },
@@ -1254,11 +1236,21 @@
       }
     },
     "schemas" : {
+      "CreateResponse" : {
+        "properties" : {
+          "id" : {
+            "description" : "Unique identifier of the created resource",
+            "type" : "string"
+          }
+        },
+        "required" : [ "id" ],
+        "type" : "object"
+      },
       "Image" : {
         "properties" : {
           "id" : {
             "description" : "Image unique identifier",
-            "maxLength" : 26,
+            "maxLength" : 36,
             "type" : "string"
           },
           "bucket" : {
@@ -1294,21 +1286,6 @@
             "nullable" : true,
             "type" : "string"
           },
-          "email" : {
-            "description" : "User contact email (only visible to profile owner)",
-            "format" : "email",
-            "nullable" : true,
-            "type" : "string"
-          },
-          "website" : {
-            "description" : "User personal website",
-            "format" : "uri",
-            "nullable" : true,
-            "type" : "string"
-          },
-          "avatar" : {
-            "$ref" : "#/components/schemas/Image"
-          },
           "followers_count" : {
             "description" : "Number of followers",
             "format" : "int64",
@@ -1331,12 +1308,10 @@
           },
           "is_following" : {
             "description" : "Whether the current user is following this user",
-            "nullable" : true,
             "type" : "boolean"
           },
           "is_followed_by" : {
             "description" : "Whether this user is following the current user",
-            "nullable" : true,
             "type" : "boolean"
           },
           "created_at" : {
@@ -1385,19 +1360,14 @@
           },
           "is_following" : {
             "description" : "Whether the current user is following this user",
-            "nullable" : true,
             "type" : "boolean"
           },
           "is_followed_by" : {
             "description" : "Whether this user is following the current user",
-            "nullable" : true,
             "type" : "boolean"
-          },
-          "avatar" : {
-            "$ref" : "#/components/schemas/Image"
           }
         },
-        "required" : [ "display_id", "followers_count", "following_count", "nickname", "user_id" ],
+        "required" : [ "display_id", "followers_count", "following_count", "is_followed_by", "is_following", "nickname", "user_id" ],
         "type" : "object"
       },
       "UpdateUserProfileRequest" : {
@@ -1411,21 +1381,6 @@
           "bio" : {
             "description" : "User biography/signature",
             "maxLength" : 100,
-            "type" : "string"
-          },
-          "email" : {
-            "description" : "User contact email",
-            "format" : "email",
-            "type" : "string"
-          },
-          "website" : {
-            "description" : "User personal website",
-            "format" : "uri",
-            "type" : "string"
-          },
-          "avatar_image_id" : {
-            "description" : "Avatar image ID",
-            "maxLength" : 26,
             "type" : "string"
           }
         },
@@ -1464,8 +1419,13 @@
           "user" : {
             "$ref" : "#/components/schemas/UserProfileSummary"
           },
-          "oc" : {
-            "$ref" : "#/components/schemas/OCSummary"
+          "ocs" : {
+            "description" : "OC characters associated with this post",
+            "items" : {
+              "$ref" : "#/components/schemas/OCSummary"
+            },
+            "maxItems" : 5,
+            "type" : "array"
           },
           "images" : {
             "description" : "Post images",
@@ -1500,7 +1460,7 @@
             "type" : "string"
           }
         },
-        "required" : [ "comments_count", "content_preview", "created_at", "id", "images", "is_liked", "is_public", "likes_count", "user" ],
+        "required" : [ "comments_count", "content_preview", "created_at", "id", "images", "is_liked", "is_public", "likes_count", "ocs", "user" ],
         "type" : "object"
       },
       "OCSummary" : {
@@ -1659,7 +1619,7 @@
           },
           "avatar_image_id" : {
             "description" : "Avatar image ID",
-            "maxLength" : 26,
+            "maxLength" : 36,
             "type" : "string"
           },
           "description" : {
@@ -1705,7 +1665,7 @@
           },
           "avatar_image_id" : {
             "description" : "Avatar image ID",
-            "maxLength" : 26,
+            "maxLength" : 36,
             "type" : "string"
           },
           "description" : {
@@ -1763,8 +1723,13 @@
           "user" : {
             "$ref" : "#/components/schemas/UserProfileSummary"
           },
-          "oc" : {
-            "$ref" : "#/components/schemas/OCSummary"
+          "ocs" : {
+            "description" : "OC characters associated with this post",
+            "items" : {
+              "$ref" : "#/components/schemas/OCSummary"
+            },
+            "maxItems" : 5,
+            "type" : "array"
           },
           "images" : {
             "description" : "Post images",
@@ -1808,7 +1773,7 @@
             "type" : "string"
           }
         },
-        "required" : [ "comments_count", "content", "created_at", "id", "images", "is_draft", "is_liked", "is_public", "likes_count", "updated_at", "user" ],
+        "required" : [ "comments_count", "content", "created_at", "id", "images", "is_draft", "is_liked", "is_public", "likes_count", "ocs", "updated_at", "user" ],
         "type" : "object"
       },
       "PostDetails" : {
@@ -1825,8 +1790,13 @@
           "user" : {
             "$ref" : "#/components/schemas/UserProfileSummary"
           },
-          "oc" : {
-            "$ref" : "#/components/schemas/OCSummary"
+          "ocs" : {
+            "description" : "OC characters associated with this post",
+            "items" : {
+              "$ref" : "#/components/schemas/OCSummary"
+            },
+            "maxItems" : 5,
+            "type" : "array"
           },
           "images" : {
             "description" : "Post images",
@@ -1878,7 +1848,7 @@
             "type" : "string"
           }
         },
-        "required" : [ "comments_count", "content", "created_at", "id", "images", "is_draft", "is_liked", "is_public", "likes_count", "recent_comments", "updated_at", "user" ],
+        "required" : [ "comments_count", "content", "created_at", "id", "images", "is_draft", "is_liked", "is_public", "likes_count", "ocs", "recent_comments", "updated_at", "user" ],
         "type" : "object"
       },
       "PostLike" : {
@@ -1935,10 +1905,13 @@
             "minLength" : 1,
             "type" : "string"
           },
-          "oc_id" : {
-            "description" : "OC character ID",
-            "nullable" : true,
-            "type" : "string"
+          "oc_ids" : {
+            "description" : "OC character IDs associated with this post",
+            "items" : {
+              "type" : "string"
+            },
+            "maxItems" : 5,
+            "type" : "array"
           },
           "image_ids" : {
             "description" : "Post image IDs",
@@ -1970,10 +1943,13 @@
             "minLength" : 1,
             "type" : "string"
           },
-          "oc_id" : {
-            "description" : "Updated OC character ID",
-            "nullable" : true,
-            "type" : "string"
+          "oc_ids" : {
+            "description" : "Updated OC character IDs associated with this post",
+            "items" : {
+              "type" : "string"
+            },
+            "maxItems" : 5,
+            "type" : "array"
           },
           "image_ids" : {
             "description" : "Updated post image IDs",
@@ -2075,7 +2051,7 @@
       "_users__id__follow_post_201_response" : {
         "properties" : {
           "data" : {
-            "$ref" : "#/components/schemas/FollowRelation"
+            "$ref" : "#/components/schemas/CreateResponse"
           }
         },
         "type" : "object"
@@ -2108,14 +2084,6 @@
         },
         "type" : "object"
       },
-      "_oc_post_201_response" : {
-        "properties" : {
-          "data" : {
-            "$ref" : "#/components/schemas/OC"
-          }
-        },
-        "type" : "object"
-      },
       "_oc__id__get_200_response" : {
         "properties" : {
           "data" : {
@@ -2138,26 +2106,10 @@
         },
         "type" : "object"
       },
-      "_posts_post_201_response" : {
-        "properties" : {
-          "data" : {
-            "$ref" : "#/components/schemas/Post"
-          }
-        },
-        "type" : "object"
-      },
       "_posts__id__get_200_response" : {
         "properties" : {
           "data" : {
             "$ref" : "#/components/schemas/PostDetails"
-          }
-        },
-        "type" : "object"
-      },
-      "_posts__id__like_post_201_response" : {
-        "properties" : {
-          "data" : {
-            "$ref" : "#/components/schemas/PostLike"
           }
         },
         "type" : "object"
@@ -2186,14 +2138,6 @@
           },
           "meta" : {
             "$ref" : "#/components/schemas/PaginationMeta"
-          }
-        },
-        "type" : "object"
-      },
-      "_posts__id__comments_post_201_response" : {
-        "properties" : {
-          "data" : {
-            "$ref" : "#/components/schemas/PostComment"
           }
         },
         "type" : "object"
