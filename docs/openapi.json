@@ -97,6 +97,158 @@
         "tags" : [ "UserProfiles" ]
       }
     },
+    "/invites/{code}" : {
+      "get" : {
+        "description" : "Validate an invite code and return inviter summary",
+        "parameters" : [ {
+          "description" : "Invite code to validate",
+          "explode" : false,
+          "in" : "path",
+          "name" : "code",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_invites__code__get_200_response"
+                }
+              }
+            },
+            "description" : "Inviter found"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "security" : [ ],
+        "summary" : "Get inviter by invite code",
+        "tags" : [ "Invites" ]
+      }
+    },
+    "/admin/settings" : {
+      "get" : {
+        "description" : "List all application settings",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_admin_settings_get_200_response"
+                }
+              }
+            },
+            "description" : "Settings list"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "summary" : "List settings",
+        "tags" : [ "AdminSettings" ]
+      }
+    },
+    "/admin/settings/{name}" : {
+      "get" : {
+        "description" : "Get a specific setting by name",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "path",
+          "name" : "name",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_admin_settings__name__get_200_response"
+                }
+              }
+            },
+            "description" : "Setting value"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "summary" : "Get a setting",
+        "tags" : [ "AdminSettings" ]
+      },
+      "put" : {
+        "description" : "Create or update a setting by name",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "path",
+          "name" : "name",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/_admin_settings__name__put_request"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_admin_settings__name__get_200_response"
+                }
+              }
+            },
+            "description" : "Upserted setting"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "summary" : "Upsert a setting",
+        "tags" : [ "AdminSettings" ]
+      }
+    },
     "/users/{id}/profile" : {
       "get" : {
         "description" : "Retrieve a user's profile information including basic info, social stats, and content overview",
@@ -1151,6 +1303,200 @@
         "summary" : "Delete a comment",
         "tags" : [ "Posts" ]
       }
+    },
+    "/tasks" : {
+      "get" : {
+        "description" : "List tasks with optional filters",
+        "parameters" : [ {
+          "explode" : true,
+          "in" : "query",
+          "name" : "type",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "explode" : true,
+          "in" : "query",
+          "name" : "state",
+          "required" : false,
+          "schema" : {
+            "enum" : [ "READY", "QUEUED", "PROCESSING", "SUCCEEDED", "FAILED", "CANCELLED" ],
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "explode" : true,
+          "in" : "query",
+          "name" : "created_at_from",
+          "required" : false,
+          "schema" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "explode" : true,
+          "in" : "query",
+          "name" : "created_at_to",
+          "required" : false,
+          "schema" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Maximum number of items to return",
+          "explode" : true,
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : 20,
+            "maximum" : 100,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Number of items to skip",
+          "explode" : true,
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_tasks_get_200_response"
+                }
+              }
+            },
+            "description" : "List tasks"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "summary" : "List tasks",
+        "tags" : [ "Tasks" ]
+      },
+      "post" : {
+        "description" : "Create a task and schedule it for execution",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CreateTaskRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_users__id__follow_post_201_response"
+                }
+              }
+            },
+            "description" : "Task created"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "summary" : "Create task",
+        "tags" : [ "Tasks" ]
+      }
+    },
+    "/tasks/{id}" : {
+      "get" : {
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_tasks__id__get_200_response"
+                }
+              }
+            },
+            "description" : "Task"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "summary" : "Get task by ID",
+        "tags" : [ "Tasks" ]
+      }
+    },
+    "/tasks/{id}/retry" : {
+      "post" : {
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/_tasks__id__retry_post_request"
+              }
+            }
+          },
+          "required" : false
+        },
+        "responses" : {
+          "204" : {
+            "description" : "Task retry scheduled"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/InternalServerError"
+          }
+        },
+        "summary" : "Retry a task",
+        "tags" : [ "Tasks" ]
+      }
     }
   },
   "components" : {
@@ -1236,6 +1582,93 @@
       }
     },
     "schemas" : {
+      "CreateTaskRequest" : {
+        "properties" : {
+          "type" : {
+            "description" : "Task type",
+            "type" : "string"
+          },
+          "payload" : {
+            "additionalProperties" : true,
+            "description" : "Arbitrary task payload",
+            "nullable" : true,
+            "type" : "object"
+          },
+          "scheduled_at" : {
+            "description" : "Schedule time; if omitted, the task is ready to run now",
+            "format" : "date-time",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "priority" : {
+            "default" : 0,
+            "description" : "Task priority (higher runs earlier)",
+            "format" : "int32",
+            "type" : "integer"
+          }
+        },
+        "required" : [ "type" ],
+        "type" : "object"
+      },
+      "Task" : {
+        "properties" : {
+          "id" : {
+            "type" : "string"
+          },
+          "type" : {
+            "type" : "string"
+          },
+          "state" : {
+            "enum" : [ "READY", "QUEUED", "PROCESSING", "SUCCEEDED", "FAILED", "CANCELLED" ],
+            "type" : "string"
+          },
+          "payload" : {
+            "additionalProperties" : true,
+            "nullable" : true,
+            "type" : "object"
+          },
+          "priority" : {
+            "type" : "integer"
+          },
+          "scheduled_at" : {
+            "format" : "date-time",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "next_run_at" : {
+            "format" : "date-time",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "processing_started_at" : {
+            "format" : "date-time",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "queued_at" : {
+            "format" : "date-time",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "error" : {
+            "nullable" : true,
+            "type" : "string"
+          },
+          "retry_count" : {
+            "type" : "integer"
+          },
+          "created_at" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "updated_at" : {
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "required" : [ "created_at", "id", "priority", "retry_count", "state", "type", "updated_at" ],
+        "type" : "object"
+      },
       "CreateResponse" : {
         "properties" : {
           "id" : {
@@ -1368,6 +1801,19 @@
           }
         },
         "required" : [ "display_id", "followers_count", "following_count", "is_followed_by", "is_following", "nickname", "user_id" ],
+        "type" : "object"
+      },
+      "Setting" : {
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "value" : {
+            "description" : "JSON value of the setting",
+            "example" : null
+          }
+        },
+        "required" : [ "name", "value" ],
         "type" : "object"
       },
       "UpdateUserProfileRequest" : {
@@ -1711,6 +2157,20 @@
       },
       "Post" : {
         "properties" : {
+          "weather" : {
+            "nullable" : true,
+            "type" : "string"
+          },
+          "location_lat" : {
+            "format" : "double",
+            "nullable" : true,
+            "type" : "number"
+          },
+          "location_lng" : {
+            "format" : "double",
+            "nullable" : true,
+            "type" : "number"
+          },
           "id" : {
             "description" : "Post unique identifier",
             "type" : "string"
@@ -1778,6 +2238,20 @@
       },
       "PostDetails" : {
         "properties" : {
+          "weather" : {
+            "nullable" : true,
+            "type" : "string"
+          },
+          "location_lat" : {
+            "format" : "double",
+            "nullable" : true,
+            "type" : "number"
+          },
+          "location_lng" : {
+            "format" : "double",
+            "nullable" : true,
+            "type" : "number"
+          },
           "id" : {
             "description" : "Post unique identifier",
             "type" : "string"
@@ -1899,6 +2373,14 @@
       },
       "CreatePostRequest" : {
         "properties" : {
+          "weather" : {
+            "description" : "Weather condition string",
+            "maxLength" : 50,
+            "type" : "string"
+          },
+          "location" : {
+            "$ref" : "#/components/schemas/CreatePostRequest_location"
+          },
           "content" : {
             "description" : "Post text content",
             "maxLength" : 1000,
@@ -1937,6 +2419,14 @@
       },
       "UpdatePostRequest" : {
         "properties" : {
+          "weather" : {
+            "description" : "Weather condition string",
+            "maxLength" : 50,
+            "type" : "string"
+          },
+          "location" : {
+            "$ref" : "#/components/schemas/CreatePostRequest_location"
+          },
           "content" : {
             "description" : "Updated post text content",
             "maxLength" : 1000,
@@ -2048,6 +2538,42 @@
         },
         "type" : "object"
       },
+      "_invites__code__get_200_response" : {
+        "properties" : {
+          "data" : {
+            "$ref" : "#/components/schemas/UserProfileSummary"
+          }
+        },
+        "type" : "object"
+      },
+      "_admin_settings_get_200_response" : {
+        "properties" : {
+          "data" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Setting"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "_admin_settings__name__get_200_response" : {
+        "properties" : {
+          "data" : {
+            "$ref" : "#/components/schemas/Setting"
+          }
+        },
+        "type" : "object"
+      },
+      "_admin_settings__name__put_request" : {
+        "properties" : {
+          "value" : {
+            "description" : "JSON value of the setting",
+            "example" : null
+          }
+        },
+        "type" : "object"
+      },
       "_users__id__follow_post_201_response" : {
         "properties" : {
           "data" : {
@@ -2142,6 +2668,50 @@
         },
         "type" : "object"
       },
+      "_tasks_get_200_response" : {
+        "properties" : {
+          "data" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Task"
+            },
+            "type" : "array"
+          },
+          "meta" : {
+            "$ref" : "#/components/schemas/PaginationMeta"
+          }
+        },
+        "type" : "object"
+      },
+      "_tasks__id__get_200_response" : {
+        "properties" : {
+          "data" : {
+            "$ref" : "#/components/schemas/Task"
+          }
+        },
+        "type" : "object"
+      },
+      "_tasks__id__retry_post_request" : {
+        "properties" : {
+          "reason" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "CreatePostRequest_location" : {
+        "nullable" : true,
+        "properties" : {
+          "lat" : {
+            "format" : "double",
+            "type" : "number"
+          },
+          "lng" : {
+            "format" : "double",
+            "type" : "number"
+          }
+        },
+        "type" : "object"
+      },
       "SupabaseConfig_buckets_avatar" : {
         "description" : "Avatar images bucket configuration",
         "properties" : {
@@ -2205,7 +2775,7 @@
       }
     },
     "securitySchemes" : {
-      "BearerAuth" : {
+      "bearerAuth" : {
         "bearerFormat" : "JWT",
         "scheme" : "bearer",
         "type" : "http"
