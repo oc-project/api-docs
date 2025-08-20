@@ -1952,6 +1952,36 @@
             "nullable" : true,
             "type" : "string"
           },
+          "gender" : {
+            "description" : "OC character gender",
+            "maxLength" : 10,
+            "nullable" : true,
+            "type" : "string"
+          },
+          "address" : {
+            "description" : "OC character address",
+            "maxLength" : 100,
+            "nullable" : true,
+            "type" : "string"
+          },
+          "birth_date" : {
+            "description" : "OC character birth date",
+            "format" : "date",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "relationship" : {
+            "description" : "Relationship with creator",
+            "maxLength" : 20,
+            "nullable" : true,
+            "type" : "string"
+          },
+          "personality" : {
+            "description" : "OC character personality",
+            "maxLength" : 50,
+            "nullable" : true,
+            "type" : "string"
+          },
           "creator" : {
             "$ref" : "#/components/schemas/UserProfileSummary"
           },
@@ -1991,6 +2021,36 @@
           "description" : {
             "description" : "OC character description/bio",
             "maxLength" : 200,
+            "nullable" : true,
+            "type" : "string"
+          },
+          "gender" : {
+            "description" : "OC character gender",
+            "maxLength" : 10,
+            "nullable" : true,
+            "type" : "string"
+          },
+          "address" : {
+            "description" : "OC character address",
+            "maxLength" : 100,
+            "nullable" : true,
+            "type" : "string"
+          },
+          "birth_date" : {
+            "description" : "OC character birth date",
+            "format" : "date",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "relationship" : {
+            "description" : "Relationship with creator",
+            "maxLength" : 20,
+            "nullable" : true,
+            "type" : "string"
+          },
+          "personality" : {
+            "description" : "OC character personality",
+            "maxLength" : 50,
             "nullable" : true,
             "type" : "string"
           },
@@ -2073,6 +2133,31 @@
             "maxLength" : 200,
             "type" : "string"
           },
+          "gender" : {
+            "description" : "OC character gender",
+            "maxLength" : 10,
+            "type" : "string"
+          },
+          "address" : {
+            "description" : "OC character address",
+            "maxLength" : 100,
+            "type" : "string"
+          },
+          "birth_date" : {
+            "description" : "OC character birth date (YYYY-MM-DD)",
+            "format" : "date",
+            "type" : "string"
+          },
+          "relationship" : {
+            "description" : "Relationship with creator (儿子|妹妹|朋友等)",
+            "maxLength" : 20,
+            "type" : "string"
+          },
+          "personality" : {
+            "description" : "OC character personality (温柔|暴躁|活泼等)",
+            "maxLength" : 50,
+            "type" : "string"
+          },
           "image_gallery" : {
             "description" : "Initial image gallery for the OC character",
             "items" : {
@@ -2117,6 +2202,31 @@
           "description" : {
             "description" : "OC character description/bio",
             "maxLength" : 200,
+            "type" : "string"
+          },
+          "gender" : {
+            "description" : "OC character gender",
+            "maxLength" : 10,
+            "type" : "string"
+          },
+          "address" : {
+            "description" : "OC character address",
+            "maxLength" : 100,
+            "type" : "string"
+          },
+          "birth_date" : {
+            "description" : "OC character birth date (YYYY-MM-DD)",
+            "format" : "date",
+            "type" : "string"
+          },
+          "relationship" : {
+            "description" : "Relationship with creator (儿子|妹妹|朋友等)",
+            "maxLength" : 20,
+            "type" : "string"
+          },
+          "personality" : {
+            "description" : "OC character personality (温柔|暴躁|活泼等)",
+            "maxLength" : 50,
             "type" : "string"
           },
           "image_gallery" : {
