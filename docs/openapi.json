@@ -1119,6 +1119,562 @@
         "tags" : [ "OC" ]
       }
     },
+    "/oc/{id}/passport" : {
+      "get" : {
+        "description" : "Get passport information for a specific OC character",
+        "parameters" : [ {
+          "description" : "OC character ID",
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_oc__id__passport_get_200_response"
+                }
+              }
+            },
+            "description" : "OC passport information"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Resource not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
+          }
+        },
+        "security" : [ ],
+        "summary" : "Get OC passport",
+        "tags" : [ "OCPassport" ]
+      },
+      "post" : {
+        "description" : "Submit a passport application for an OC character",
+        "parameters" : [ {
+          "description" : "OC character ID",
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ApplyPassportRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_users__id__follow_post_201_response"
+                }
+              }
+            },
+            "description" : "Passport application submitted successfully"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Bad request"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Unauthorized - authentication required"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Passport already exists or application pending"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
+          }
+        },
+        "summary" : "Apply for OC passport",
+        "tags" : [ "OCPassport" ]
+      }
+    },
+    "/oc/{id}/passport/appeal" : {
+      "post" : {
+        "description" : "Submit an appeal for a suspicious passport",
+        "parameters" : [ {
+          "description" : "OC character ID",
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/AppealPassportRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_users__id__follow_post_201_response"
+                }
+              }
+            },
+            "description" : "Passport appeal submitted successfully"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Bad request"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Unauthorized - authentication required"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Appeal already pending or passport not suspicious"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
+          }
+        },
+        "summary" : "Appeal passport",
+        "tags" : [ "OCPassport" ]
+      }
+    },
+    "/my/passports" : {
+      "get" : {
+        "description" : "Get a list of OC passports owned by the current authenticated user",
+        "parameters" : [ {
+          "description" : "Maximum number of items to return",
+          "explode" : true,
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : 20,
+            "maximum" : 100,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Number of items to skip",
+          "explode" : true,
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_my_passports_get_200_response"
+                }
+              }
+            },
+            "description" : "List of user's OC passports"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Unauthorized - authentication required"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
+          }
+        },
+        "summary" : "Get current user's OC passports",
+        "tags" : [ "OCPassport" ]
+      }
+    },
+    "/admin/audits" : {
+      "get" : {
+        "description" : "List all audit records with optional filtering (admin only)",
+        "parameters" : [ {
+          "description" : "Filter by audit status",
+          "explode" : true,
+          "in" : "query",
+          "name" : "status",
+          "required" : false,
+          "schema" : {
+            "enum" : [ "pending", "approved", "rejected" ],
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Filter by audit type",
+          "explode" : true,
+          "in" : "query",
+          "name" : "audit_type",
+          "required" : false,
+          "schema" : {
+            "enum" : [ "passport_application", "appeal" ],
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Filter by user ID",
+          "explode" : true,
+          "in" : "query",
+          "name" : "user_id",
+          "required" : false,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Maximum number of items to return",
+          "explode" : true,
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : 20,
+            "maximum" : 100,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Number of items to skip",
+          "explode" : true,
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_admin_audits_get_200_response"
+                }
+              }
+            },
+            "description" : "List of audit records"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Unauthorized - authentication required"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Forbidden - access denied"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
+          }
+        },
+        "summary" : "List audit records",
+        "tags" : [ "AdminAudit" ]
+      }
+    },
+    "/admin/audits/{id}/review" : {
+      "post" : {
+        "description" : "Approve or reject an audit record (admin only)",
+        "parameters" : [ {
+          "description" : "Audit record ID",
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ReviewAuditRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "204" : {
+            "description" : "Audit reviewed successfully"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Bad request"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Unauthorized - authentication required"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Forbidden - access denied"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Resource not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
+          }
+        },
+        "summary" : "Review audit record",
+        "tags" : [ "AdminAudit" ]
+      }
+    },
+    "/my/audits" : {
+      "get" : {
+        "description" : "Get a list of audit records for the current authenticated user",
+        "parameters" : [ {
+          "description" : "Filter by audit status",
+          "explode" : true,
+          "in" : "query",
+          "name" : "status",
+          "required" : false,
+          "schema" : {
+            "enum" : [ "pending", "approved", "rejected" ],
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Filter by audit type",
+          "explode" : true,
+          "in" : "query",
+          "name" : "audit_type",
+          "required" : false,
+          "schema" : {
+            "enum" : [ "passport_application", "appeal" ],
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Maximum number of items to return",
+          "explode" : true,
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : 20,
+            "maximum" : 100,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Number of items to skip",
+          "explode" : true,
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_admin_audits_get_200_response"
+                }
+              }
+            },
+            "description" : "List of user's audit records"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Unauthorized - authentication required"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
+          }
+        },
+        "summary" : "Get current user's audit records",
+        "tags" : [ "UserAudit" ]
+      }
+    },
     "/posts" : {
       "get" : {
         "description" : "Get a paginated list of all posts (all types) with optional filtering",
@@ -3323,6 +3879,158 @@
         "required" : [ "code", "message" ],
         "type" : "object"
       },
+      "OCPassport" : {
+        "properties" : {
+          "id" : {
+            "description" : "Passport unique identifier",
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "oc_id" : {
+            "description" : "OC character ID",
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "oc_name" : {
+            "description" : "OC character name",
+            "type" : "string"
+          },
+          "passport_no" : {
+            "description" : "Passport number (UUID)",
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "issue_date" : {
+            "description" : "Passport issue date",
+            "format" : "date-time",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "is_suspicious" : {
+            "description" : "Whether the passport is marked as suspicious",
+            "type" : "boolean"
+          },
+          "creator" : {
+            "$ref" : "#/components/schemas/UserProfileSummary"
+          },
+          "created_at" : {
+            "description" : "Passport creation timestamp",
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "updated_at" : {
+            "description" : "Passport last update timestamp",
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "required" : [ "created_at", "creator", "id", "is_suspicious", "oc_id", "oc_name", "passport_no", "updated_at" ],
+        "type" : "object"
+      },
+      "AuditRecord" : {
+        "properties" : {
+          "id" : {
+            "description" : "Audit record unique identifier",
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "user_id" : {
+            "description" : "User ID who initiated the audit",
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "oc_id" : {
+            "description" : "Related OC character ID",
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "post_id" : {
+            "description" : "Related post ID (for applications)",
+            "format" : "uuid",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "audit_type" : {
+            "description" : "Type of audit",
+            "enum" : [ "passport_application", "appeal" ],
+            "type" : "string"
+          },
+          "status" : {
+            "description" : "Current status of the audit",
+            "enum" : [ "pending", "approved", "rejected" ],
+            "type" : "string"
+          },
+          "parent_id" : {
+            "description" : "Parent audit record ID (for appeals)",
+            "format" : "uuid",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "user" : {
+            "$ref" : "#/components/schemas/UserProfileSummary"
+          },
+          "oc_name" : {
+            "description" : "OC character name",
+            "type" : "string"
+          },
+          "post_content" : {
+            "description" : "Related post content (preview)",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "created_at" : {
+            "description" : "Audit creation timestamp",
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "updated_at" : {
+            "description" : "Audit last update timestamp",
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "required" : [ "audit_type", "created_at", "id", "oc_id", "oc_name", "status", "updated_at", "user", "user_id" ],
+        "type" : "object"
+      },
+      "ApplyPassportRequest" : {
+        "properties" : {
+          "post_id" : {
+            "description" : "Post ID for the passport application",
+            "format" : "uuid",
+            "type" : "string"
+          }
+        },
+        "required" : [ "post_id" ],
+        "type" : "object"
+      },
+      "AppealPassportRequest" : {
+        "properties" : {
+          "post_id" : {
+            "description" : "Post ID for the appeal",
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "parent_audit_id" : {
+            "description" : "Previous rejected audit record ID",
+            "format" : "uuid",
+            "nullable" : true,
+            "type" : "string"
+          }
+        },
+        "required" : [ "post_id" ],
+        "type" : "object"
+      },
+      "ReviewAuditRequest" : {
+        "properties" : {
+          "decision" : {
+            "description" : "Admin's decision on the audit",
+            "enum" : [ "approved", "rejected" ],
+            "type" : "string"
+          }
+        },
+        "required" : [ "decision" ],
+        "type" : "object"
+      },
       "_config_supabase_get_200_response" : {
         "properties" : {
           "data" : {
@@ -3415,6 +4123,42 @@
         "properties" : {
           "data" : {
             "$ref" : "#/components/schemas/OCDetails"
+          }
+        },
+        "type" : "object"
+      },
+      "_oc__id__passport_get_200_response" : {
+        "properties" : {
+          "data" : {
+            "$ref" : "#/components/schemas/OCPassport"
+          }
+        },
+        "type" : "object"
+      },
+      "_my_passports_get_200_response" : {
+        "properties" : {
+          "data" : {
+            "items" : {
+              "$ref" : "#/components/schemas/OCPassport"
+            },
+            "type" : "array"
+          },
+          "meta" : {
+            "$ref" : "#/components/schemas/PaginationMeta"
+          }
+        },
+        "type" : "object"
+      },
+      "_admin_audits_get_200_response" : {
+        "properties" : {
+          "data" : {
+            "items" : {
+              "$ref" : "#/components/schemas/AuditRecord"
+            },
+            "type" : "array"
+          },
+          "meta" : {
+            "$ref" : "#/components/schemas/PaginationMeta"
           }
         },
         "type" : "object"
