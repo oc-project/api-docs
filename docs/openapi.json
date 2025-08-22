@@ -35,7 +35,14 @@
             "description" : "Supabase configuration information"
           },
           "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
           }
         },
         "security" : [ ],
@@ -58,10 +65,24 @@
             "description" : "Current user's profile information"
           },
           "401" : {
-            "$ref" : "#/components/responses/Unauthorized"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Unauthorized - authentication required"
           },
           "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
           }
         },
         "summary" : "Get current user profile",
@@ -84,13 +105,34 @@
             "description" : "User profile updated successfully"
           },
           "400" : {
-            "$ref" : "#/components/responses/BadRequest"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Bad request"
           },
           "401" : {
-            "$ref" : "#/components/responses/Unauthorized"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Unauthorized - authentication required"
           },
           "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
           }
         },
         "summary" : "Update current user profile",
@@ -123,10 +165,24 @@
             "description" : "Inviter found"
           },
           "404" : {
-            "$ref" : "#/components/responses/NotFound"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Resource not found"
           },
           "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
           }
         },
         "security" : [ ],
@@ -149,13 +205,34 @@
             "description" : "Settings list"
           },
           "401" : {
-            "$ref" : "#/components/responses/Unauthorized"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Unauthorized - authentication required"
           },
           "403" : {
-            "$ref" : "#/components/responses/Forbidden"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Forbidden - access denied"
           },
           "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
           }
         },
         "summary" : "List settings",
@@ -187,16 +264,44 @@
             "description" : "Setting value"
           },
           "401" : {
-            "$ref" : "#/components/responses/Unauthorized"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Unauthorized - authentication required"
           },
           "403" : {
-            "$ref" : "#/components/responses/Forbidden"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Forbidden - access denied"
           },
           "404" : {
-            "$ref" : "#/components/responses/NotFound"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Resource not found"
           },
           "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
           }
         },
         "summary" : "Get a setting",
@@ -236,13 +341,34 @@
             "description" : "Upserted setting"
           },
           "401" : {
-            "$ref" : "#/components/responses/Unauthorized"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Unauthorized - authentication required"
           },
           "403" : {
-            "$ref" : "#/components/responses/Forbidden"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Forbidden - access denied"
           },
           "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
           }
         },
         "summary" : "Upsert a setting",
@@ -259,6 +385,7 @@
           "name" : "id",
           "required" : true,
           "schema" : {
+            "format" : "uuid",
             "type" : "string"
           },
           "style" : "simple"
@@ -275,10 +402,24 @@
             "description" : "User profile information"
           },
           "404" : {
-            "$ref" : "#/components/responses/NotFound"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Resource not found"
           },
           "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
           }
         },
         "security" : [ ],
@@ -296,6 +437,7 @@
           "name" : "id",
           "required" : true,
           "schema" : {
+            "format" : "uuid",
             "type" : "string"
           },
           "style" : "simple"
@@ -305,13 +447,34 @@
             "description" : "Successfully unfollowed user"
           },
           "401" : {
-            "$ref" : "#/components/responses/Unauthorized"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Unauthorized - authentication required"
           },
           "404" : {
-            "$ref" : "#/components/responses/NotFound"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Resource not found"
           },
           "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
           }
         },
         "summary" : "Unfollow a user",
@@ -326,6 +489,7 @@
           "name" : "id",
           "required" : true,
           "schema" : {
+            "format" : "uuid",
             "type" : "string"
           },
           "style" : "simple"
@@ -342,13 +506,34 @@
             "description" : "Successfully followed user"
           },
           "400" : {
-            "$ref" : "#/components/responses/BadRequest"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Bad request"
           },
           "401" : {
-            "$ref" : "#/components/responses/Unauthorized"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Unauthorized - authentication required"
           },
           "404" : {
-            "$ref" : "#/components/responses/NotFound"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Resource not found"
           },
           "409" : {
             "content" : {
@@ -361,7 +546,14 @@
             "description" : "Already following this user"
           },
           "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
           }
         },
         "summary" : "Follow a user",
@@ -378,6 +570,7 @@
           "name" : "id",
           "required" : true,
           "schema" : {
+            "format" : "uuid",
             "type" : "string"
           },
           "style" : "simple"
@@ -419,10 +612,24 @@
             "description" : "List of followers"
           },
           "404" : {
-            "$ref" : "#/components/responses/NotFound"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Resource not found"
           },
           "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
           }
         },
         "security" : [ ],
@@ -440,6 +647,7 @@
           "name" : "id",
           "required" : true,
           "schema" : {
+            "format" : "uuid",
             "type" : "string"
           },
           "style" : "simple"
@@ -481,10 +689,24 @@
             "description" : "List of users being followed"
           },
           "404" : {
-            "$ref" : "#/components/responses/NotFound"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Resource not found"
           },
           "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
           }
         },
         "security" : [ ],
@@ -533,10 +755,24 @@
             "description" : "List of user's OC characters"
           },
           "401" : {
-            "$ref" : "#/components/responses/Unauthorized"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Unauthorized - authentication required"
           },
           "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
           }
         },
         "summary" : "Get current user's OC characters",
@@ -566,13 +802,34 @@
             "description" : "OC character created successfully"
           },
           "400" : {
-            "$ref" : "#/components/responses/BadRequest"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Bad request"
           },
           "401" : {
-            "$ref" : "#/components/responses/Unauthorized"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Unauthorized - authentication required"
           },
           "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
           }
         },
         "summary" : "Create OC character",
@@ -589,6 +846,7 @@
           "name" : "id",
           "required" : true,
           "schema" : {
+            "format" : "uuid",
             "type" : "string"
           },
           "style" : "simple"
@@ -608,16 +866,44 @@
             "description" : "Cannot delete OC character with associated diary entries"
           },
           "401" : {
-            "$ref" : "#/components/responses/Unauthorized"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Unauthorized - authentication required"
           },
           "403" : {
-            "$ref" : "#/components/responses/Forbidden"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Forbidden - access denied"
           },
           "404" : {
-            "$ref" : "#/components/responses/NotFound"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Resource not found"
           },
           "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
           }
         },
         "summary" : "Delete OC character",
@@ -632,6 +918,7 @@
           "name" : "id",
           "required" : true,
           "schema" : {
+            "format" : "uuid",
             "type" : "string"
           },
           "style" : "simple"
@@ -648,10 +935,24 @@
             "description" : "OC character details"
           },
           "404" : {
-            "$ref" : "#/components/responses/NotFound"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Resource not found"
           },
           "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
           }
         },
         "security" : [ ],
@@ -667,6 +968,7 @@
           "name" : "id",
           "required" : true,
           "schema" : {
+            "format" : "uuid",
             "type" : "string"
           },
           "style" : "simple"
@@ -686,19 +988,54 @@
             "description" : "OC character updated successfully"
           },
           "400" : {
-            "$ref" : "#/components/responses/BadRequest"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Bad request"
           },
           "401" : {
-            "$ref" : "#/components/responses/Unauthorized"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Unauthorized - authentication required"
           },
           "403" : {
-            "$ref" : "#/components/responses/Forbidden"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Forbidden - access denied"
           },
           "404" : {
-            "$ref" : "#/components/responses/NotFound"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Resource not found"
           },
           "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
           }
         },
         "summary" : "Update OC character",
@@ -715,6 +1052,7 @@
           "name" : "id",
           "required" : true,
           "schema" : {
+            "format" : "uuid",
             "type" : "string"
           },
           "style" : "simple"
@@ -756,10 +1094,24 @@
             "description" : "List of user's OC characters"
           },
           "404" : {
-            "$ref" : "#/components/responses/NotFound"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Resource not found"
           },
           "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
           }
         },
         "security" : [ ],
@@ -769,37 +1121,39 @@
     },
     "/posts" : {
       "get" : {
-        "description" : "Get a paginated list of posts from followed users or public posts",
+        "description" : "Get a paginated list of all posts (all types) with optional filtering",
         "parameters" : [ {
-          "description" : "Type of posts to retrieve",
+          "description" : "Filter posts by type",
           "explode" : true,
           "in" : "query",
-          "name" : "feed_type",
+          "name" : "post_type",
           "required" : false,
           "schema" : {
-            "default" : "following",
-            "enum" : [ "following", "public", "user" ],
+            "default" : "diary",
+            "enum" : [ "diary", "application" ],
             "type" : "string"
           },
           "style" : "form"
         }, {
-          "description" : "User ID to get posts from (required when feed_type is 'user')",
+          "description" : "User ID to get posts from",
           "explode" : true,
           "in" : "query",
           "name" : "user_id",
           "required" : false,
           "schema" : {
+            "format" : "uuid",
             "type" : "string"
           },
           "style" : "form"
         }, {
-          "description" : "OC IDs to filter posts by specific characters (comma-separated)",
+          "description" : "OC IDs to filter posts by specific characters (comma-separated, only for diary posts)",
           "explode" : false,
           "in" : "query",
           "name" : "oc_ids",
           "required" : false,
           "schema" : {
             "items" : {
+              "format" : "uuid",
               "type" : "string"
             },
             "type" : "array"
@@ -842,19 +1196,23 @@
             },
             "description" : "List of posts"
           },
-          "401" : {
-            "$ref" : "#/components/responses/Unauthorized"
-          },
           "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
           }
         },
         "security" : [ ],
-        "summary" : "Get posts feed",
+        "summary" : "Get all posts",
         "tags" : [ "Posts" ]
       },
       "post" : {
-        "description" : "Create a new diary post that can be associated with multiple OC characters",
+        "description" : "Create a new post of any type (diary, application, etc.)",
         "requestBody" : {
           "content" : {
             "application/json" : {
@@ -877,16 +1235,37 @@
             "description" : "Post created successfully"
           },
           "400" : {
-            "$ref" : "#/components/responses/BadRequest"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Bad request"
           },
           "401" : {
-            "$ref" : "#/components/responses/Unauthorized"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Unauthorized - authentication required"
           },
           "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
           }
         },
-        "summary" : "Create a new post",
+        "summary" : "Create a post",
         "tags" : [ "Posts" ]
       }
     },
@@ -900,6 +1279,7 @@
           "name" : "id",
           "required" : true,
           "schema" : {
+            "format" : "uuid",
             "type" : "string"
           },
           "style" : "simple"
@@ -909,16 +1289,44 @@
             "description" : "Post deleted successfully"
           },
           "401" : {
-            "$ref" : "#/components/responses/Unauthorized"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Unauthorized - authentication required"
           },
           "403" : {
-            "$ref" : "#/components/responses/Forbidden"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Forbidden - access denied"
           },
           "404" : {
-            "$ref" : "#/components/responses/NotFound"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Resource not found"
           },
           "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
           }
         },
         "summary" : "Delete a post",
@@ -933,6 +1341,7 @@
           "name" : "id",
           "required" : true,
           "schema" : {
+            "format" : "uuid",
             "type" : "string"
           },
           "style" : "simple"
@@ -949,10 +1358,24 @@
             "description" : "Post details"
           },
           "404" : {
-            "$ref" : "#/components/responses/NotFound"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Resource not found"
           },
           "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
           }
         },
         "security" : [ ],
@@ -968,6 +1391,7 @@
           "name" : "id",
           "required" : true,
           "schema" : {
+            "format" : "uuid",
             "type" : "string"
           },
           "style" : "simple"
@@ -987,19 +1411,54 @@
             "description" : "Post updated successfully"
           },
           "400" : {
-            "$ref" : "#/components/responses/BadRequest"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Bad request"
           },
           "401" : {
-            "$ref" : "#/components/responses/Unauthorized"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Unauthorized - authentication required"
           },
           "403" : {
-            "$ref" : "#/components/responses/Forbidden"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Forbidden - access denied"
           },
           "404" : {
-            "$ref" : "#/components/responses/NotFound"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Resource not found"
           },
           "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
           }
         },
         "summary" : "Update a post",
@@ -1016,6 +1475,7 @@
           "name" : "id",
           "required" : true,
           "schema" : {
+            "format" : "uuid",
             "type" : "string"
           },
           "style" : "simple"
@@ -1025,13 +1485,34 @@
             "description" : "Post unliked successfully"
           },
           "401" : {
-            "$ref" : "#/components/responses/Unauthorized"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Unauthorized - authentication required"
           },
           "404" : {
-            "$ref" : "#/components/responses/NotFound"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Resource not found"
           },
           "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
           }
         },
         "summary" : "Unlike a post",
@@ -1046,6 +1527,7 @@
           "name" : "id",
           "required" : true,
           "schema" : {
+            "format" : "uuid",
             "type" : "string"
           },
           "style" : "simple"
@@ -1062,10 +1544,24 @@
             "description" : "Post liked successfully"
           },
           "401" : {
-            "$ref" : "#/components/responses/Unauthorized"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Unauthorized - authentication required"
           },
           "404" : {
-            "$ref" : "#/components/responses/NotFound"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Resource not found"
           },
           "409" : {
             "content" : {
@@ -1078,7 +1574,14 @@
             "description" : "Already liked this post"
           },
           "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
           }
         },
         "summary" : "Like a post",
@@ -1095,6 +1598,7 @@
           "name" : "id",
           "required" : true,
           "schema" : {
+            "format" : "uuid",
             "type" : "string"
           },
           "style" : "simple"
@@ -1136,10 +1640,24 @@
             "description" : "List of users who liked the post"
           },
           "404" : {
-            "$ref" : "#/components/responses/NotFound"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Resource not found"
           },
           "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
           }
         },
         "security" : [ ],
@@ -1157,6 +1675,7 @@
           "name" : "id",
           "required" : true,
           "schema" : {
+            "format" : "uuid",
             "type" : "string"
           },
           "style" : "simple"
@@ -1198,10 +1717,24 @@
             "description" : "List of comments"
           },
           "404" : {
-            "$ref" : "#/components/responses/NotFound"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Resource not found"
           },
           "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
           }
         },
         "security" : [ ],
@@ -1217,6 +1750,7 @@
           "name" : "id",
           "required" : true,
           "schema" : {
+            "format" : "uuid",
             "type" : "string"
           },
           "style" : "simple"
@@ -1243,16 +1777,44 @@
             "description" : "Comment added successfully"
           },
           "400" : {
-            "$ref" : "#/components/responses/BadRequest"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Bad request"
           },
           "401" : {
-            "$ref" : "#/components/responses/Unauthorized"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Unauthorized - authentication required"
           },
           "404" : {
-            "$ref" : "#/components/responses/NotFound"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Resource not found"
           },
           "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
           }
         },
         "summary" : "Add a comment to a post",
@@ -1269,6 +1831,7 @@
           "name" : "id",
           "required" : true,
           "schema" : {
+            "format" : "uuid",
             "type" : "string"
           },
           "style" : "simple"
@@ -1279,6 +1842,7 @@
           "name" : "comment_id",
           "required" : true,
           "schema" : {
+            "format" : "uuid",
             "type" : "string"
           },
           "style" : "simple"
@@ -1288,16 +1852,44 @@
             "description" : "Comment deleted successfully"
           },
           "401" : {
-            "$ref" : "#/components/responses/Unauthorized"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Unauthorized - authentication required"
           },
           "403" : {
-            "$ref" : "#/components/responses/Forbidden"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Forbidden - access denied"
           },
           "404" : {
-            "$ref" : "#/components/responses/NotFound"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Resource not found"
           },
           "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
           }
         },
         "summary" : "Delete a comment",
@@ -1384,7 +1976,14 @@
             "description" : "List tasks"
           },
           "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
           }
         },
         "summary" : "List tasks",
@@ -1414,10 +2013,24 @@
             "description" : "Task created"
           },
           "400" : {
-            "$ref" : "#/components/responses/BadRequest"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Bad request"
           },
           "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
           }
         },
         "summary" : "Create task",
@@ -1432,6 +2045,7 @@
           "name" : "id",
           "required" : true,
           "schema" : {
+            "format" : "uuid",
             "type" : "string"
           },
           "style" : "simple"
@@ -1448,10 +2062,24 @@
             "description" : "Task"
           },
           "404" : {
-            "$ref" : "#/components/responses/NotFound"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Resource not found"
           },
           "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
           }
         },
         "summary" : "Get task by ID",
@@ -1466,6 +2094,7 @@
           "name" : "id",
           "required" : true,
           "schema" : {
+            "format" : "uuid",
             "type" : "string"
           },
           "style" : "simple"
@@ -1485,13 +2114,34 @@
             "description" : "Task retry scheduled"
           },
           "400" : {
-            "$ref" : "#/components/responses/BadRequest"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Bad request"
           },
           "404" : {
-            "$ref" : "#/components/responses/NotFound"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Resource not found"
           },
           "500" : {
-            "$ref" : "#/components/responses/InternalServerError"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
           }
         },
         "summary" : "Retry a task",
@@ -1613,6 +2263,7 @@
       "Task" : {
         "properties" : {
           "id" : {
+            "format" : "uuid",
             "type" : "string"
           },
           "type" : {
@@ -1673,6 +2324,7 @@
         "properties" : {
           "id" : {
             "description" : "Unique identifier of the created resource",
+            "format" : "uuid",
             "type" : "string"
           }
         },
@@ -1683,7 +2335,7 @@
         "properties" : {
           "id" : {
             "description" : "Image unique identifier",
-            "maxLength" : 36,
+            "format" : "uuid",
             "type" : "string"
           },
           "bucket" : {
@@ -1702,6 +2354,7 @@
         "properties" : {
           "id" : {
             "description" : "User unique identifier",
+            "format" : "uuid",
             "type" : "string"
           },
           "display_id" : {
@@ -1765,6 +2418,7 @@
         "properties" : {
           "user_id" : {
             "description" : "User unique identifier",
+            "format" : "uuid",
             "type" : "string"
           },
           "display_id" : {
@@ -1836,10 +2490,12 @@
         "properties" : {
           "follower_id" : {
             "description" : "ID of the user who is following",
+            "format" : "uuid",
             "type" : "string"
           },
           "following_id" : {
             "description" : "ID of the user being followed",
+            "format" : "uuid",
             "type" : "string"
           },
           "created_at" : {
@@ -1855,6 +2511,7 @@
         "properties" : {
           "id" : {
             "description" : "Post unique identifier",
+            "format" : "uuid",
             "type" : "string"
           },
           "content_preview" : {
@@ -1913,6 +2570,7 @@
         "properties" : {
           "id" : {
             "description" : "OC unique identifier",
+            "format" : "uuid",
             "type" : "string"
           },
           "name" : {
@@ -1936,6 +2594,7 @@
         "properties" : {
           "id" : {
             "description" : "OC unique identifier",
+            "format" : "uuid",
             "type" : "string"
           },
           "name" : {
@@ -2008,6 +2667,7 @@
         "properties" : {
           "id" : {
             "description" : "OC unique identifier",
+            "format" : "uuid",
             "type" : "string"
           },
           "name" : {
@@ -2095,6 +2755,7 @@
         "properties" : {
           "id" : {
             "description" : "Image unique identifier",
+            "format" : "uuid",
             "type" : "string"
           },
           "image" : {
@@ -2125,7 +2786,7 @@
           },
           "avatar_image_id" : {
             "description" : "Avatar image ID",
-            "maxLength" : 36,
+            "format" : "uuid",
             "type" : "string"
           },
           "description" : {
@@ -2174,7 +2835,7 @@
         "properties" : {
           "image_id" : {
             "description" : "Image ID",
-            "maxLength" : 26,
+            "format" : "uuid",
             "type" : "string"
           },
           "description" : {
@@ -2196,7 +2857,7 @@
           },
           "avatar_image_id" : {
             "description" : "Avatar image ID",
-            "maxLength" : 36,
+            "format" : "uuid",
             "type" : "string"
           },
           "description" : {
@@ -2244,11 +2905,12 @@
         "properties" : {
           "id" : {
             "description" : "Image ID (for existing images)",
+            "format" : "uuid",
             "type" : "string"
           },
           "image_id" : {
             "description" : "New image ID (for add/update actions)",
-            "maxLength" : 26,
+            "format" : "uuid",
             "type" : "string"
           },
           "description" : {
@@ -2283,11 +2945,17 @@
           },
           "id" : {
             "description" : "Post unique identifier",
+            "format" : "uuid",
             "type" : "string"
           },
           "content" : {
             "description" : "Post text content",
             "maxLength" : 1000,
+            "type" : "string"
+          },
+          "post_type" : {
+            "description" : "Type of post - diary for regular posts, application for review requests",
+            "enum" : [ "diary", "application" ],
             "type" : "string"
           },
           "user" : {
@@ -2343,7 +3011,7 @@
             "type" : "string"
           }
         },
-        "required" : [ "comments_count", "content", "created_at", "id", "images", "is_draft", "is_liked", "is_public", "likes_count", "ocs", "updated_at", "user" ],
+        "required" : [ "comments_count", "content", "created_at", "id", "images", "is_draft", "is_liked", "is_public", "likes_count", "ocs", "post_type", "updated_at", "user" ],
         "type" : "object"
       },
       "PostDetails" : {
@@ -2364,11 +3032,17 @@
           },
           "id" : {
             "description" : "Post unique identifier",
+            "format" : "uuid",
             "type" : "string"
           },
           "content" : {
             "description" : "Post text content",
             "maxLength" : 1000,
+            "type" : "string"
+          },
+          "post_type" : {
+            "description" : "Type of post - diary for regular posts, application for review requests",
+            "enum" : [ "diary", "application" ],
             "type" : "string"
           },
           "user" : {
@@ -2432,13 +3106,14 @@
             "type" : "string"
           }
         },
-        "required" : [ "comments_count", "content", "created_at", "id", "images", "is_draft", "is_liked", "is_public", "likes_count", "ocs", "recent_comments", "updated_at", "user" ],
+        "required" : [ "comments_count", "content", "created_at", "id", "images", "is_draft", "is_liked", "is_public", "likes_count", "ocs", "post_type", "recent_comments", "updated_at", "user" ],
         "type" : "object"
       },
       "PostLike" : {
         "properties" : {
           "id" : {
             "description" : "Like unique identifier",
+            "format" : "uuid",
             "type" : "string"
           },
           "user" : {
@@ -2457,6 +3132,7 @@
         "properties" : {
           "id" : {
             "description" : "Comment unique identifier",
+            "format" : "uuid",
             "type" : "string"
           },
           "content" : {
@@ -2483,23 +3159,30 @@
       },
       "CreatePostRequest" : {
         "properties" : {
-          "weather" : {
-            "description" : "Weather condition string",
-            "maxLength" : 50,
-            "type" : "string"
-          },
-          "location" : {
-            "$ref" : "#/components/schemas/CreatePostRequest_location"
-          },
           "content" : {
             "description" : "Post text content",
             "maxLength" : 1000,
             "minLength" : 1,
             "type" : "string"
           },
+          "post_type" : {
+            "default" : "diary",
+            "description" : "Type of post - diary for regular posts, application for review requests",
+            "enum" : [ "diary", "application" ],
+            "type" : "string"
+          },
+          "weather" : {
+            "description" : "Weather condition string (only for diary posts)",
+            "maxLength" : 50,
+            "type" : "string"
+          },
+          "location" : {
+            "$ref" : "#/components/schemas/CreatePostRequest_location"
+          },
           "oc_ids" : {
-            "description" : "OC character IDs associated with this post",
+            "description" : "OC character IDs associated with this post (only for diary posts)",
             "items" : {
+              "format" : "uuid",
               "type" : "string"
             },
             "maxItems" : 5,
@@ -2508,6 +3191,7 @@
           "image_ids" : {
             "description" : "Post image IDs",
             "items" : {
+              "format" : "uuid",
               "type" : "string"
             },
             "maxItems" : 9,
@@ -2529,23 +3213,29 @@
       },
       "UpdatePostRequest" : {
         "properties" : {
-          "weather" : {
-            "description" : "Weather condition string",
-            "maxLength" : 50,
-            "type" : "string"
-          },
-          "location" : {
-            "$ref" : "#/components/schemas/CreatePostRequest_location"
-          },
           "content" : {
             "description" : "Updated post text content",
             "maxLength" : 1000,
             "minLength" : 1,
             "type" : "string"
           },
+          "post_type" : {
+            "description" : "Type of post - diary for regular posts, application for review requests",
+            "enum" : [ "diary", "application" ],
+            "type" : "string"
+          },
+          "weather" : {
+            "description" : "Weather condition string (only for diary posts)",
+            "maxLength" : 50,
+            "type" : "string"
+          },
+          "location" : {
+            "$ref" : "#/components/schemas/CreatePostRequest_location"
+          },
           "oc_ids" : {
-            "description" : "Updated OC character IDs associated with this post",
+            "description" : "Updated OC character IDs associated with this post (only for diary posts)",
             "items" : {
+              "format" : "uuid",
               "type" : "string"
             },
             "maxItems" : 5,
@@ -2554,6 +3244,7 @@
           "image_ids" : {
             "description" : "Updated post image IDs",
             "items" : {
+              "format" : "uuid",
               "type" : "string"
             },
             "maxItems" : 9,
@@ -2732,7 +3423,7 @@
         "properties" : {
           "data" : {
             "items" : {
-              "$ref" : "#/components/schemas/PostSummary"
+              "$ref" : "#/components/schemas/Post"
             },
             "type" : "array"
           },
@@ -2809,6 +3500,7 @@
         "type" : "object"
       },
       "CreatePostRequest_location" : {
+        "description" : "Location information (only for diary posts)",
         "nullable" : true,
         "properties" : {
           "lat" : {
