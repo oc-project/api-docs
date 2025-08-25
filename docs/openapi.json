@@ -5,7 +5,7 @@
       "name" : "API Support",
       "url" : "https://github.com/example/oc-backend"
     },
-    "description" : "API for managing user profiles and follows",
+    "description" : "API for managing user profiles and follows\n\n## Authentication & Authorization\n\nMost endpoints require JWT Bearer authentication. Some endpoints require specific roles:\n\n- **Admin endpoints**: Require `app_metadata.role: \"admin\"` in the JWT token\n- **User endpoints**: Require valid authentication but no specific role\n- **Public endpoints**: No authentication required (marked with `security: []`)\n\n## Admin Privileges\n\nAdmin users have access to additional endpoints for:\n- Managing application settings (`/admin/settings`)\n- Viewing and reviewing all audit records (`/admin/audits`)\n- Making decisions on passport applications and appeals\n\nTo grant admin privileges, set the user's `app_metadata.role` to `\"admin\"` in Supabase Auth.\n",
     "title" : "OC Backend API",
     "version" : "1.0.0"
   },
@@ -192,7 +192,7 @@
     },
     "/admin/settings" : {
       "get" : {
-        "description" : "List all application settings",
+        "description" : "List all application settings. This endpoint requires admin privileges.\n\n**Required Role:** `admin` in JWT `app_metadata.role`\n",
         "responses" : {
           "200" : {
             "content" : {
@@ -222,7 +222,7 @@
                 }
               }
             },
-            "description" : "Forbidden - access denied"
+            "description" : "Forbidden - access denied. This error occurs when:\n- The user lacks required admin privileges\n- The JWT token doesn't contain `app_metadata.role: \"admin\"`\n- The user is not authorized to perform this operation\n"
           },
           "500" : {
             "content" : {
@@ -235,13 +235,16 @@
             "description" : "Internal server error"
           }
         },
-        "summary" : "List settings",
+        "security" : [ {
+          "adminAuth" : [ ]
+        } ],
+        "summary" : "List settings (Admin only)",
         "tags" : [ "AdminSettings" ]
       }
     },
     "/admin/settings/{name}" : {
       "get" : {
-        "description" : "Get a specific setting by name",
+        "description" : "Get a specific setting by name. This endpoint requires admin privileges.\n\n**Required Role:** `admin` in JWT `app_metadata.role`\n",
         "parameters" : [ {
           "explode" : false,
           "in" : "path",
@@ -281,7 +284,7 @@
                 }
               }
             },
-            "description" : "Forbidden - access denied"
+            "description" : "Forbidden - access denied. This error occurs when:\n- The user lacks required admin privileges\n- The JWT token doesn't contain `app_metadata.role: \"admin\"`\n- The user is not authorized to perform this operation\n"
           },
           "404" : {
             "content" : {
@@ -304,11 +307,14 @@
             "description" : "Internal server error"
           }
         },
-        "summary" : "Get a setting",
+        "security" : [ {
+          "adminAuth" : [ ]
+        } ],
+        "summary" : "Get a setting (Admin only)",
         "tags" : [ "AdminSettings" ]
       },
       "put" : {
-        "description" : "Create or update a setting by name",
+        "description" : "Create or update a setting by name. This endpoint requires admin privileges.\n\n**Required Role:** `admin` in JWT `app_metadata.role`\n",
         "parameters" : [ {
           "explode" : false,
           "in" : "path",
@@ -358,7 +364,7 @@
                 }
               }
             },
-            "description" : "Forbidden - access denied"
+            "description" : "Forbidden - access denied. This error occurs when:\n- The user lacks required admin privileges\n- The JWT token doesn't contain `app_metadata.role: \"admin\"`\n- The user is not authorized to perform this operation\n"
           },
           "500" : {
             "content" : {
@@ -371,7 +377,10 @@
             "description" : "Internal server error"
           }
         },
-        "summary" : "Upsert a setting",
+        "security" : [ {
+          "adminAuth" : [ ]
+        } ],
+        "summary" : "Upsert a setting (Admin only)",
         "tags" : [ "AdminSettings" ]
       }
     },
@@ -883,7 +892,7 @@
                 }
               }
             },
-            "description" : "Forbidden - access denied"
+            "description" : "Forbidden - access denied. This error occurs when:\n- The user lacks required admin privileges\n- The JWT token doesn't contain `app_metadata.role: \"admin\"`\n- The user is not authorized to perform this operation\n"
           },
           "404" : {
             "content" : {
@@ -1015,7 +1024,7 @@
                 }
               }
             },
-            "description" : "Forbidden - access denied"
+            "description" : "Forbidden - access denied. This error occurs when:\n- The user lacks required admin privileges\n- The JWT token doesn't contain `app_metadata.role: \"admin\"`\n- The user is not authorized to perform this operation\n"
           },
           "404" : {
             "content" : {
@@ -1398,7 +1407,7 @@
     },
     "/admin/audits" : {
       "get" : {
-        "description" : "List all audit records with optional filtering (admin only)",
+        "description" : "List all audit records with optional filtering. This endpoint requires admin privileges\nand allows admins to view audit records from all users.\n\n**Required Role:** `admin` in JWT `app_metadata.role`\n",
         "parameters" : [ {
           "description" : "Filter by audit status",
           "explode" : true,
@@ -1487,7 +1496,7 @@
                 }
               }
             },
-            "description" : "Forbidden - access denied"
+            "description" : "Forbidden - access denied. This error occurs when:\n- The user lacks required admin privileges\n- The JWT token doesn't contain `app_metadata.role: \"admin\"`\n- The user is not authorized to perform this operation\n"
           },
           "500" : {
             "content" : {
@@ -1500,13 +1509,16 @@
             "description" : "Internal server error"
           }
         },
-        "summary" : "List audit records",
+        "security" : [ {
+          "adminAuth" : [ ]
+        } ],
+        "summary" : "List audit records (Admin only)",
         "tags" : [ "AdminAudit" ]
       }
     },
     "/admin/audits/{id}/review" : {
       "post" : {
-        "description" : "Approve or reject an audit record (admin only)",
+        "description" : "Approve or reject an audit record. This endpoint requires admin privileges\nand allows admins to make decisions on passport applications and appeals.\n\n**Required Role:** `admin` in JWT `app_metadata.role`\n",
         "parameters" : [ {
           "description" : "Audit record ID",
           "explode" : false,
@@ -1561,7 +1573,7 @@
                 }
               }
             },
-            "description" : "Forbidden - access denied"
+            "description" : "Forbidden - access denied. This error occurs when:\n- The user lacks required admin privileges\n- The JWT token doesn't contain `app_metadata.role: \"admin\"`\n- The user is not authorized to perform this operation\n"
           },
           "404" : {
             "content" : {
@@ -1584,7 +1596,10 @@
             "description" : "Internal server error"
           }
         },
-        "summary" : "Review audit record",
+        "security" : [ {
+          "adminAuth" : [ ]
+        } ],
+        "summary" : "Review audit record (Admin only)",
         "tags" : [ "AdminAudit" ]
       }
     },
@@ -1862,7 +1877,7 @@
                 }
               }
             },
-            "description" : "Forbidden - access denied"
+            "description" : "Forbidden - access denied. This error occurs when:\n- The user lacks required admin privileges\n- The JWT token doesn't contain `app_metadata.role: \"admin\"`\n- The user is not authorized to perform this operation\n"
           },
           "404" : {
             "content" : {
@@ -1994,7 +2009,7 @@
                 }
               }
             },
-            "description" : "Forbidden - access denied"
+            "description" : "Forbidden - access denied. This error occurs when:\n- The user lacks required admin privileges\n- The JWT token doesn't contain `app_metadata.role: \"admin\"`\n- The user is not authorized to perform this operation\n"
           },
           "404" : {
             "content" : {
@@ -2425,7 +2440,7 @@
                 }
               }
             },
-            "description" : "Forbidden - access denied"
+            "description" : "Forbidden - access denied. This error occurs when:\n- The user lacks required admin privileges\n- The JWT token doesn't contain `app_metadata.role: \"admin\"`\n- The user is not authorized to perform this operation\n"
           },
           "404" : {
             "content" : {
@@ -2754,7 +2769,22 @@
             }
           }
         },
-        "description" : "Forbidden - access denied"
+        "description" : "Forbidden - access denied. This error occurs when:\n- The user lacks required admin privileges\n- The JWT token doesn't contain `app_metadata.role: \"admin\"`\n- The user is not authorized to perform this operation\n"
+      },
+      "AdminPrivilegeRequired" : {
+        "content" : {
+          "application/json" : {
+            "example" : {
+              "error" : "insufficient permissions",
+              "message" : "admin role required",
+              "code" : 4006
+            },
+            "schema" : {
+              "$ref" : "#/components/schemas/Error"
+            }
+          }
+        },
+        "description" : "Admin privilege required. The authenticated user does not have admin role.\nThe JWT token must contain `app_metadata.role: \"admin\"` to access this endpoint.\n"
       },
       "BadRequest" : {
         "content" : {
@@ -4323,6 +4353,12 @@
     "securitySchemes" : {
       "bearerAuth" : {
         "bearerFormat" : "JWT",
+        "scheme" : "bearer",
+        "type" : "http"
+      },
+      "adminAuth" : {
+        "bearerFormat" : "JWT",
+        "description" : "JWT Bearer authentication with admin privileges.\nToken must contain `app_metadata.role: \"admin\"` claim.\n",
         "scheme" : "bearer",
         "type" : "http"
       }
