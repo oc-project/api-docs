@@ -3327,15 +3327,66 @@
             "nullable" : true,
             "type" : "string"
           },
-          "address" : {
-            "description" : "OC character address",
-            "maxLength" : 100,
-            "nullable" : true,
-            "type" : "string"
-          },
           "birth_date" : {
             "description" : "OC character birth date",
             "format" : "date",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "birth_time" : {
+            "description" : "OC character birth time",
+            "format" : "time",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "birth_province" : {
+            "description" : "Birth province",
+            "maxLength" : 50,
+            "nullable" : true,
+            "type" : "string"
+          },
+          "birth_city" : {
+            "description" : "Birth city",
+            "maxLength" : 50,
+            "nullable" : true,
+            "type" : "string"
+          },
+          "birth_district" : {
+            "description" : "Birth district",
+            "maxLength" : 50,
+            "nullable" : true,
+            "type" : "string"
+          },
+          "birth_address_detail" : {
+            "description" : "Detailed birth address",
+            "maxLength" : 200,
+            "nullable" : true,
+            "type" : "string"
+          },
+          "height_cm" : {
+            "description" : "Height in centimeters",
+            "maximum" : 300,
+            "minimum" : 1,
+            "nullable" : true,
+            "type" : "integer"
+          },
+          "weight_kg" : {
+            "description" : "Weight in kilograms",
+            "format" : "float",
+            "maximum" : 999.99,
+            "minimum" : 0.1,
+            "nullable" : true,
+            "type" : "number"
+          },
+          "skin_color" : {
+            "description" : "Skin color",
+            "maxLength" : 20,
+            "nullable" : true,
+            "type" : "string"
+          },
+          "personality" : {
+            "description" : "OC character personality",
+            "maxLength" : 50,
             "nullable" : true,
             "type" : "string"
           },
@@ -3345,9 +3396,9 @@
             "nullable" : true,
             "type" : "string"
           },
-          "personality" : {
-            "description" : "OC character personality",
-            "maxLength" : 50,
+          "call_me_as" : {
+            "description" : "How the OC calls the creator",
+            "maxLength" : 20,
             "nullable" : true,
             "type" : "string"
           },
@@ -3400,15 +3451,66 @@
             "nullable" : true,
             "type" : "string"
           },
-          "address" : {
-            "description" : "OC character address",
-            "maxLength" : 100,
-            "nullable" : true,
-            "type" : "string"
-          },
           "birth_date" : {
             "description" : "OC character birth date",
             "format" : "date",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "birth_time" : {
+            "description" : "OC character birth time",
+            "format" : "time",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "birth_province" : {
+            "description" : "Birth province",
+            "maxLength" : 50,
+            "nullable" : true,
+            "type" : "string"
+          },
+          "birth_city" : {
+            "description" : "Birth city",
+            "maxLength" : 50,
+            "nullable" : true,
+            "type" : "string"
+          },
+          "birth_district" : {
+            "description" : "Birth district",
+            "maxLength" : 50,
+            "nullable" : true,
+            "type" : "string"
+          },
+          "birth_address_detail" : {
+            "description" : "Detailed birth address",
+            "maxLength" : 200,
+            "nullable" : true,
+            "type" : "string"
+          },
+          "height_cm" : {
+            "description" : "Height in centimeters",
+            "maximum" : 300,
+            "minimum" : 1,
+            "nullable" : true,
+            "type" : "integer"
+          },
+          "weight_kg" : {
+            "description" : "Weight in kilograms",
+            "format" : "float",
+            "maximum" : 999.99,
+            "minimum" : 0.1,
+            "nullable" : true,
+            "type" : "number"
+          },
+          "skin_color" : {
+            "description" : "Skin color",
+            "maxLength" : 20,
+            "nullable" : true,
+            "type" : "string"
+          },
+          "personality" : {
+            "description" : "OC character personality",
+            "maxLength" : 50,
             "nullable" : true,
             "type" : "string"
           },
@@ -3418,9 +3520,9 @@
             "nullable" : true,
             "type" : "string"
           },
-          "personality" : {
-            "description" : "OC character personality",
-            "maxLength" : 50,
+          "call_me_as" : {
+            "description" : "How the OC calls the creator",
+            "maxLength" : 20,
             "nullable" : true,
             "type" : "string"
           },
@@ -3509,14 +3611,57 @@
             "maxLength" : 10,
             "type" : "string"
           },
-          "address" : {
-            "description" : "OC character address",
-            "maxLength" : 100,
-            "type" : "string"
-          },
           "birth_date" : {
             "description" : "OC character birth date (YYYY-MM-DD)",
             "format" : "date",
+            "type" : "string"
+          },
+          "birth_time" : {
+            "description" : "OC character birth time (HH:MM:SS)",
+            "format" : "time",
+            "type" : "string"
+          },
+          "birth_province" : {
+            "description" : "Birth province",
+            "maxLength" : 50,
+            "type" : "string"
+          },
+          "birth_city" : {
+            "description" : "Birth city",
+            "maxLength" : 50,
+            "type" : "string"
+          },
+          "birth_district" : {
+            "description" : "Birth district",
+            "maxLength" : 50,
+            "type" : "string"
+          },
+          "birth_address_detail" : {
+            "description" : "Detailed birth address",
+            "maxLength" : 200,
+            "type" : "string"
+          },
+          "height_cm" : {
+            "description" : "Height in centimeters",
+            "maximum" : 300,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "weight_kg" : {
+            "description" : "Weight in kilograms",
+            "format" : "float",
+            "maximum" : 999.99,
+            "minimum" : 0.1,
+            "type" : "number"
+          },
+          "skin_color" : {
+            "description" : "Skin color",
+            "maxLength" : 20,
+            "type" : "string"
+          },
+          "personality" : {
+            "description" : "OC character personality (温柔|暴躁|活泼等)",
+            "maxLength" : 50,
             "type" : "string"
           },
           "relationship" : {
@@ -3524,9 +3669,9 @@
             "maxLength" : 20,
             "type" : "string"
           },
-          "personality" : {
-            "description" : "OC character personality (温柔|暴躁|活泼等)",
-            "maxLength" : 50,
+          "call_me_as" : {
+            "description" : "How the OC calls the creator",
+            "maxLength" : 20,
             "type" : "string"
           },
           "image_gallery" : {
@@ -3580,14 +3725,57 @@
             "maxLength" : 10,
             "type" : "string"
           },
-          "address" : {
-            "description" : "OC character address",
-            "maxLength" : 100,
-            "type" : "string"
-          },
           "birth_date" : {
             "description" : "OC character birth date (YYYY-MM-DD)",
             "format" : "date",
+            "type" : "string"
+          },
+          "birth_time" : {
+            "description" : "OC character birth time (HH:MM:SS)",
+            "format" : "time",
+            "type" : "string"
+          },
+          "birth_province" : {
+            "description" : "Birth province",
+            "maxLength" : 50,
+            "type" : "string"
+          },
+          "birth_city" : {
+            "description" : "Birth city",
+            "maxLength" : 50,
+            "type" : "string"
+          },
+          "birth_district" : {
+            "description" : "Birth district",
+            "maxLength" : 50,
+            "type" : "string"
+          },
+          "birth_address_detail" : {
+            "description" : "Detailed birth address",
+            "maxLength" : 200,
+            "type" : "string"
+          },
+          "height_cm" : {
+            "description" : "Height in centimeters",
+            "maximum" : 300,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "weight_kg" : {
+            "description" : "Weight in kilograms",
+            "format" : "float",
+            "maximum" : 999.99,
+            "minimum" : 0.1,
+            "type" : "number"
+          },
+          "skin_color" : {
+            "description" : "Skin color",
+            "maxLength" : 20,
+            "type" : "string"
+          },
+          "personality" : {
+            "description" : "OC character personality (温柔|暴躁|活泼等)",
+            "maxLength" : 50,
             "type" : "string"
           },
           "relationship" : {
@@ -3595,9 +3783,9 @@
             "maxLength" : 20,
             "type" : "string"
           },
-          "personality" : {
-            "description" : "OC character personality (温柔|暴躁|活泼等)",
-            "maxLength" : 50,
+          "call_me_as" : {
+            "description" : "How the OC calls the creator",
+            "maxLength" : 20,
             "type" : "string"
           },
           "image_gallery" : {
