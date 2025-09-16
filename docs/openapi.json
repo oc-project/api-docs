@@ -1727,6 +1727,80 @@
         "tags" : [ "AdminAudit" ]
       }
     },
+    "/admin/passports/{id}" : {
+      "get" : {
+        "description" : "Get a specific OC passport by passport ID. This endpoint requires admin privileges\nand allows admins to view any passport information.\n\n**Required Role:** `admin` in JWT `app_metadata.role`\n",
+        "parameters" : [ {
+          "description" : "Passport ID",
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_admin_passports__id__get_200_response"
+                }
+              }
+            },
+            "description" : "OC passport information"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Unauthorized - authentication required"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Forbidden - access denied. This error occurs when:\n- The user lacks required admin privileges\n- The JWT token doesn't contain `app_metadata.role: \"admin\"`\n- The user is not authorized to perform this operation\n"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Resource not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
+          }
+        },
+        "security" : [ {
+          "adminAuth" : [ ]
+        } ],
+        "summary" : "Get OC passport by ID (Admin only)",
+        "tags" : [ "AdminPassport" ]
+      }
+    },
     "/my/audits" : {
       "get" : {
         "description" : "Get a list of audit records for the current authenticated user",
@@ -3167,6 +3241,31 @@
         "required" : [ "display_id", "followers_count", "following_count", "is_followed_by", "is_following", "nickname", "user_id" ],
         "type" : "object"
       },
+      "UserBasicInfo" : {
+        "properties" : {
+          "user_id" : {
+            "description" : "User unique identifier",
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "display_id" : {
+            "description" : "User public display ID",
+            "type" : "string"
+          },
+          "nickname" : {
+            "description" : "User display name",
+            "type" : "string"
+          },
+          "bio" : {
+            "description" : "User biography/signature (truncated)",
+            "maxLength" : 50,
+            "nullable" : true,
+            "type" : "string"
+          }
+        },
+        "required" : [ "display_id", "nickname", "user_id" ],
+        "type" : "object"
+      },
       "Setting" : {
         "properties" : {
           "name" : {
@@ -4216,6 +4315,20 @@
         "required" : [ "created_at", "creator_id", "is_suspicious", "oc_id", "oc_name", "passport_id", "passport_no", "updated_at" ],
         "type" : "object"
       },
+      "AdminOCPassport" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/OCPassport"
+        }, {
+          "properties" : {
+            "payment_intent" : {
+              "description" : "Stripe Payment Intent ID for passport payment",
+              "nullable" : true,
+              "type" : "string"
+            }
+          },
+          "type" : "object"
+        } ]
+      },
       "AuditRecord" : {
         "properties" : {
           "id" : {
@@ -4256,7 +4369,7 @@
             "type" : "string"
           },
           "user" : {
-            "$ref" : "#/components/schemas/UserProfileSummary"
+            "$ref" : "#/components/schemas/UserBasicInfo"
           },
           "oc_name" : {
             "description" : "OC character name",
@@ -4561,6 +4674,15 @@
             "$ref" : "#/components/schemas/PaginationMeta"
           }
         },
+        "type" : "object"
+      },
+      "_admin_passports__id__get_200_response" : {
+        "properties" : {
+          "data" : {
+            "$ref" : "#/components/schemas/AdminOCPassport"
+          }
+        },
+        "required" : [ "data" ],
         "type" : "object"
       },
       "_posts_get_200_response" : {
