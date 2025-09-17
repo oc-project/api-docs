@@ -1727,11 +1727,11 @@
         "tags" : [ "AdminAudit" ]
       }
     },
-    "/admin/passports/{id}" : {
+    "/admin/oc/{id}/passport" : {
       "get" : {
-        "description" : "Get a specific OC passport by passport ID. This endpoint requires admin privileges\nand allows admins to view any passport information.\n\n**Required Role:** `admin` in JWT `app_metadata.role`\n",
+        "description" : "Get a specific OC passport by OC ID. This endpoint requires admin privileges\nand allows admins to view passport information for any OC character.\n\n**Required Role:** `admin` in JWT `app_metadata.role`\n",
         "parameters" : [ {
-          "description" : "Passport ID",
+          "description" : "OC ID to get passport information for",
           "explode" : false,
           "in" : "path",
           "name" : "id",
@@ -1747,7 +1747,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/_admin_passports__id__get_200_response"
+                  "$ref" : "#/components/schemas/_admin_oc__id__passport_get_200_response"
                 }
               }
             },
@@ -1797,7 +1797,7 @@
         "security" : [ {
           "adminAuth" : [ ]
         } ],
-        "summary" : "Get OC passport by ID (Admin only)",
+        "summary" : "Get OC passport by OC ID (Admin only)",
         "tags" : [ "AdminPassport" ]
       }
     },
@@ -4676,7 +4676,7 @@
         },
         "type" : "object"
       },
-      "_admin_passports__id__get_200_response" : {
+      "_admin_oc__id__passport_get_200_response" : {
         "properties" : {
           "data" : {
             "$ref" : "#/components/schemas/AdminOCPassport"
