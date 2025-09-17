@@ -1498,7 +1498,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/_my_passports_pending_get_200_response"
+                  "$ref" : "#/components/schemas/_my_passports_get_200_response"
                 }
               }
             },
@@ -4297,6 +4297,11 @@
             "nullable" : true,
             "type" : "string"
           },
+          "status" : {
+            "description" : "Passport status in the application workflow",
+            "enum" : [ "pending", "paid", "approved", "issued", "rejected" ],
+            "type" : "string"
+          },
           "is_suspicious" : {
             "description" : "Whether the passport is marked as suspicious",
             "type" : "boolean"
@@ -4312,7 +4317,7 @@
             "type" : "string"
           }
         },
-        "required" : [ "created_at", "creator_id", "is_suspicious", "oc_id", "oc_name", "passport_id", "passport_no", "updated_at" ],
+        "required" : [ "created_at", "creator_id", "is_suspicious", "oc_id", "oc_name", "passport_id", "passport_no", "status", "updated_at" ],
         "type" : "object"
       },
       "AdminOCPassport" : {
@@ -4604,14 +4609,9 @@
         "properties" : {
           "data" : {
             "$ref" : "#/components/schemas/OCPassport"
-          },
-          "status" : {
-            "description" : "Passport status (issued or pending approval)",
-            "enum" : [ "issued", "pending" ],
-            "type" : "string"
           }
         },
-        "required" : [ "data", "status" ],
+        "required" : [ "data" ],
         "type" : "object"
       },
       "_checkout_sessions_post_201_response" : {
@@ -4630,36 +4630,11 @@
             },
             "type" : "array"
           },
-          "status" : {
-            "description" : "Status of returned passports (only issued passports)",
-            "enum" : [ "issued" ],
-            "type" : "string"
-          },
           "meta" : {
             "$ref" : "#/components/schemas/PaginationMeta"
           }
         },
-        "required" : [ "data", "meta", "status" ],
-        "type" : "object"
-      },
-      "_my_passports_pending_get_200_response" : {
-        "properties" : {
-          "data" : {
-            "items" : {
-              "$ref" : "#/components/schemas/OCPassport"
-            },
-            "type" : "array"
-          },
-          "status" : {
-            "description" : "Status of returned passports (only pending passports)",
-            "enum" : [ "pending" ],
-            "type" : "string"
-          },
-          "meta" : {
-            "$ref" : "#/components/schemas/PaginationMeta"
-          }
-        },
-        "required" : [ "data", "meta", "status" ],
+        "required" : [ "data", "meta" ],
         "type" : "object"
       },
       "_admin_audits_get_200_response" : {
