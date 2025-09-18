@@ -1921,6 +1921,136 @@
         "tags" : [ "AdminPassport" ]
       }
     },
+    "/admin/posts" : {
+      "get" : {
+        "description" : "List all posts from all users with optional filtering by content search and post type.\nThis endpoint requires admin privileges and allows admins to manage all posts.\n\n**Required Role:** `admin` in JWT `app_metadata.role`\n",
+        "parameters" : [ {
+          "description" : "Maximum number of items to return",
+          "explode" : true,
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : 20,
+            "maximum" : 100,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Number of items to skip",
+          "explode" : true,
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Filter by post type",
+          "explode" : true,
+          "in" : "query",
+          "name" : "post_type",
+          "required" : false,
+          "schema" : {
+            "enum" : [ "diary", "application" ],
+            "example" : "diary",
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Search posts by content (case-insensitive partial match)",
+          "explode" : true,
+          "in" : "query",
+          "name" : "search",
+          "required" : false,
+          "schema" : {
+            "example" : "travel",
+            "maxLength" : 100,
+            "minLength" : 1,
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Include soft-deleted posts in results",
+          "explode" : true,
+          "in" : "query",
+          "name" : "include_deleted",
+          "required" : false,
+          "schema" : {
+            "default" : false,
+            "example" : false,
+            "type" : "boolean"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_admin_posts_get_200_response"
+                }
+              }
+            },
+            "description" : "Posts list with pagination metadata"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Bad request"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Unauthorized - authentication required"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "example" : {
+                  "error" : "insufficient permissions",
+                  "message" : "admin role required",
+                  "code" : 4006
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Admin privilege required. The authenticated user does not have admin role.\nThe JWT token must contain `app_metadata.role: \"admin\"` to access this endpoint.\n"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
+          }
+        },
+        "security" : [ {
+          "adminAuth" : [ ]
+        } ],
+        "summary" : "List all posts (Admin only)",
+        "tags" : [ "AdminPost" ]
+      }
+    },
     "/my/audits" : {
       "get" : {
         "description" : "Get a list of audit records for the current authenticated user",
@@ -3319,49 +3449,49 @@
         "type" : "object"
       },
       "UserProfileSummary" : {
-        "properties" : {
-          "user_id" : {
-            "description" : "User unique identifier",
-            "format" : "uuid",
-            "type" : "string"
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/UserBasicInfo"
+        }, {
+          "properties" : {
+            "followers_count" : {
+              "description" : "Number of followers",
+              "format" : "int64",
+              "type" : "integer"
+            },
+            "following_count" : {
+              "description" : "Number of users being followed",
+              "format" : "int64",
+              "type" : "integer"
+            },
+            "is_following" : {
+              "description" : "Whether the current user is following this user",
+              "type" : "boolean"
+            },
+            "is_followed_by" : {
+              "description" : "Whether this user is following the current user",
+              "type" : "boolean"
+            }
           },
-          "display_id" : {
-            "description" : "User public display ID",
-            "type" : "string"
-          },
-          "nickname" : {
-            "description" : "User display name",
-            "type" : "string"
-          },
-          "bio" : {
-            "description" : "User biography/signature (truncated)",
-            "maxLength" : 50,
-            "nullable" : true,
-            "type" : "string"
-          },
-          "followers_count" : {
-            "description" : "Number of followers",
-            "format" : "int64",
-            "type" : "integer"
-          },
-          "following_count" : {
-            "description" : "Number of users being followed",
-            "format" : "int64",
-            "type" : "integer"
-          },
-          "is_following" : {
-            "description" : "Whether the current user is following this user",
-            "type" : "boolean"
-          },
-          "is_followed_by" : {
-            "description" : "Whether this user is following the current user",
-            "type" : "boolean"
-          }
-        },
-        "required" : [ "display_id", "followers_count", "following_count", "is_followed_by", "is_following", "nickname", "user_id" ],
-        "type" : "object"
+          "required" : [ "followers_count", "following_count", "is_followed_by", "is_following" ],
+          "type" : "object"
+        } ]
       },
       "UserBasicInfo" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/UserBaseInfo"
+        }, {
+          "properties" : {
+            "bio" : {
+              "description" : "User biography/signature (truncated)",
+              "maxLength" : 50,
+              "nullable" : true,
+              "type" : "string"
+            }
+          },
+          "type" : "object"
+        } ]
+      },
+      "UserBaseInfo" : {
         "properties" : {
           "user_id" : {
             "description" : "User unique identifier",
@@ -3374,17 +3504,16 @@
           },
           "nickname" : {
             "description" : "User display name",
-            "type" : "string"
-          },
-          "bio" : {
-            "description" : "User biography/signature (truncated)",
-            "maxLength" : 50,
-            "nullable" : true,
             "type" : "string"
           }
         },
         "required" : [ "display_id", "nickname", "user_id" ],
         "type" : "object"
+      },
+      "UserAdminInfo" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/UserBaseInfo"
+        } ]
       },
       "Setting" : {
         "properties" : {
@@ -4065,7 +4194,7 @@
         "required" : [ "comments_count", "content", "created_at", "id", "images", "is_draft", "is_liked", "is_public", "likes_count", "ocs", "post_type", "updated_at", "user" ],
         "type" : "object"
       },
-      "PostDetails" : {
+      "PostCore" : {
         "properties" : {
           "weather" : {
             "nullable" : true,
@@ -4096,9 +4225,6 @@
             "enum" : [ "diary", "application" ],
             "type" : "string"
           },
-          "user" : {
-            "$ref" : "#/components/schemas/UserProfileSummary"
-          },
           "ocs" : {
             "description" : "OC characters associated with this post",
             "items" : {
@@ -4125,11 +4251,6 @@
             "format" : "int64",
             "type" : "integer"
           },
-          "is_liked" : {
-            "default" : false,
-            "description" : "Whether the current user has liked this post",
-            "type" : "boolean"
-          },
           "is_public" : {
             "description" : "Whether the post is public",
             "type" : "boolean"
@@ -4137,14 +4258,6 @@
           "is_draft" : {
             "description" : "Whether the post is a draft",
             "type" : "boolean"
-          },
-          "recent_comments" : {
-            "description" : "Recent comments on this post",
-            "items" : {
-              "$ref" : "#/components/schemas/PostComment"
-            },
-            "maxItems" : 5,
-            "type" : "array"
           },
           "created_at" : {
             "description" : "Post creation timestamp",
@@ -4157,8 +4270,60 @@
             "type" : "string"
           }
         },
-        "required" : [ "comments_count", "content", "created_at", "id", "images", "is_draft", "is_liked", "is_public", "likes_count", "ocs", "post_type", "recent_comments", "updated_at", "user" ],
+        "required" : [ "comments_count", "content", "created_at", "id", "images", "is_draft", "is_public", "likes_count", "ocs", "post_type", "updated_at" ],
         "type" : "object"
+      },
+      "PostSocialFields" : {
+        "properties" : {
+          "is_liked" : {
+            "default" : false,
+            "description" : "Whether the current user has liked this post",
+            "type" : "boolean"
+          },
+          "recent_comments" : {
+            "description" : "Recent comments on this post",
+            "items" : {
+              "$ref" : "#/components/schemas/PostComment"
+            },
+            "maxItems" : 5,
+            "type" : "array"
+          }
+        },
+        "required" : [ "is_liked", "recent_comments" ],
+        "type" : "object"
+      },
+      "PostBase" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/PostCore"
+        }, {
+          "$ref" : "#/components/schemas/PostSocialFields"
+        } ]
+      },
+      "AdminPostDetails" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/PostCore"
+        }, {
+          "properties" : {
+            "user" : {
+              "$ref" : "#/components/schemas/UserAdminInfo"
+            }
+          },
+          "required" : [ "user" ],
+          "type" : "object"
+        } ]
+      },
+      "PostDetails" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/PostBase"
+        }, {
+          "properties" : {
+            "user" : {
+              "$ref" : "#/components/schemas/UserProfileSummary"
+            }
+          },
+          "required" : [ "user" ],
+          "type" : "object"
+        } ]
       },
       "PostLike" : {
         "properties" : {
@@ -4847,6 +5012,21 @@
           }
         },
         "required" : [ "data" ],
+        "type" : "object"
+      },
+      "_admin_posts_get_200_response" : {
+        "properties" : {
+          "data" : {
+            "items" : {
+              "$ref" : "#/components/schemas/AdminPostDetails"
+            },
+            "type" : "array"
+          },
+          "meta" : {
+            "$ref" : "#/components/schemas/PaginationMeta"
+          }
+        },
+        "required" : [ "data", "meta" ],
         "type" : "object"
       },
       "_posts_get_200_response" : {
