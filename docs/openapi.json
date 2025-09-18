@@ -1727,6 +1727,126 @@
         "tags" : [ "AdminAudit" ]
       }
     },
+    "/admin/oc" : {
+      "get" : {
+        "description" : "List all OC characters from all users with optional filtering. This endpoint requires admin privileges\nand allows admins to view and search through all OC characters.\n\n**Required Role:** `admin` in JWT `app_metadata.role`\n",
+        "parameters" : [ {
+          "description" : "Filter by OC name (partial match, case-insensitive)",
+          "explode" : true,
+          "in" : "query",
+          "name" : "name",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Filter by exact OC ID",
+          "explode" : true,
+          "in" : "query",
+          "name" : "oc_id",
+          "required" : false,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Filter by creator user ID",
+          "explode" : true,
+          "in" : "query",
+          "name" : "creator_id",
+          "required" : false,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Filter by creator display ID",
+          "explode" : true,
+          "in" : "query",
+          "name" : "creator_display_id",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Maximum number of items to return",
+          "explode" : true,
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : 20,
+            "maximum" : 100,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Number of items to skip",
+          "explode" : true,
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_admin_oc_get_200_response"
+                }
+              }
+            },
+            "description" : "List of all OC characters"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Unauthorized - authentication required"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Forbidden - access denied. This error occurs when:\n- The user lacks required admin privileges\n- The JWT token doesn't contain `app_metadata.role: \"admin\"`\n- The user is not authorized to perform this operation\n"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
+          }
+        },
+        "security" : [ {
+          "adminAuth" : [ ]
+        } ],
+        "summary" : "List all OC characters (Admin only)",
+        "tags" : [ "AdminOC" ]
+      }
+    },
     "/admin/oc/{id}/passport" : {
       "get" : {
         "description" : "Get a specific OC passport by OC ID. This endpoint requires admin privileges\nand allows admins to view passport information for any OC character.\n\n**Required Role:** `admin` in JWT `app_metadata.role`\n",
@@ -4320,6 +4440,61 @@
         "required" : [ "created_at", "creator_id", "is_suspicious", "oc_id", "oc_name", "passport_id", "passport_no", "status", "updated_at" ],
         "type" : "object"
       },
+      "AdminOC" : {
+        "properties" : {
+          "id" : {
+            "description" : "OC unique identifier",
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "name" : {
+            "description" : "OC character name",
+            "maxLength" : 20,
+            "type" : "string"
+          },
+          "avatar" : {
+            "$ref" : "#/components/schemas/Image"
+          },
+          "description" : {
+            "description" : "OC character description/bio",
+            "maxLength" : 200,
+            "nullable" : true,
+            "type" : "string"
+          },
+          "gender" : {
+            "description" : "OC character gender",
+            "maxLength" : 10,
+            "nullable" : true,
+            "type" : "string"
+          },
+          "creator" : {
+            "$ref" : "#/components/schemas/UserProfileSummary"
+          },
+          "posts_count" : {
+            "description" : "Number of diary posts associated with this OC",
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "created_at" : {
+            "description" : "OC creation timestamp",
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "updated_at" : {
+            "description" : "OC last update timestamp",
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "deleted_at" : {
+            "description" : "OC deletion timestamp (soft delete)",
+            "format" : "date-time",
+            "nullable" : true,
+            "type" : "string"
+          }
+        },
+        "required" : [ "created_at", "creator", "id", "name", "posts_count", "updated_at" ],
+        "type" : "object"
+      },
       "AdminOCPassport" : {
         "allOf" : [ {
           "$ref" : "#/components/schemas/OCPassport"
@@ -4642,6 +4817,20 @@
           "data" : {
             "items" : {
               "$ref" : "#/components/schemas/AuditRecord"
+            },
+            "type" : "array"
+          },
+          "meta" : {
+            "$ref" : "#/components/schemas/PaginationMeta"
+          }
+        },
+        "type" : "object"
+      },
+      "_admin_oc_get_200_response" : {
+        "properties" : {
+          "data" : {
+            "items" : {
+              "$ref" : "#/components/schemas/AdminOC"
             },
             "type" : "array"
           },
