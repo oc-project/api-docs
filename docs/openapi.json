@@ -4633,7 +4633,7 @@
             "type" : "string"
           },
           "creator" : {
-            "$ref" : "#/components/schemas/UserProfileSummary"
+            "$ref" : "#/components/schemas/UserAdminInfo"
           },
           "posts_count" : {
             "description" : "Number of diary posts associated with this OC",
@@ -4868,7 +4868,7 @@
       "_invites__code__get_200_response" : {
         "properties" : {
           "data" : {
-            "$ref" : "#/components/schemas/UserProfileSummary"
+            "$ref" : "#/components/schemas/UserBasicInfo"
           }
         },
         "type" : "object"
