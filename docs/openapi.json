@@ -4491,8 +4491,8 @@
       },
       "SupabaseConfig" : {
         "properties" : {
-          "project_reference" : {
-            "description" : "Supabase project reference ID",
+          "project_url" : {
+            "description" : "Supabase project URL",
             "type" : "string"
           },
           "api_anno_key" : {
@@ -4503,7 +4503,7 @@
             "$ref" : "#/components/schemas/SupabaseConfig_buckets"
           }
         },
-        "required" : [ "api_anno_key", "buckets", "project_reference" ],
+        "required" : [ "api_anno_key", "buckets", "project_url" ],
         "type" : "object"
       },
       "PaginationMeta" : {
