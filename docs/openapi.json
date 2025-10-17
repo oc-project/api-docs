@@ -3386,7 +3386,7 @@
       },
       "UserProfile" : {
         "properties" : {
-          "id" : {
+          "user_id" : {
             "description" : "User unique identifier",
             "format" : "uuid",
             "type" : "string"
@@ -3445,7 +3445,7 @@
             "type" : "string"
           }
         },
-        "required" : [ "created_at", "display_id", "followers_count", "following_count", "id", "nickname", "oc_characters_count", "posts_count", "updated_at" ],
+        "required" : [ "created_at", "display_id", "followers_count", "following_count", "nickname", "oc_characters_count", "posts_count", "updated_at", "user_id" ],
         "type" : "object"
       },
       "UserProfileSummary" : {
