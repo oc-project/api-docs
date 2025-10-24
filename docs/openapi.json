@@ -1529,6 +1529,100 @@
         "tags" : [ "OCPassport" ]
       }
     },
+    "/my/tasks" : {
+      "get" : {
+        "description" : "List tasks owned by the authenticated user with optional filters",
+        "parameters" : [ {
+          "explode" : true,
+          "in" : "query",
+          "name" : "type",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "explode" : true,
+          "in" : "query",
+          "name" : "state",
+          "required" : false,
+          "schema" : {
+            "enum" : [ "READY", "QUEUED", "PROCESSING", "SUCCEEDED", "FAILED", "CANCELLED" ],
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "explode" : true,
+          "in" : "query",
+          "name" : "created_at_from",
+          "required" : false,
+          "schema" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "explode" : true,
+          "in" : "query",
+          "name" : "created_at_to",
+          "required" : false,
+          "schema" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Maximum number of items to return",
+          "explode" : true,
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : 20,
+            "maximum" : 100,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Number of items to skip",
+          "explode" : true,
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_my_tasks_get_200_response"
+                }
+              }
+            },
+            "description" : "List tasks for the current user"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
+          }
+        },
+        "summary" : "List my tasks",
+        "tags" : [ "Tasks" ]
+      }
+    },
     "/admin/audits" : {
       "get" : {
         "description" : "List all audit records with optional filtering. This endpoint requires admin privileges\nand allows admins to view audit records from all users.\n\n**Required Role:** `admin` in JWT `app_metadata.role`\n",
@@ -2988,7 +3082,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/_tasks_get_200_response"
+                  "$ref" : "#/components/schemas/_my_tasks_get_200_response"
                 }
               }
             },
@@ -3307,6 +3401,10 @@
             "enum" : [ "READY", "QUEUED", "PROCESSING", "SUCCEEDED", "FAILED", "CANCELLED" ],
             "type" : "string"
           },
+          "user_id" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
           "payload" : {
             "additionalProperties" : true,
             "nullable" : true,
@@ -3351,7 +3449,7 @@
             "type" : "string"
           }
         },
-        "required" : [ "created_at", "id", "priority", "retry_count", "state", "type", "updated_at" ],
+        "required" : [ "created_at", "id", "priority", "retry_count", "state", "type", "updated_at", "user_id" ],
         "type" : "object"
       },
       "CreateResponse" : {
@@ -4977,6 +5075,20 @@
         "required" : [ "data", "meta" ],
         "type" : "object"
       },
+      "_my_tasks_get_200_response" : {
+        "properties" : {
+          "data" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Task"
+            },
+            "type" : "array"
+          },
+          "meta" : {
+            "$ref" : "#/components/schemas/PaginationMeta"
+          }
+        },
+        "type" : "object"
+      },
       "_admin_audits_get_200_response" : {
         "properties" : {
           "data" : {
@@ -5070,20 +5182,6 @@
           "data" : {
             "items" : {
               "$ref" : "#/components/schemas/PostComment"
-            },
-            "type" : "array"
-          },
-          "meta" : {
-            "$ref" : "#/components/schemas/PaginationMeta"
-          }
-        },
-        "type" : "object"
-      },
-      "_tasks_get_200_response" : {
-        "properties" : {
-          "data" : {
-            "items" : {
-              "$ref" : "#/components/schemas/Task"
             },
             "type" : "array"
           },
