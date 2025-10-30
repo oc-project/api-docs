@@ -2050,7 +2050,7 @@
           "name" : "post_type",
           "required" : false,
           "schema" : {
-            "enum" : [ "diary", "application" ],
+            "enum" : [ "diary", "application", "feedback" ],
             "example" : "diary",
             "type" : "string"
           },
@@ -2143,6 +2143,227 @@
         } ],
         "summary" : "List all posts (Admin only)",
         "tags" : [ "AdminPost" ]
+      }
+    },
+    "/admin/feedbacks" : {
+      "get" : {
+        "description" : "List user feedback submissions with optional filtering by content, processing status,\nor user identifier. This endpoint requires admin privileges.\n\n**Required Role:** `admin` in JWT `app_metadata.role`\n",
+        "parameters" : [ {
+          "description" : "Maximum number of items to return",
+          "explode" : true,
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : 20,
+            "maximum" : 100,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Number of items to skip",
+          "explode" : true,
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Search feedback by text content (case-insensitive partial match)",
+          "explode" : true,
+          "in" : "query",
+          "name" : "search",
+          "required" : false,
+          "schema" : {
+            "example" : "bug report",
+            "maxLength" : 100,
+            "minLength" : 1,
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Filter feedback by processing status",
+          "explode" : true,
+          "in" : "query",
+          "name" : "status",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/FeedbackStatus"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Search by user display ID (partial) or exact user ID",
+          "explode" : true,
+          "in" : "query",
+          "name" : "user_query",
+          "required" : false,
+          "schema" : {
+            "example" : "user123",
+            "maxLength" : 100,
+            "minLength" : 1,
+            "type" : "string"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_admin_feedbacks_get_200_response"
+                }
+              }
+            },
+            "description" : "Feedback list with pagination metadata"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Bad request"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Unauthorized - authentication required"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "example" : {
+                  "error" : "insufficient permissions",
+                  "message" : "admin role required",
+                  "code" : 4006
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Admin privilege required. The authenticated user does not have admin role.\nThe JWT token must contain `app_metadata.role: \"admin\"` to access this endpoint.\n"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
+          }
+        },
+        "security" : [ {
+          "adminAuth" : [ ]
+        } ],
+        "summary" : "List feedback (Admin only)",
+        "tags" : [ "AdminFeedback" ]
+      }
+    },
+    "/admin/feedbacks/{id}/status" : {
+      "patch" : {
+        "description" : "Update the processing status of a specific feedback entry. This endpoint requires admin privileges.\n\n**Required Role:** `admin` in JWT `app_metadata.role`\n",
+        "parameters" : [ {
+          "description" : "Feedback ID",
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UpdateFeedbackStatusRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "204" : {
+            "description" : "Feedback status updated successfully"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Bad request"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Unauthorized - authentication required"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "example" : {
+                  "error" : "insufficient permissions",
+                  "message" : "admin role required",
+                  "code" : 4006
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Admin privilege required. The authenticated user does not have admin role.\nThe JWT token must contain `app_metadata.role: \"admin\"` to access this endpoint.\n"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Resource not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
+          }
+        },
+        "security" : [ {
+          "adminAuth" : [ ]
+        } ],
+        "summary" : "Update feedback status (Admin only)",
+        "tags" : [ "AdminFeedback" ]
       }
     },
     "/my/audits" : {
@@ -2243,7 +2464,7 @@
           "required" : false,
           "schema" : {
             "default" : "diary",
-            "enum" : [ "diary", "application" ],
+            "enum" : [ "diary", "application", "feedback" ],
             "type" : "string"
           },
           "style" : "form"
@@ -2576,6 +2797,138 @@
         },
         "summary" : "Update a post",
         "tags" : [ "Posts" ]
+      }
+    },
+    "/feedbacks" : {
+      "get" : {
+        "description" : "Retrieve paginated feedback submitted by the authenticated user.",
+        "parameters" : [ {
+          "description" : "Maximum number of items to return",
+          "explode" : true,
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : 20,
+            "maximum" : 100,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Number of items to skip",
+          "explode" : true,
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Filter feedback by processing status",
+          "explode" : true,
+          "in" : "query",
+          "name" : "status",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/FeedbackStatus"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_feedbacks_get_200_response"
+                }
+              }
+            },
+            "description" : "Feedback list with pagination metadata"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Unauthorized - authentication required"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
+          }
+        },
+        "summary" : "List my feedback",
+        "tags" : [ "Feedback" ]
+      },
+      "post" : {
+        "description" : "Submit feedback with optional images. Feedback is private and reviewed by admins.",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CreateFeedbackRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/_users__id__follow_post_201_response"
+                }
+              }
+            },
+            "description" : "Feedback submitted successfully"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Bad request"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Unauthorized - authentication required"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            },
+            "description" : "Internal server error"
+          }
+        },
+        "summary" : "Submit feedback",
+        "tags" : [ "Feedback" ]
       }
     },
     "/posts/{id}/like" : {
@@ -3694,6 +4047,9 @@
             "maxItems" : 9,
             "type" : "array"
           },
+          "feedback_status" : {
+            "$ref" : "#/components/schemas/FeedbackStatus"
+          },
           "likes_count" : {
             "description" : "Number of likes",
             "format" : "int64",
@@ -4233,7 +4589,7 @@
           },
           "post_type" : {
             "description" : "Type of post - diary for regular posts, application for review requests",
-            "enum" : [ "diary", "application" ],
+            "enum" : [ "diary", "application", "feedback" ],
             "type" : "string"
           },
           "user" : {
@@ -4320,7 +4676,7 @@
           },
           "post_type" : {
             "description" : "Type of post - diary for regular posts, application for review requests",
-            "enum" : [ "diary", "application" ],
+            "enum" : [ "diary", "application", "feedback" ],
             "type" : "string"
           },
           "ocs" : {
@@ -4482,7 +4838,7 @@
           "post_type" : {
             "default" : "diary",
             "description" : "Type of post - diary for regular posts, application for review requests",
-            "enum" : [ "diary", "application" ],
+            "enum" : [ "diary", "application", "feedback" ],
             "type" : "string"
           },
           "weather" : {
@@ -4535,7 +4891,7 @@
           },
           "post_type" : {
             "description" : "Type of post - diary for regular posts, application for review requests",
-            "enum" : [ "diary", "application" ],
+            "enum" : [ "diary", "application", "feedback" ],
             "type" : "string"
           },
           "weather" : {
@@ -4573,6 +4929,102 @@
             "type" : "boolean"
           }
         },
+        "type" : "object"
+      },
+      "FeedbackStatus" : {
+        "description" : "Processing status for feedback entries",
+        "enum" : [ "pending", "processed" ],
+        "type" : "string"
+      },
+      "CreateFeedbackRequest" : {
+        "properties" : {
+          "text" : {
+            "description" : "Feedback text content",
+            "maxLength" : 1000,
+            "minLength" : 1,
+            "type" : "string"
+          },
+          "image_ids" : {
+            "description" : "Image IDs attached to this feedback",
+            "items" : {
+              "format" : "uuid",
+              "type" : "string"
+            },
+            "maxItems" : 9,
+            "type" : "array"
+          }
+        },
+        "required" : [ "text" ],
+        "type" : "object"
+      },
+      "FeedbackSummary" : {
+        "properties" : {
+          "id" : {
+            "description" : "Feedback unique identifier",
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "text" : {
+            "description" : "Feedback text content",
+            "maxLength" : 1000,
+            "type" : "string"
+          },
+          "image_ids" : {
+            "description" : "Feedback image IDs",
+            "items" : {
+              "format" : "uuid",
+              "type" : "string"
+            },
+            "maxItems" : 9,
+            "type" : "array"
+          },
+          "status" : {
+            "$ref" : "#/components/schemas/FeedbackStatus"
+          },
+          "created_at" : {
+            "description" : "Feedback creation timestamp",
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "updated_at" : {
+            "description" : "Feedback last update timestamp",
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "required" : [ "created_at", "id", "image_ids", "status", "text", "updated_at" ],
+        "type" : "object"
+      },
+      "AdminFeedbackItem" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/FeedbackSummary"
+        }, {
+          "properties" : {
+            "user_id" : {
+              "description" : "Author user ID",
+              "format" : "uuid",
+              "type" : "string"
+            },
+            "user_display_id" : {
+              "description" : "Author display ID",
+              "type" : "string"
+            },
+            "user_nickname" : {
+              "description" : "Author nickname",
+              "type" : "string"
+            }
+          },
+          "required" : [ "user_display_id", "user_id" ],
+          "type" : "object"
+        } ]
+      },
+      "UpdateFeedbackStatusRequest" : {
+        "properties" : {
+          "status" : {
+            "$ref" : "#/components/schemas/FeedbackStatus"
+          }
+        },
+        "required" : [ "status" ],
         "type" : "object"
       },
       "CreateCommentRequest" : {
@@ -5141,6 +5593,21 @@
         "required" : [ "data", "meta" ],
         "type" : "object"
       },
+      "_admin_feedbacks_get_200_response" : {
+        "properties" : {
+          "data" : {
+            "items" : {
+              "$ref" : "#/components/schemas/AdminFeedbackItem"
+            },
+            "type" : "array"
+          },
+          "meta" : {
+            "$ref" : "#/components/schemas/PaginationMeta"
+          }
+        },
+        "required" : [ "data", "meta" ],
+        "type" : "object"
+      },
       "_posts_get_200_response" : {
         "properties" : {
           "data" : {
@@ -5161,6 +5628,21 @@
             "$ref" : "#/components/schemas/PostDetails"
           }
         },
+        "type" : "object"
+      },
+      "_feedbacks_get_200_response" : {
+        "properties" : {
+          "data" : {
+            "items" : {
+              "$ref" : "#/components/schemas/FeedbackSummary"
+            },
+            "type" : "array"
+          },
+          "meta" : {
+            "$ref" : "#/components/schemas/PaginationMeta"
+          }
+        },
+        "required" : [ "data", "meta" ],
         "type" : "object"
       },
       "_posts__id__likes_get_200_response" : {
