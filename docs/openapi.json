@@ -459,7 +459,7 @@
           "adminAuth" : [ ]
         } ],
         "summary" : "List marketing tasks (Admin only)",
-        "tags" : [ "Admin", "MarketingTasks" ]
+        "tags" : [ "AdminMarketingTasks" ]
       },
       "post" : {
         "description" : "Create a new marketing task. This endpoint requires admin privileges.\n",
@@ -529,7 +529,7 @@
           "adminAuth" : [ ]
         } ],
         "summary" : "Create marketing task (Admin only)",
-        "tags" : [ "Admin", "MarketingTasks" ]
+        "tags" : [ "AdminMarketingTasks" ]
       }
     },
     "/admin/marketing-tasks/{id}" : {
@@ -595,7 +595,7 @@
           "adminAuth" : [ ]
         } ],
         "summary" : "Delete marketing task (Admin only)",
-        "tags" : [ "Admin", "MarketingTasks" ]
+        "tags" : [ "AdminMarketingTasks" ]
       },
       "get" : {
         "description" : "Get a specific marketing task by ID with statistics. This endpoint requires admin privileges.\n",
@@ -666,7 +666,7 @@
           "adminAuth" : [ ]
         } ],
         "summary" : "Get marketing task (Admin only)",
-        "tags" : [ "Admin", "MarketingTasks" ]
+        "tags" : [ "AdminMarketingTasks" ]
       },
       "put" : {
         "description" : "Update a marketing task. This endpoint requires admin privileges.\n",
@@ -757,7 +757,7 @@
           "adminAuth" : [ ]
         } ],
         "summary" : "Update marketing task (Admin only)",
-        "tags" : [ "Admin", "MarketingTasks" ]
+        "tags" : [ "AdminMarketingTasks" ]
       }
     },
     "/marketing-tasks" : {
