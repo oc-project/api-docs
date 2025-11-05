@@ -3713,85 +3713,6 @@
         "security" : [ ],
         "summary" : "Get post comments",
         "tags" : [ "Posts" ]
-      },
-      "post" : {
-        "description" : "Add a comment to a post",
-        "parameters" : [ {
-          "description" : "Post ID",
-          "explode" : false,
-          "in" : "path",
-          "name" : "id",
-          "required" : true,
-          "schema" : {
-            "format" : "uuid",
-            "type" : "string"
-          },
-          "style" : "simple"
-        } ],
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/CreateCommentRequest"
-              }
-            }
-          },
-          "required" : true
-        },
-        "responses" : {
-          "201" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/_marketing_tasks__id__complete_post_201_response"
-                }
-              }
-            },
-            "description" : "Comment added successfully"
-          },
-          "400" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Error"
-                }
-              }
-            },
-            "description" : "Bad request"
-          },
-          "401" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Error"
-                }
-              }
-            },
-            "description" : "Unauthorized - authentication required"
-          },
-          "404" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Error"
-                }
-              }
-            },
-            "description" : "Resource not found"
-          },
-          "500" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Error"
-                }
-              }
-            },
-            "description" : "Internal server error"
-          }
-        },
-        "summary" : "Add a comment to a post",
-        "tags" : [ "Posts" ]
       }
     },
     "/posts/{id}/comments/{comment_id}" : {
@@ -4790,8 +4711,8 @@
             "format" : "int64",
             "type" : "integer"
           },
-          "posts_count" : {
-            "description" : "Number of posts created",
+          "diary_count" : {
+            "description" : "Number of diary posts created",
             "format" : "int64",
             "type" : "integer"
           },
@@ -4819,7 +4740,7 @@
             "type" : "string"
           }
         },
-        "required" : [ "created_at", "display_id", "followers_count", "following_count", "nickname", "oc_characters_count", "posts_count", "updated_at", "user_id" ],
+        "required" : [ "created_at", "diary_count", "display_id", "followers_count", "following_count", "nickname", "oc_characters_count", "updated_at", "user_id" ],
         "type" : "object"
       },
       "UserProfileSummary" : {
@@ -5112,7 +5033,7 @@
           "creator" : {
             "$ref" : "#/components/schemas/UserProfileSummary"
           },
-          "posts_count" : {
+          "diary_count" : {
             "description" : "Number of diary posts associated with this OC",
             "format" : "int64",
             "type" : "integer"
@@ -5128,7 +5049,7 @@
             "type" : "string"
           }
         },
-        "required" : [ "created_at", "creator", "id", "name", "posts_count", "updated_at" ],
+        "required" : [ "created_at", "creator", "diary_count", "id", "name", "updated_at" ],
         "type" : "object"
       },
       "OCDetails" : {
@@ -5226,7 +5147,7 @@
             "maxItems" : 9,
             "type" : "array"
           },
-          "posts_count" : {
+          "diary_count" : {
             "description" : "Number of diary posts associated with this OC",
             "format" : "int64",
             "type" : "integer"
@@ -5249,7 +5170,7 @@
             "type" : "string"
           }
         },
-        "required" : [ "created_at", "creator", "id", "image_gallery", "name", "posts_count", "recent_posts", "updated_at" ],
+        "required" : [ "created_at", "creator", "diary_count", "id", "image_gallery", "name", "recent_posts", "updated_at" ],
         "type" : "object"
       },
       "OCImage" : {
@@ -5511,8 +5432,8 @@
             "type" : "string"
           },
           "post_type" : {
-            "description" : "Type of post - diary for regular posts, application for review requests",
-            "enum" : [ "diary", "application", "feedback" ],
+            "description" : "Type of post - diary for regular posts, application for review requests, comment for threaded replies",
+            "enum" : [ "diary", "application", "feedback", "comment" ],
             "type" : "string"
           },
           "user" : {
@@ -5598,8 +5519,8 @@
             "type" : "string"
           },
           "post_type" : {
-            "description" : "Type of post - diary for regular posts, application for review requests",
-            "enum" : [ "diary", "application", "feedback" ],
+            "description" : "Type of post - diary for regular posts, application for review requests, comment for threaded replies",
+            "enum" : [ "diary", "application", "feedback", "comment" ],
             "type" : "string"
           },
           "ocs" : {
@@ -5760,8 +5681,14 @@
           },
           "post_type" : {
             "default" : "diary",
-            "description" : "Type of post - diary for regular posts, application for review requests",
-            "enum" : [ "diary", "application", "feedback" ],
+            "description" : "Type of post - diary for regular posts, application for review requests, comment for threaded replies",
+            "enum" : [ "diary", "application", "feedback", "comment" ],
+            "type" : "string"
+          },
+          "parent_id" : {
+            "description" : "Parent post ID when creating a comment",
+            "format" : "uuid",
+            "nullable" : true,
             "type" : "string"
           },
           "weather" : {
@@ -5950,18 +5877,6 @@
         "required" : [ "status" ],
         "type" : "object"
       },
-      "CreateCommentRequest" : {
-        "properties" : {
-          "content" : {
-            "description" : "Comment text content",
-            "maxLength" : 300,
-            "minLength" : 1,
-            "type" : "string"
-          }
-        },
-        "required" : [ "content" ],
-        "type" : "object"
-      },
       "SupabaseConfig" : {
         "properties" : {
           "project_url" : {
@@ -6108,7 +6023,7 @@
           "creator" : {
             "$ref" : "#/components/schemas/UserAdminInfo"
           },
-          "posts_count" : {
+          "diary_count" : {
             "description" : "Number of diary posts associated with this OC",
             "format" : "int64",
             "type" : "integer"
@@ -6130,7 +6045,7 @@
             "type" : "string"
           }
         },
-        "required" : [ "created_at", "creator", "id", "name", "posts_count", "updated_at" ],
+        "required" : [ "created_at", "creator", "diary_count", "id", "name", "updated_at" ],
         "type" : "object"
       },
       "AdminOCPassport" : {
