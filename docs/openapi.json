@@ -3683,7 +3683,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/_posts__id__comments_get_200_response"
+                  "$ref" : "#/components/schemas/_posts_get_200_response"
                 }
               }
             },
@@ -5581,7 +5581,7 @@
           "recent_comments" : {
             "description" : "Recent comments on this post",
             "items" : {
-              "$ref" : "#/components/schemas/PostComment"
+              "$ref" : "#/components/schemas/Post"
             },
             "maxItems" : 5,
             "type" : "array"
@@ -5640,35 +5640,6 @@
           }
         },
         "required" : [ "created_at", "id", "user" ],
-        "type" : "object"
-      },
-      "PostComment" : {
-        "properties" : {
-          "id" : {
-            "description" : "Comment unique identifier",
-            "format" : "uuid",
-            "type" : "string"
-          },
-          "content" : {
-            "description" : "Comment text content",
-            "maxLength" : 300,
-            "type" : "string"
-          },
-          "user" : {
-            "$ref" : "#/components/schemas/UserProfileSummary"
-          },
-          "created_at" : {
-            "description" : "Comment timestamp",
-            "format" : "date-time",
-            "type" : "string"
-          },
-          "updated_at" : {
-            "description" : "Comment last update timestamp",
-            "format" : "date-time",
-            "type" : "string"
-          }
-        },
-        "required" : [ "content", "created_at", "id", "updated_at", "user" ],
         "type" : "object"
       },
       "CreatePostRequest" : {
@@ -6895,20 +6866,6 @@
           "data" : {
             "items" : {
               "$ref" : "#/components/schemas/PostLike"
-            },
-            "type" : "array"
-          },
-          "meta" : {
-            "$ref" : "#/components/schemas/PaginationMeta"
-          }
-        },
-        "type" : "object"
-      },
-      "_posts__id__comments_get_200_response" : {
-        "properties" : {
-          "data" : {
-            "items" : {
-              "$ref" : "#/components/schemas/PostComment"
             },
             "type" : "array"
           },
