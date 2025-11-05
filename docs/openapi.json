@@ -5432,8 +5432,8 @@
             "type" : "string"
           },
           "post_type" : {
-            "description" : "Type of post - diary for regular posts, application for review requests, comment for threaded replies",
-            "enum" : [ "diary", "application", "feedback", "comment" ],
+            "description" : "Type of post - comments inherit their parent's type (use parent_id to detect threaded replies)",
+            "enum" : [ "diary", "application", "feedback" ],
             "type" : "string"
           },
           "user" : {
@@ -5519,8 +5519,8 @@
             "type" : "string"
           },
           "post_type" : {
-            "description" : "Type of post - diary for regular posts, application for review requests, comment for threaded replies",
-            "enum" : [ "diary", "application", "feedback", "comment" ],
+            "description" : "Type of post - comments inherit their parent's type (use parent_id to detect threaded replies)",
+            "enum" : [ "diary", "application", "feedback" ],
             "type" : "string"
           },
           "ocs" : {
@@ -5681,8 +5681,8 @@
           },
           "post_type" : {
             "default" : "diary",
-            "description" : "Type of post - diary for regular posts, application for review requests, comment for threaded replies",
-            "enum" : [ "diary", "application", "feedback", "comment" ],
+            "description" : "Type of post - threaded comments inherit their parent's type (submit parent_id to create a comment)",
+            "enum" : [ "diary", "application", "feedback" ],
             "type" : "string"
           },
           "parent_id" : {
@@ -5807,10 +5807,10 @@
         "required" : [ "text" ],
         "type" : "object"
       },
-      "FeedbackSummary" : {
+      "FeedbackContent" : {
         "properties" : {
           "id" : {
-            "description" : "Feedback unique identifier",
+            "description" : "Feedback entry unique identifier",
             "format" : "uuid",
             "type" : "string"
           },
@@ -5820,7 +5820,7 @@
             "type" : "string"
           },
           "image_ids" : {
-            "description" : "Feedback image IDs",
+            "description" : "Image IDs attached to this entry",
             "items" : {
               "format" : "uuid",
               "type" : "string"
@@ -5828,22 +5828,32 @@
             "maxItems" : 9,
             "type" : "array"
           },
-          "status" : {
-            "$ref" : "#/components/schemas/FeedbackStatus"
-          },
           "created_at" : {
-            "description" : "Feedback creation timestamp",
+            "description" : "Entry creation timestamp",
             "format" : "date-time",
             "type" : "string"
           },
           "updated_at" : {
-            "description" : "Feedback last update timestamp",
+            "description" : "Entry last update timestamp",
             "format" : "date-time",
             "type" : "string"
           }
         },
-        "required" : [ "created_at", "id", "image_ids", "status", "text", "updated_at" ],
+        "required" : [ "created_at", "id", "image_ids", "text", "updated_at" ],
         "type" : "object"
+      },
+      "FeedbackSummary" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/FeedbackContent"
+        }, {
+          "properties" : {
+            "status" : {
+              "$ref" : "#/components/schemas/FeedbackStatus"
+            }
+          },
+          "required" : [ "status" ],
+          "type" : "object"
+        } ]
       },
       "AdminFeedbackItem" : {
         "allOf" : [ {
@@ -6110,6 +6120,12 @@
           },
           "post_content" : {
             "description" : "Related post content (preview)",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "post_parent_id" : {
+            "description" : "Parent post ID (indicates this is a comment if present)",
+            "format" : "uuid",
             "nullable" : true,
             "type" : "string"
           },
