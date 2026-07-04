@@ -7012,6 +7012,36 @@
         "required" : [ "name", "public" ],
         "type" : "object"
       },
+      "SupabaseConfig_buckets_oc_images" : {
+        "description" : "OC images bucket configuration",
+        "properties" : {
+          "name" : {
+            "description" : "Bucket name",
+            "type" : "string"
+          },
+          "public" : {
+            "description" : "Whether bucket is public",
+            "type" : "boolean"
+          }
+        },
+        "required" : [ "name", "public" ],
+        "type" : "object"
+      },
+      "SupabaseConfig_buckets_post_images" : {
+        "description" : "Post images bucket configuration",
+        "properties" : {
+          "name" : {
+            "description" : "Bucket name",
+            "type" : "string"
+          },
+          "public" : {
+            "description" : "Whether bucket is public",
+            "type" : "boolean"
+          }
+        },
+        "required" : [ "name", "public" ],
+        "type" : "object"
+      },
       "SupabaseConfig_buckets" : {
         "description" : "Storage buckets configuration",
         "properties" : {
@@ -7019,10 +7049,10 @@
             "$ref" : "#/components/schemas/SupabaseConfig_buckets_avatar"
           },
           "oc_images" : {
-            "$ref" : "#/components/schemas/SupabaseConfig_buckets_avatar"
+            "$ref" : "#/components/schemas/SupabaseConfig_buckets_oc_images"
           },
           "post_images" : {
-            "$ref" : "#/components/schemas/SupabaseConfig_buckets_avatar"
+            "$ref" : "#/components/schemas/SupabaseConfig_buckets_post_images"
           }
         },
         "required" : [ "avatar", "oc_images", "post_images" ],
